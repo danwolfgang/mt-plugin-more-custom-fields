@@ -21,7 +21,7 @@ sub _options_field {
 sub _field_html {
     return q{
 <script type="text/javascript">
-    function insertSelectedPage(html, val, id) {
+    function insertSelectedEntry(html, val, id) {
         var se = document.getElementById(id);
         se.setAttribute('value', val);
 
