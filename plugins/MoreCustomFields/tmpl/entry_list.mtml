@@ -1,0 +1,189 @@
+<mt:unless name="json">
+<mt:SetVar name="screen_type" value="dialog-screen insert-asset-dialog">
+<mt:setvarblock name="page_title"><mt:if name="se_page"><__trans phrase="Select Page"><mt:else><__trans phrase="Select Entry"></mt:if></mt:setvarblock>
+<mt:setvarblock name="html_head" append="1">
+    <script type="text/javascript" src="<mt:var name="static_uri">js/tc/client.js"></script>
+    <script type="text/javascript" src="<mt:var name="static_uri">js/tc/json.js"></script>
+    <script type="text/javascript" src="<mt:var name="static_uri">js/dialog.js"></script>
+
+    <script type="text/javascript">
+    /* <![CDATA[ */
+    function dialogClose(data) {
+        if (!data) {
+            closeDialog();
+            return;
+        }
+        // user made a selection and clicked insert...
+        var f = document.forms['select_entry'];
+        var sel = dlg.panel.tableSelect.selected();
+        f['id'].value = sel[0].value;
+        f.submit();
+    }
+
+    function viewChange(ds, fn) {
+        if (fn) fn(ds);
+    }
+
+    var tableSelect;
+    var dlg;
+    function init() {
+        // setup
+        dlg = new Dialog.Simple("list-entries");
+        var panel = new ListingPanel("entry");
+        dlg.panel = panel;
+
+        // hook into view updates so we can close any opened detail panel
+        var old_update = panel.datasource.onUpdate;
+        panel.datasource.onUpdate = function(ds) { viewChange(ds, old_update) };
+
+        panel.pager.setState(<mt:if name="pager_json"><mt:var name="pager_json"><mt:else>{}</mt:if>);
+        panel.parent = dlg;
+        dlg.open({}, dialogClose);
+    }
+    TC.attachLoadEvent( init );
+    /* ]]> */
+    </script>
+</mt:setvarblock>
+
+<mt:include name="dialog/header.tmpl">
+
+<div id="list-entries-dialog">
+    <div class="panel-header">
+    </div>
+    <div class="listing-filter">
+        <div class="listing-filter-inner inner pkg">
+    <mt:if name="panel_searchable">
+            <form action="" method="get" id="modal-search">
+                <input name="search" type="text" value="<__trans phrase="Search">" class="search-input search-query" onblur="if(this.value==''){this.style.color=''; this.form.reset()}" onfocus="if (this.value == '<__trans phrase="Search">') this.value = ''; this.style.color = '#000';" />
+                <input type="image" class="search-command search-submit" src="<$mt:var name="static_uri"$>images/search-submit<mt:unless name="blog_id">-system</mt:unless>.gif" title="<__trans phrase="Search">" />
+                <a href="javascript:void(0)" class="search-reset hidden"><__trans phrase="Reset"></a>
+            </form>
+    </mt:if>
+        </div>
+    </div>
+
+</mt:unless>
+<mt:if name="object_loop">
+    <mt:unless name="json">
+    <form method="post" action="<mt:var name="script_url">" name="select_entry">
+        <input type="hidden" name="__mode" value="mcf_select_entry" />
+        <input type="hidden" name="_type" value="entry" />
+        <input type="hidden" name="magic_token" value="<mt:var name="magic_token">" />
+        <input type="hidden" name="edit_field" value="<mt:var name="edit_field">" />
+        <input type="hidden" name="dialog_view" value="1" />
+        <input type="hidden" name="id" value="" />
+        <mt:if name="edit_blog_id">
+        <input type="hidden" name="blog_id" value="<mt:var name="edit_blog_id">" />
+        </mt:if>
+        <mt:if name="user_id">
+        <input type="hidden" name="user_id" value="<mt:var name="user_id">" />
+        </mt:if>        
+    </form>
+
+    <div class="list-wrapper" style="position: relative;">
+    <div class="selector listing" id="selector">
+        <form action="" method="get" onsubmit="return false">
+            <table cellspacing="0" class="list-heading entry-listing-table <mt:unless name="edit_blog_id">show-weblog </mt:unless><mt:if name="view_expanded">expanded<mt:else>compact</mt:if>">
+                <thead>
+                    <tr>
+                        <th class="cb"><img src="<mt:var name="static_uri">images/spacer.gif" width="15" height="1"></th>
+                        <th class="status si">
+                            <img src="<mt:var name="static_uri">images/status_icons/invert-flag.gif" alt="<__trans phrase="Status">" title="<__trans phrase="Status">" width="9" height="9" />
+                        </th>
+                        <th class="title"><__trans phrase="Title"></th>
+                        <th class="author" style="min-width: 70px;"><__trans phrase="Author"></th>
+                        <th class="date" style="min-width: 70px;"><__trans phrase="Created"></th>
+                        <th class="view si"><span><__trans phrase="View"></span></th>
+                    </tr>
+                </thead>
+            </table>
+
+            <div class="list-data-wrapper-modal list-data">
+    </mt:unless>
+                <div class="list-data-layout-modal">
+                    <table cellspacing="0" class="list-data scrollable" id="entryDisplay">
+                        <tbody>
+    <mt:loop name="object_loop">
+                            <tr id="entry-<mt:var name="id">" class="<mt:if name="__odd__">odd<mt:else>even</mt:if>">
+                                <td class="cb"><input type="hidden" id="entry-<mt:var name="id">-json" value="<mt:var name="metadata_json" escape="html">" /><input type="radio" name="id" value="<mt:var name="id">" class="select" id="entry-radio-<mt:var name="id">" /></td>
+                                <td class="status si status-<mt:if name="status_draft">draft<mt:elseif name="status_publish">publish<mt:elseif name="status_review">review<mt:elseif name="status_future">future</mt:if>"><img src="<mt:var name="static_uri">images/spacer.gif" alt="<mt:if name="status_draft"><__trans phrase="Unpublished (Draft)"><mt:elseif name="status_publish"><__trans phrase="Published"><mt:elseif name="status_review"><__trans phrase="Unpublished (Review)"><mt:elseif name="status_future"><__trans phrase="Scheduled"></mt:if>" width="9" height="9" /></td>
+                                <td class="title"><mt:Var name="title" escape="html"></td>
+                                <td class="author" style="min-width: 70px;"><mt:Var name="author_name" escape="html"></td>
+                                <td class="date" style="min-width: 85px;">
+                                    <mt:if name="created_on_relative" and="dates_relative">
+                                        <mt:var name="created_on_relative">
+                                    <mt:else>
+                                        <mt:var name="created_on_formatted">
+                                    </mt:if>
+                                </td>
+                                <td class="view si status-view">
+                                    <mt:if name="entry_permalink">
+                                        <a href="<mt:var name="entry_permalink">" target="<__trans phrase="_external_link_target">" title="<__trans phrase="View entry">"><img src="<mt:var name="static_uri">images/spacer.gif" alt="<__trans phrase="View entry">" width="13" height="9" /></a>
+                                    <mt:else>
+                                        &#160;
+                                    </mt:if>
+                                </td>
+                            </tr>
+    </mt:loop>
+                        <tbody>
+                    </table>
+                </div>
+    <mt:unless name="json">
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="pagination"></div>
+
+<div class="insert_button_spacing">&nbsp;</div>
+
+<div class="actions-bar">
+    <div class="actions-bar-inner pkg actions">
+        <form action="" method="get" onsubmit="return false">
+            <button
+                type="submit"
+                accesskey="s"
+                title="<__trans phrase="Select (s)">"
+                class="primary-button close disabled-button"
+                disabled="true"
+                ><__trans phrase="Select"></button>
+            <button
+                onclick="closeDialog(); return false"
+                type="submit"
+                accesskey="x"
+                class="cancel"
+                title="<__trans phrase="Cancel (x)">"
+                ><__trans phrase="Cancel"></button>
+        </form>
+    </div>
+</div>
+
+    </mt:unless>
+<mt:else>
+    <mtapp:statusmsg
+        id="no-assets"
+        class="info">
+        <__trans phrase="No entries could be found.">
+    </mtapp:statusmsg>
+    <mt:unless name="json">
+    <div class="actions-bar">
+        <div class="actions-bar-inner pkg actions">
+            <form action="" method="get" onsubmit="return false">
+                <button
+                    onclick="closeDialog(); return false"
+                    type="submit"
+                    accesskey="x"
+                    class="cancel"
+                    title="<__trans phrase="Cancel (x)">"
+                    ><__trans phrase="Cancel"></button>
+            </form>
+        </div>
+    </div>
+    </mt:unless>
+</mt:if>
+
+<mt:unless name="json">
+    </div>
+    <mt:include name="dialog/footer.tmpl">
+</mt:unless>
