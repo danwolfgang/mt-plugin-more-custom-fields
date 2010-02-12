@@ -236,7 +236,7 @@ sub tag_selected_pages {
             local $vars->{__counter__} = $i + 1;
             # Assign the selected page
             my $page = MT::Page->load( { id => $page_id, } );
-            local $ctx->{__stash}{page} = $page;
+            local $ctx->{__stash}{entry} = $page;
 
             my $out = $builder->build($ctx, $tokens);
             if (!defined $out) {
