@@ -40,7 +40,7 @@ sub _field_html {
         <button
             style="background: #333 url('<mt:StaticWebPath>images/buttons/button.gif') no-repeat 0 center; border:none; border-top:1px solid #d4d4d4; font-weight: bold; font-size: 14px; line-height: 1.3; text-decoration: none; color: #eee; cursor: pointer; padding: 2px 10px 4px;"
             type="submit"
-            onclick="return openDialog(this.form, 'mcf_list_pages', 'blog_ids=<mt:Var name="blogids">&edit_field=<mt:Var name="field_name">_selectedpagescf_<mt:Var name="__counter__">')">
+            onclick="return openDialog(this.form, 'mcf_list_pages', 'blog_id=<mt:Var name="blogids">&edit_field=<mt:Var name="field_name">_selectedpagescf_<mt:Var name="__counter__">')">
             Choose Page
         </button>
         <span id="<mt:Var name="field_name">_selectedpagescf_<mt:Var name="__counter__">_preview" class="preview" style="padding-left: 8px;">
@@ -253,11 +253,9 @@ sub tag_selected_pages {
 sub se_list_pages {
     my $app = shift;
     my $blog_ids = $app->param('blog_ids');
-    my $type = 'page';
-    my $pkg = $app->model($type) or return "Invalid request.";
 
-    my %terms;
-    $terms{status} = '2';
+    my $terms = {};
+    $terms->{status} = '2';
     
     my @blog_ids;
     if ($blog_ids == 'all') {
@@ -266,7 +264,7 @@ sub se_list_pages {
     else {
         # Turn this into an array so that all specified blogs can be loaded.
         @blog_ids = split(/,/, $blog_ids);
-        $terms{blog_id} = [@blog_ids];
+        $terms->{blog_id} = [@blog_ids];
     }
     
     my %args = (
@@ -276,6 +274,12 @@ sub se_list_pages {
 
     my $plugin = MT->component('MoreCustomFields');
     my $tmpl = $plugin->load_tmpl('entry_list.mtml');
+    $tmpl->param('type', 'page');
+
+    # For some reason the 'page' _type doesn't get set/picked up for
+    # searches, so just set it here.
+    $app->param('_type','page');
+
     return $app->listing({
         type => 'page',
         template => $tmpl,
@@ -302,7 +306,7 @@ sub se_list_pages {
             }
             return $row;
         },
-        terms => \%terms,
+        terms => $terms,
         args  => \%args,
         limit => 10,
     });
