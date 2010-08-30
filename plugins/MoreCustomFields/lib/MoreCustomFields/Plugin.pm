@@ -6,13 +6,85 @@ use warnings;
 use MT 4.2;
 use base qw(MT::Plugin);
 use CustomFields::Util qw( get_meta save_meta field_loop _get_html );
-use MT::Util
-  qw( relative_date offset_time offset_time_list epoch2ts ts2epoch format_ts encode_html dirify );
+use MT::Util qw( relative_date offset_time offset_time_list epoch2ts 
+                 ts2epoch format_ts encode_html dirify );
+
+use Text::CSV;
 
 use MoreCustomFields::CheckboxGroup;
 use MoreCustomFields::RadioButtonsWithInput;
 use MoreCustomFields::SelectedEntries;
 use MoreCustomFields::SelectedPages;
+use MoreCustomFields::SingleLineTextGroup;
+
+use Data::Dumper;
+
+sub init_app {
+    my $plugin = shift;
+    my ($app) = @_;
+    return if $app->id eq 'wizard';
+
+    my $r = $plugin->registry;
+    $r->{tags} = sub { _load_tags( $app, $plugin ) };
+}
+
+sub _load_tags {
+    my $app  = shift;
+    my $tags = {};
+
+    # Grab the field definitions, then use those definitions to load the
+    # appropriate objects. Finally, turn those into a block tag.
+    my @field_defs = MT->model('field')->load({
+        type => 'multi_use_single_line_text_group',
+    });
+    foreach my $field_def (@field_defs) {
+        my $tag = $field_def->tag;
+        # Load the objects (entry, author, whatever) based on the current
+        # field definition.
+        my $obj_type = $field_def->obj_type;
+        my @objects = MT->model($obj_type)->load({
+            blog_id => $field_def->blog_id
+        });
+        foreach my $obj (@objects) {
+            my $basename = 'field.' . $field_def->basename;
+            # Only continue if this object has some metadata saved. That is,
+            # if the field has been used.
+            if ($obj->$basename) {
+                # Create the actual tag Use the tag name and append "Loop" to it.
+                $tags->{block}->{$tag . 'Loop'} = sub {
+                    my ( $ctx, $args, $cond ) = @_;
+                    # Use the $obj_type to figure out what context we're in.
+                    my $obj = $ctx->stash($obj_type);
+                    # Then load the saved YAML
+                    my $yaml = YAML::Tiny->read_string( $obj->$basename );
+                    # The $field_name is the custom field basename.
+                    foreach my $field_name ( keys %{$yaml->[0]} ) {
+                        my $field = $yaml->[0]->{$field_name};
+                        # Build the output tag content
+                        my $out = '';
+                        my $vars = $ctx->{__stash}{vars};
+                        my $count = 0;
+                        # The $group_num is the group order/parent of the values. Sort
+                        # it so that they are displayed in the order they were saved.
+                        foreach my $group_num ( sort keys %{$field} ) {
+                            local $vars->{'__first__'} = ($count++ == 0);
+                            local $vars->{'__last__'} = ($count == scalar keys %{$field});
+                            # Add the keys and values to the output
+                            foreach my $value ( keys %{$field->{$group_num}} ) {
+                                $vars->{$value} = $field->{$group_num}->{$value};
+                            }
+                            defined( $out .= $ctx->slurp( $args, $cond ) ) or return;
+                        }
+                        return $out;
+                    }
+                };
+            }
+        }
+    }
+    
+    return $tags;
+}
+
 
 sub load_customfield_types {
     my $checkbox_group = {
@@ -54,6 +126,26 @@ sub load_customfield_types {
             options_field     => sub { MoreCustomFields::SelectedPages::_options_field(); },
             field_html        => sub { MoreCustomFields::SelectedPages::_field_html(); },
             field_html_params => sub { MoreCustomFields::SelectedPages::_field_html_params(@_); },
+        },
+#        single_line_text_group => {
+#            label             => 'Single-Line Text Group',
+#            column_def        => 'vblob',
+#            order             => 101,
+#            no_default        => 1,
+#            options_delimiter => ',',
+#            options_field     => sub { MoreCustomFields::SingleLineTextGroup::_options_field(); },
+#            field_html        => sub { MoreCustomFields::SingleLineTextGroup::_field_html(); },
+#            field_html_params => sub { MoreCustomFields::SingleLineTextGroup::_field_html_params(@_); },
+#        },
+        multi_use_single_line_text_group => {
+            label             => 'Multi-Use Single-Line Text Group',
+            column_def        => 'vblob',
+            order             => 102,
+            no_default        => 1,
+            options_delimiter => ',',
+            options_field     => sub { MoreCustomFields::SingleLineTextGroup::_options_field(); },
+            field_html        => sub { MoreCustomFields::SingleLineTextGroup::_multi_field_html(); },
+            field_html_params => sub { MoreCustomFields::SingleLineTextGroup::_multi_field_html_params(@_); },
         },
     };
 }
@@ -211,6 +303,82 @@ sub post_save {
             # Destroy the specially-assembled fields, because they make MT barf.
             $app->delete_param($field_name);
         } #end of Selected Pages field.
+        # Find the Single Line Text Group field
+        # The "beacon" is used to always grab the text field. This will catch
+        # an empty text field.
+        if(m/^customfield_(.*?)_singlelinetextgroupcf_(.*?)_cb_beacon$/) { 
+            my $user_field_name = $2;
+            # Now look at the individual text field in the group to determine if 
+            # it's checked.
+            if( $app->param( /^customfield_(.*?)_singlelinetextgroupcf_$user_field_name$/ ) ) { 
+                my $field_name = "customfield_$1_singlelinetextgroupcf_$user_field_name";
+
+                # Store this field's data as YAML.
+                my $yaml = YAML::Tiny->new;
+
+                # If any options for this CF have already been read and set,
+                # grab them so we can just continue appending to them.
+                if ( $app->param("customfield_$1") ) {
+                    $yaml = YAML::Tiny->read_string( $app->param("customfield_$1") );
+                }
+
+                # Write the YAML for the current field.
+                $yaml->[0]->{$1}->{$user_field_name} = $app->param($field_name);
+
+                # Turn that YAML into a plain old string.
+                my $result = $yaml->write_string();
+
+                # Save the new result to the *real* field name, which should be written to the DB.
+                $app->param("customfield_$1", $result);
+
+                # Destory the specially-assembled fields, because they make MT barf.
+                $app->delete_param($field_name);
+                $app->delete_param($field_name.'_cb_beacon');
+            }
+        }
+        # Find the Multi-Use Single Line Text Group field
+        # The "beacon" is used to always grab the text field. This will catch
+        # an empty text field.
+        if(m/^customfield_(.*?)_multiusesinglelinetextgroupcf_(.*?)_cb_beacon$/) { 
+            my $user_field_name = $2;
+            # Now look at the individual text field in the group to determine if 
+            # it's checked.
+            if( $app->param( /^customfield_(.*?)_multiusesinglelinetextgroupcf_$user_field_name$/ ) ) { 
+                my $field_name = "customfield_$1_multiusesinglelinetextgroupcf_$user_field_name";
+                
+                # Use a group number to hold each group of text boxes together.
+                my $group_num = 1;
+                
+                foreach my $field_value ( $app->param($field_name) ) {
+                    # Store this field's data as YAML.
+                    my $yaml = YAML::Tiny->new;
+
+                    # If any options for this CF have already been read and set,
+                    # grab them so we can just continue appending to them.
+                    if ( $app->param("customfield_$1") ) {
+                        $yaml = YAML::Tiny->read_string( $app->param("customfield_$1") );
+                    }
+
+                    # Write the YAML.
+                    $yaml->[0]->{$1}->{$group_num}->{$user_field_name} = $field_value;
+                    # Turn that YAML into a plain old string.
+                    my $result = $yaml->write_string();
+
+                    # Save the new result to the *real* field name, which
+                    # should be written to the DB.
+                    $app->param("customfield_$1", $result);
+
+                    # Increment the group number so that the next text group 
+                    # gets its own YAML key.
+                    $group_num++;
+                }
+
+                # Destory the specially-assembled fields, because they make MT barf.
+                $app->delete_param($field_name);
+                $app->delete_param($field_name.'_cb_beacon');
+                $app->delete_param($field_name.'_invisible')
+            }
+        }
     }
 
     1; # For some reason necessary to make author, category, and folder pages save without error.

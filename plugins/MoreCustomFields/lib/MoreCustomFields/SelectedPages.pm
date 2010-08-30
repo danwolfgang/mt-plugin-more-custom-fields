@@ -253,10 +253,11 @@ sub tag_selected_pages {
 sub se_list_pages {
     my $app = shift;
     my $blog_ids = $app->param('blog_ids');
+    my $pkg = $app->model('page') or return "Invalid request.";
 
     my $terms = {};
     $terms->{status} = '2';
-    
+
     my @blog_ids;
     if ($blog_ids == 'all') {
         # @blog_ids should stay empty so all blogs are loaded.
@@ -266,16 +267,19 @@ sub se_list_pages {
         @blog_ids = split(/,/, $blog_ids);
         $terms->{blog_id} = [@blog_ids];
     }
-    
+
     my %args = (
         sort      => 'authored_on',
         direction => 'descend',
+    );
+    my %terms = (
+         class => 'page', 
     );
 
     my $plugin = MT->component('MoreCustomFields');
     my $tmpl = $plugin->load_tmpl('entry_list.mtml');
     $tmpl->param('type', 'page');
-
+    
     # For some reason the 'page' _type doesn't get set/picked up for
     # searches, so just set it here.
     $app->param('_type','page');
