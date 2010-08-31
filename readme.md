@@ -20,6 +20,8 @@ To install this plugin follow the instructions found here:
 
 http://tinyurl.com/easy-plugin-install
 
+This plugin requires a newer version of the `YAML::Tiny` Perl module than is included with Movable Type. Included with this plugin (in the `extlib/` folder) is a newer version of YAML::Tiny. Copy from the plugin archive `extlib/YAML/Tiny.pm` to `$MT_HOME/extlib/YAML/Tiny.pm` to update Movable Type's copy of this plugin. **This is a required, non-optional step!**
+
 
 # Configuration
 
