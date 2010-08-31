@@ -225,7 +225,8 @@ sub _multi_field_html_params {
     my $basename = $tmpl_param->{field_name};
     $basename =~ s/^customfield_(.*)$/$1/;
     my $field = MT->model('field')->load({
-        blog_id => $app->blog->id,
+        #Don't grab the blog_id because that keeps system-wide setting from working ok...
+        #blog_id => $app->blog->id || '0',
         basename => $basename,
     });
     if ($field) {

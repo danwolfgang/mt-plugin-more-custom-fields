@@ -9,15 +9,11 @@ use CustomFields::Util qw( get_meta save_meta field_loop _get_html );
 use MT::Util qw( relative_date offset_time offset_time_list epoch2ts 
                  ts2epoch format_ts encode_html dirify );
 
-use Text::CSV;
-
 use MoreCustomFields::CheckboxGroup;
 use MoreCustomFields::RadioButtonsWithInput;
 use MoreCustomFields::SelectedEntries;
 use MoreCustomFields::SelectedPages;
 use MoreCustomFields::SingleLineTextGroup;
-
-use Data::Dumper;
 
 sub init_app {
     my $plugin = shift;
@@ -87,7 +83,7 @@ sub _load_tags {
 
 
 sub load_customfield_types {
-    my $checkbox_group = {
+    return {
         checkbox_group => {
             label             => 'Checkbox Group',
             column_def        => 'vchar',
