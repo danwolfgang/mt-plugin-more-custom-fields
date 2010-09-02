@@ -146,3 +146,17 @@ I've entered several links in the Favorite Links field I created, so it will out
     <p><a href="http://danandsherree.com">danandsherree.com</a></p>
     <p><a href="http://eatdrinksleepmovabletype.com">Eat Drink Sleep Movable Type</a></p>
 
+Also note that this field uses jQuery. If this field is used for author fields on user profile pages, you'll want to include jQuery in your Edit Profile template, or rewrite the Javascript for the field to work how you prefer.
+
+
+# Known Issues
+
+## Movable Type Pro 4.24 and Earlier
+
+Movable Type Pro 4.24 and previous versions (and Motion betas 1 and 2) don’t run the `api_post_save.author` callback when saving an author profile from `mt-cp.cgi`.
+
+This means that if you’ve defined a Checkbox Group custom field type (or any other custom custom field type) for authors and you try to save those options through the `mt-cp.cgi` Edit Profile screen, the options will not be saved. Options are saved if you're editing through the `mt.cgi` Edit Profile screen. This bug doesn't affect Entry, Page, Folder, or Category objects.
+
+This bug is fixed in Movable Type Pro 4.25. Bug # 92832
+http://bugs.movabletype.org/default.asp?92832
+

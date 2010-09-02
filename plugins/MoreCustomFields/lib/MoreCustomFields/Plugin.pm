@@ -146,6 +146,24 @@ sub load_customfield_types {
     };
 }
 
+sub update_template {
+    # This is responsible for loading jQuery in the head of the site.
+    my ($cb, $app, $template) = @_;
+
+    # Check if jQuery has already been loaded. If it has, just skip this.
+    unless ( $$template =~ m/jquery/) {
+        # Just grab onto a closing "</script>" tag. Since it's only going
+        # to be grabbed once and we don't really care when jQuery is added,
+        # we can use something so generic.
+        my $old = q{</script>};
+        $old = quotemeta($old);
+        my $new = <<'END';
+    </script>
+    <script type="text/javascript" src="<mt:StaticWebPath>jquery/jquery.js"></script>
+END
+        $$template =~ s/$old/$new/;
+    }
+}
 
 sub post_save {
     my ($cb, $app, $obj) = @_;

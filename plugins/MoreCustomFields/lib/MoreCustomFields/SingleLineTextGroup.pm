@@ -51,7 +51,7 @@ sub _multi_field_html {
     <li style="padding-bottom: 2px;">
         <input type="hidden" name="<mt:Var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">_cb_beacon" value="1" />
         <label for="<mt:var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">" style="width: 100px; display: block; float: left; text-align: right; padding: 4px 5px 0 0;"><mt:Var name="option"></label>
-        <input type="text" name="<mt:var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">" id="<mt:var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">" value="<mt:Var name="value" escape="html">" class="ti" style="border:1px solid #ccc;background-color:#fff;padding:2px 4px; width: 465px;" />
+        <input type="text" name="<mt:var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">" id="<mt:var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">" value="<mt:Var name="value" escape="html">" style="border:1px solid #ccc;background-color:#fff;padding:2px 4px; max-width: 465px;" class="full-width ti" />
     </li>
 </mt:SetVarTemplate>
 
@@ -206,10 +206,9 @@ sub _multi_field_html_params {
     if ( ! scalar @group_loop ) {
         my @fields_loop;
         foreach my $option ( @$option_loop ) {
-            my $label = $option->{label};
             push @fields_loop, { 
                 is_selected => $option->{is_selected},
-                label       => $label,
+                label       => $option->{label},
                 option      => $option->{option},
             };
         }
@@ -232,6 +231,7 @@ sub _multi_field_html_params {
     if ($field) {
         $tmpl_param->{text_group_label} = $field->name;
     }
+    
 }
 
 1;
