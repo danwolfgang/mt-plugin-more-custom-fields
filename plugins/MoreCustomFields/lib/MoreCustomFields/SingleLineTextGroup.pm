@@ -43,15 +43,15 @@ sub _multi_field_html {
 <mt:SetVarTemplate name="invisible_field_template">
     <li style="padding-bottom: 2px;">
         <input type="hidden" name="<mt:Var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">_cb_beacon" value="1" />
-        <label for="<mt:var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">" style="width: 100px; display: block; float: left; text-align: right; padding: 4px 5px 0 0;"><mt:Var name="option"></label>
-        <input type="text" name="<mt:var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">_invisible" id="<mt:var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">" value="" class="ti" style="border:1px solid #ccc;background-color:#fff;padding:2px 4px; width: 465px;" />
+        <label for="<mt:var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">"><mt:Var name="option"></label>
+        <input type="text" name="<mt:var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">_invisible" id="<mt:var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">" value="" style="border:1px solid #ccc;background-color:#fff;padding:2px 4px;" class="full-width ti" />
     </li>
 </mt:SetVarTemplate>
 <mt:SetVarTemplate name="field_template">
     <li style="padding-bottom: 2px;">
         <input type="hidden" name="<mt:Var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">_cb_beacon" value="1" />
-        <label for="<mt:var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">" style="width: 100px; display: block; float: left; text-align: right; padding: 4px 5px 0 0;"><mt:Var name="option"></label>
-        <input type="text" name="<mt:var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">" id="<mt:var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">" value="<mt:Var name="value" escape="html">" style="border:1px solid #ccc;background-color:#fff;padding:2px 4px; max-width: 465px;" class="full-width ti" />
+        <label for="<mt:var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">"><mt:Var name="option"></label>
+        <input type="text" name="<mt:var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">" id="<mt:var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">" value="<mt:Var name="value" escape="html">" style="border:1px solid #ccc;background-color:#fff;padding:2px 4px;" class="full-width ti" />
     </li>
 </mt:SetVarTemplate>
 
@@ -70,15 +70,9 @@ sub _multi_field_html {
             var name = $(this).attr('name', name);
         });
     }
-    $(document).ready(function() {
-        $('li.cf-text-group-delete-button a').live('click', function(e){
-            $(this).parent().parent().remove();
-        });
-    });
     </script>
 <mt:Loop name="text_group_loop">
     <mt:Var name="__counter__" setvar="text_group_counter">
-    <mt:If name="__last__"><mt:Var name="last_text_group" value="1"></mt:If>
     <mt:If name="__first__">
         <div id="<mt:Var name="field_name">_multiusesinglelinetextgroupcf_container">
     </mt:If>
@@ -89,7 +83,7 @@ sub _multi_field_html {
                 <mt:Var name="field_template">
         <mt:If name="__last__">
                 <li class="cf-text-group-delete-button" style="text-align: right;">
-                    <a href="javascript:void(0)" class="icon-left icon-error">
+                    <a href="javascript:void(0)" onclick="$(this).parent().parent().remove()" class="icon-left icon-error">
                         Delete this <mt:Var name="text_group_label"> field group
                     </a>
                 </li>
@@ -104,6 +98,7 @@ sub _multi_field_html {
             </a>
         </p>
     </mt:If>
+    <!-- This is to create the "hidden" group, used for the "add another" link. -->
     <mt:If name="__last__">
         <mt:Loop name="fields_loop">
             <mt:If name="__first__">
@@ -112,7 +107,7 @@ sub _multi_field_html {
                     <mt:Var name="invisible_field_template">
             <mt:If name="__last__">
                     <li class="cf-text-group-delete-button" style="text-align: right;">
-                        <a href="javascript:void(0)" class="icon-left icon-error">
+                        <a href="javascript:void(0)" onclick="$(this).parent().parent().remove()" class="icon-left icon-error">
                             Delete this <mt:Var name="text_group_label"> field group
                         </a>
                     </li>
