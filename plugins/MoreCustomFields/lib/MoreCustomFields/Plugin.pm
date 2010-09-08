@@ -38,42 +38,36 @@ sub _load_tags {
         # Load the objects (entry, author, whatever) based on the current
         # field definition.
         my $obj_type = $field_def->obj_type;
-        my @objects = MT->model($obj_type)->load();
-        foreach my $obj (@objects) {
-            my $basename = 'field.' . $field_def->basename;
-            # Only continue if this object has some metadata saved. That is,
-            # if the field has been used.
-            if ($obj->$basename) {
-                # Create the actual tag Use the tag name and append "Loop" to it.
-                $tags->{block}->{$tag . 'Loop'} = sub {
-                    my ( $ctx, $args, $cond ) = @_;
-                    # Use the $obj_type to figure out what context we're in.
-                    my $obj = $ctx->stash($obj_type);
-                    # Then load the saved YAML
-                    my $yaml = YAML::Tiny->read_string( $obj->$basename );
-                    # The $field_name is the custom field basename.
-                    foreach my $field_name ( keys %{$yaml->[0]} ) {
-                        my $field = $yaml->[0]->{$field_name};
-                        # Build the output tag content
-                        my $out = '';
-                        my $vars = $ctx->{__stash}{vars};
-                        my $count = 0;
-                        # The $group_num is the group order/parent of the values. Sort
-                        # it so that they are displayed in the order they were saved.
-                        foreach my $group_num ( sort keys %{$field} ) {
-                            local $vars->{'__first__'} = ($count++ == 0);
-                            local $vars->{'__last__'} = ($count == scalar keys %{$field});
-                            # Add the keys and values to the output
-                            foreach my $value ( keys %{$field->{$group_num}} ) {
-                                $vars->{$value} = $field->{$group_num}->{$value};
-                            }
-                            defined( $out .= $ctx->slurp( $args, $cond ) ) or return;
-                        }
-                        return $out;
+        my $basename = 'field.' . $field_def->basename;
+        # Create the actual tag Use the tag name and append "Loop" to it.
+        $tags->{block}->{$tag . 'Loop'} = sub {
+            my ( $ctx, $args, $cond ) = @_;
+            # Use the $obj_type to figure out what context we're in.
+            my $obj = $ctx->stash($obj_type);
+            # Then load the saved YAML
+            my $yaml = YAML::Tiny->read_string( $obj->$basename );
+            # The $field_name is the custom field basename.
+            foreach my $field_name ( keys %{$yaml->[0]} ) {
+                my $field = $yaml->[0]->{$field_name};
+                # Build the output tag content
+                my $out = '';
+                my $vars = $ctx->{__stash}{vars};
+                my $count = 0;
+                # The $group_num is the group order/parent of the values.
+                # Sort it so that they are displayed in the order they
+                # were saved.
+                foreach my $group_num ( sort keys %{$field} ) {
+                    local $vars->{'__first__'} = ($count++ == 0);
+                    local $vars->{'__last__'} = ($count == scalar keys %{$field});
+                    # Add the keys and values to the output
+                    foreach my $value ( keys %{$field->{$group_num}} ) {
+                        $vars->{$value} = $field->{$group_num}->{$value};
                     }
-                };
+                    defined( $out .= $ctx->slurp( $args, $cond ) ) or return;
+                }
+                return $out;
             }
-        }
+        };
     }
     
     return $tags;
