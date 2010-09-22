@@ -21,7 +21,9 @@ sub init_app {
     return if $app->id eq 'wizard';
 
     my $r = $plugin->registry;
-    $r->{tags} = sub { _load_tags( $app, $plugin ) };
+    my $tags = sub { _load_tags( $app, $plugin ) };
+    MT::__merge_hash($r->{tags}, $tags);
+#    $r->{tags} = sub { _load_tags( $app, $plugin ) };
 }
 
 sub _load_tags {
