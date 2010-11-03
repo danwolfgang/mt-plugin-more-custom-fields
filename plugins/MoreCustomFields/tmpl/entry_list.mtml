@@ -66,7 +66,7 @@
 <mt:if name="object_loop">
     <mt:unless name="json">
     <form method="post" action="<mt:var name="script_url">" name="select_entry">
-        <input type="hidden" name="__mode" value="mcf_select_<mt:Var name="type">" />
+        <input type="hidden" name="__mode" value="mcf_select_<mt:Var name="type" default="entries">" />
         <input type="hidden" name="_type" value="<mt:Var name="type">" />
         <input type="hidden" name="magic_token" value="<mt:var name="magic_token">" />
         <input type="hidden" name="edit_field" value="<mt:var name="edit_field">" />
