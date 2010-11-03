@@ -22,8 +22,10 @@ sub init_app {
 
     my $r = $plugin->registry;
     my $tags = sub { _load_tags( $app, $plugin ) };
-    MT::__merge_hash($r->{tags}, $tags);
-#    $r->{tags} = sub { _load_tags( $app, $plugin ) };
+    # If any tags were needed, merge them into the registry.
+    if ( ref($tags) eq 'HASH' ) {
+        MT::__merge_hash($r->{tags}, $tags);
+    }
 }
 
 sub _load_tags {

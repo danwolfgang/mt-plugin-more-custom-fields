@@ -256,8 +256,9 @@ sub se_list_entries {
     my $type = 'entry';
     my $pkg = $app->model($type) or return "Invalid request.";
 
-    my %terms;
-    $terms{status} = '2';
+    my %terms = (
+         status => '2', 
+    );
     
     my @blog_ids;
     if ($blog_ids == 'all') {
@@ -276,6 +277,8 @@ sub se_list_entries {
 
     my $plugin = MT->component('MoreCustomFields');
     my $tmpl = $plugin->load_tmpl('entry_list.mtml');
+    $tmpl->param('type', $type);
+
     return $app->listing({
         type => 'entry',
         template => $tmpl,
