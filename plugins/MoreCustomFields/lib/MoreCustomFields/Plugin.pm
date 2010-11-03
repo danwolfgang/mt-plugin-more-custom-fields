@@ -21,7 +21,7 @@ sub init_app {
     return if $app->id eq 'wizard';
 
     my $r = $plugin->registry;
-    my $tags = sub { _load_tags( $app, $plugin ) };
+    my $tags = _load_tags( $app, $plugin );
     # If any tags were needed, merge them into the registry.
     if ( ref($tags) eq 'HASH' ) {
         MT::__merge_hash($r->{tags}, $tags);
