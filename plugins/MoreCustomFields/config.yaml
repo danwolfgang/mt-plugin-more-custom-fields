@@ -2,7 +2,7 @@ name: More Custom Fields
 id: MoreCustomFields
 key: MoreCustomFields
 description: 'Use additional types of custom fields: checkbox group, radio buttons with an input box, selected entries, and selected pages.'
-version: 1.2.10
+version: 1.3
 author_name: 'Dan Wolfgang, uiNNOVATIONS'
 author_link: http://uinnovations.com
 plugin_link: http://eatdrinksleepmovabletype.com/plugins/more_custom_fields/
@@ -39,10 +39,14 @@ callbacks:
     MT::App::CMS::template_source.edit_author:   $MoreCustomFields::MoreCustomFields::Plugin::update_template
     MT::App::CMS::template_source.edit_category: $MoreCustomFields::MoreCustomFields::Plugin::update_template
     MT::App::CMS::template_source.edit_folder:   $MoreCustomFields::MoreCustomFields::Plugin::update_template
+    template_param.asset_insert: 
+        handler: $MoreCustomFields::MoreCustomFields::SelectedAssets::asset_insert_param
+        priority: 1
 
 
 tags:
     block:
+        SelectedAssets:  $MoreCustomFields::MoreCustomFields::SelectedAssets::tag_selected_assets
         SelectedEntries: $MoreCustomFields::MoreCustomFields::SelectedEntries::tag_selected_entries
         SelectedPages:   $MoreCustomFields::MoreCustomFields::SelectedPages::tag_selected_pages
 
