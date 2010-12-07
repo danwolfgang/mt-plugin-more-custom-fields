@@ -49,6 +49,27 @@ The **Multi-Use Single-Line Text Group** field type is a mouthful. A breakdown o
 
 Lastly, use your new fields! Don't forget to place them in your templates.
 
+## Using More Custom Fields with your Theme
+
+If you're building your site as a theme, custom fields can be specified and automatically created when the theme is applied (refer to Theme Manager for more information). A list of the field types along with their keys is below, which may help expedite your theme creation.
+
+* Checkbox Group: `checkbox_group`
+* Radio Buttons (with Input field): `radio_input`
+* Selected Entries: `selected_entries`
+* Selected Pages: `selected_pages`
+* Multi-Use Single-Line Text Group: `multi_use_single_line_text_group`
+* Selected Assets: `selected_assets`
+
+Note that the Selected Assets field actually creates a different custom field for each type of asset field available (Selected Images, Selected Videos, etc). These fields can also be used, though because they are dynamically generated you'll need to determine the name of the field yourself. The following format is followed:
+
+    selected_[asset type]s
+    
+So, valid field types defined by the Community Pack would include:
+
+* Selected Audios: `selected_asset.audios`
+* Selected Images: `selected_asset.images`
+* Selected Videos: `selected_asset.videos`
+
 
 # Template Tags
 
