@@ -151,6 +151,11 @@ sub _field_html_params {
 
     # Several dropdowns may be needed, because several entries were selected.
     my $field_value = $tmpl_param->{field_value};
+    
+    # If there is no field value, there is nothing to parse. Likely on the
+    # Edit Field screen.
+    return unless $field_value;
+    
     my @entryids = split(/,\s?/, $field_value);
 
     my @entryids_loop;

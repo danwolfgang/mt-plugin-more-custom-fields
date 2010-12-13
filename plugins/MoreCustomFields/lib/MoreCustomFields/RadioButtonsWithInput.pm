@@ -64,6 +64,10 @@ sub _field_html_params {
     my $blog_id  = $blog ? $blog->id : 0;
     my $obj_type = $tmpl_param->{obj_type};
 
+    # Give up if there is no object type; we must be on the Edit Field
+    # screen, where there's nothing to load anyway.
+    return unless $obj_type;
+
     # Figure out what kind of object we're working with
     my @objects;
     if ($obj_type eq 'author') {
