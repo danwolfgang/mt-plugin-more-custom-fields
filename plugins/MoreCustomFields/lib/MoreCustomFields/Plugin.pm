@@ -15,6 +15,7 @@ use MoreCustomFields::SelectedAssets;
 use MoreCustomFields::SelectedEntries;
 use MoreCustomFields::SelectedPages;
 use MoreCustomFields::SingleLineTextGroup;
+use MoreCustomFields::Message;
 
 sub init_app {
     my $plugin = shift;
@@ -139,6 +140,16 @@ sub load_customfield_types {
             options_field     => sub { MoreCustomFields::SingleLineTextGroup::_options_field(); },
             field_html        => sub { MoreCustomFields::SingleLineTextGroup::_multi_field_html(); },
             field_html_params => sub { MoreCustomFields::SingleLineTextGroup::_multi_field_html_params(@_); },
+        },
+        message => {
+            label             => 'Message',
+            column_def        => 'vclob',
+            order             => 201,
+            # Disabling "no_default" means that a default *is* allowed.
+            #no_default        => 1,
+            options_field     => sub { MoreCustomFields::Message::_options_field(); },
+            field_html        => sub { MoreCustomFields::Message::_field_html(); },
+            field_html_params => sub { MoreCustomFields::Message::_field_html_params(@_); },
         },
     };
     

@@ -8,6 +8,7 @@ The Custom Fields found in Movable Type Pro are a boon to creating a flexible an
 * Selected Pages: works just like Selected Entries, but for Pages!
 * Selected Assets: as you may guess, this works just like Selected Entries and Selected Pages. Note that each asset type is registered as a separate custom field, so in addition to the generic "Selected Assets" custom field, "Selected Images," "Selected Audios," "Selected Videos," and "Selected Files" are also available to filter the types of asset you want the field to work with.
 * Multi-Use Single-Line Text Group: don't let the crazy name scare you -- this field type allows you to create a reusable group of fields, perfect for including a list of your favorite bookmarks, for example.
+* Message: administrators can edit the contents of the Message field text area, but any other use can only read the contents. Useful for displaying instructions or other data you don't want the user to edit.
 
 
 # Prerequisites
@@ -34,6 +35,7 @@ More Custom Fields creates several additional field types that are available whe
 * Selected Pages
 * Selected Assets (and "child" types: Selected Images, Selected Audios, Selected Videos, Selected Files, and any other type of registered asset)
 * Multi-Use Single-Line Text Group
+* Message
 
 Use these field types as you would any other: from the Preferences menu select Custom Fields, and create a new custom field.
 
@@ -47,6 +49,8 @@ The **Selected Assets** field type (and the related asset types) work similar to
 
 The **Multi-Use Single-Line Text Group** field type is a mouthful. A breakdown of this field: The Single-Line Text field is included with MT Pro and lets you create a one-line text field. This field type can have many single-line text fields grouped together. Lastly, this is a multi-use field and provides an "add another group" button to add a limitless recurrence of the text fields you've defined. A popular use for this is to display URLs (with "Link Name" and "Link URL" text fields), and being multi-use means that an author can provide many URLs. Specify a comma-separated list of text field labels. Example: "Link Name,Link URL".
 
+The **Message** field type should receive a default value. This value is the "message" displayed for all other users. The field options allow you to specify whether *no* user should be able to edit the field data, or if administrators should be able to override the supplied default.
+
 Lastly, use your new fields! Don't forget to place them in your templates.
 
 ## Using More Custom Fields with your Theme
@@ -54,11 +58,12 @@ Lastly, use your new fields! Don't forget to place them in your templates.
 If you're building your site as a theme, custom fields can be specified and automatically created when the theme is applied (refer to Theme Manager for more information). A list of the field types along with their keys is below, which may help expedite your theme creation.
 
 * Checkbox Group: `checkbox_group`
+* Multi-Use Single-Line Text Group: `multi_use_single_line_text_group`
 * Radio Buttons (with Input field): `radio_input`
+* Selected Assets: `selected_assets`
 * Selected Entries: `selected_entries`
 * Selected Pages: `selected_pages`
-* Multi-Use Single-Line Text Group: `multi_use_single_line_text_group`
-* Selected Assets: `selected_assets`
+* Message: `message`
 
 Note that the Selected Assets field actually creates a different custom field for each type of asset field available (Selected Images, Selected Videos, etc). These fields can also be used, though because they are dynamically generated you'll need to determine the name of the field yourself. The following format is followed:
 
@@ -186,6 +191,10 @@ I've entered several links in the Favorite Links field I created, so it will out
     <p><a href="http://eatdrinksleepmovabletype.com">Eat Drink Sleep Movable Type</a></p>
 
 Also note that this field uses jQuery. If this field is used for author fields on user profile pages, you'll want to include jQuery in your Edit Profile template, or rewrite the Javascript for the field to work how you prefer.
+
+## Message
+
+The Message custom field can be output simply using the tag you define for the field. There are no special capabilities.
 
 
 # Known Issues
