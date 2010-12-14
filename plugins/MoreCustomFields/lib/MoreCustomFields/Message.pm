@@ -22,19 +22,25 @@ sub _options_field {
 }
 
 sub _field_html {
+    # It appears that the Message custom field hits upon a weird bug, 
+    # brought on by the combination of logic used here and the need to edit
+    # the default text. The returned HTML can't begin with an MT tag--it 
+    # it must begin with HTML. So, I've just added this simple HTML comment
+    # below, just to make it work.
     return q{
-<mt:SetVarTemplate name="message_cf">
+<!-- Building the Message custom field type -->
+<mt:SetVarBlock name="message_cf">
     <div class="textarea-wrapper">
         <textarea name="<mt:var name="field_name">" id="<mt:var name="field_id">" class="full-width ta" rows="3" cols="72"><mt:var name="field_value" escape="html"></textarea>
     </div>
-</mt:SetVarTemplate>
+</mt:SetVarBlock>
 
 <mt:if name="is_admin">
     <mt:Ignore> If admins are allowed to edit the field... </mt:Ignore>
     <mt:If name="options" eq="allow">
         <mt:Var name="message_cf">
     </mt:If>
-    
+
     <mt:Ignore> If *nobody* is allowed to edit the field... </mt:Ignore>
     <mt:If name="options" eq="deny">
         <mt:If name="on_edit_field">
