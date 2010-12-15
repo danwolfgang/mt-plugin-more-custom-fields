@@ -75,7 +75,9 @@ sub _field_html_params {
     # not actually set everywhere. In particular, on the Create/Edit Custom
     # Field screen, where the admin can set the default text,
     # is_administrator isn't set.
-    $tmpl_param->{is_admin} = $app->user->is_superuser();
+    if ($app->user) {
+        $tmpl_param->{is_admin} = $app->user->is_superuser();
+    }
     
     # If the user is on the Edit Field screen, we want them to be able to 
     # edit the field contents regardless of the option selection.
