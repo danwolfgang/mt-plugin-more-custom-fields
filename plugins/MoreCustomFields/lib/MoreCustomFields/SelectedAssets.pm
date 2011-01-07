@@ -40,7 +40,7 @@ sub _field_html {
                 </mt:If>
             </mt:Asset>
         </span>
-        <a style="padding: 3px 5px;" href="javascript:removeSelectedAsset('li_<mt:Var name="field_name">_selectedassetcf_<mt:Var name="__counter__">');" title="Remove selected <mt:Var name="asset_type_label">"><img src="<mt:StaticWebPath>images/status_icons/close.gif" width="9" height="9" alt="Remove selected <mt:Var name="asset_type_label">" /></a>
+        <a style="padding: 3px 5px;" href="javascript:removeSelectedAsset('li_<mt:Var name="field_name">_selectedassetcf_<mt:Var name="__counter__">','<mt:Var name="field_name">');" title="Remove selected <mt:Var name="asset_type_label">"><img src="<mt:StaticWebPath>images/status_icons/close.gif" width="9" height="9" alt="Remove selected <mt:Var name="asset_type_label">" /></a>
     </li>
 </mt:Loop>
 </ul>
@@ -102,7 +102,7 @@ sub _field_html {
         var newDeleteLink = document.createElement('a');
         newDeleteLink.setAttribute('style', "margin-left: 5px;");
         newDeleteLink.setAttribute('style', 'padding: 3px 5px;');
-        var href = "javascript:removeSelectedAsset('li_" + newInputName + "');";
+        var href = "javascript:removeSelectedAsset('li_" + newInputName + "','<mt:Var name="field_name">');";
         newDeleteLink.setAttribute('href', href);
         newDeleteLink.setAttribute('title', 'Remove selected asset');
         newDeleteLink.appendChild(newDeleteIcon);
@@ -119,14 +119,41 @@ sub _field_html {
         var CF = document.getElementById('custom-field-selected-assets_' + cf_name);
         CF.appendChild(newListItem);
         
+        // If the beacon (added when there are no Selected Assets) is 
+        // present, remove it. After all, the user is adding an Asset now,
+        // so that state is no longer true.
+        var beacon = document.getElementById(cf_name + '_selectedassetscf_beacon');
+        if (beacon) {
+            CF.removeChild(beacon);
+        }
+        
         // After the user clicks to Add an Asset, they are going to want to
         // click Choose Asset. We might as well save them the effort.
         openDialog(this.form, 'list_assets', 'blog_id=<mt:Var name="blog_id">&amp;edit_field=' + newInputName + '&amp;_type=asset&amp;&amp;dialog_view=1&amp;asset_select=1' + filter );
     }
 
-    function removeSelectedAsset(l) {
+    function removeSelectedAsset(l,f) {
         var listItem = document.getElementById(l);
         listItem.parentNode.removeChild(listItem);
+
+        // If the user has just deleted the last Selected Asset, then add a
+        // beacon so that the state can be properly saved.
+        var ul_field = 'custom-field-selected-assets_' + f;
+        var ul = document.getElementById(ul_field);
+        var li_count = ul.getElementsByTagName('li').length
+        if (li_count == 0) {
+            // Create the beacon field.
+            var beacon = document.createElement('input');
+            beacon_field = f+ '_selectedassetscf_beacon';
+            beacon.setAttribute('name', beacon_field);
+            beacon.setAttribute('id', beacon_field);
+            beacon.setAttribute('type', 'hidden');
+            beacon.setAttribute('value', '1');
+
+            // Add the beacon field to the parent UL.
+            var CF = document.getElementById(ul_field);
+            CF.appendChild(beacon);
+        }
     }
 </script>
     };

@@ -329,6 +329,16 @@ sub post_save {
             # purposefully unselected, so we need to force save the deletion of the field.
             if (!$result) { $result = ' '; }
 
+            # If all objects have been deleted, we need to save that this
+            # field is now empty. To do this, we still need something to
+            # check for: a beacon. After the last Selected Asset/Entry/Page
+            # has been deleted, a beacon hidden input field is inserted.
+            # Check for this field. If it exists, then remove clear any
+            # saved data.
+            if ($3 eq 'beacon') {
+                $result = ' ';
+            }
+
             # Save the new result to the *real* field name, which should be written to the DB.
             $app->param("customfield_$1", $result);
 
