@@ -212,16 +212,13 @@ sub update_template {
 
     # Check if jQuery has already been loaded. If it has, just skip this.
     unless ( $$template =~ m/jquery/) {
-        # Just grab onto a closing "</script>" tag. Since it's only going
-        # to be grabbed once and we don't really care when jQuery is added,
-        # we can use something so generic.
-        my $old = q{</script>};
-        $old = quotemeta($old);
+        # Include jQuery as part of the js_include, used on the 
+        # include/header.tmpl, which is used on all pages.
+        my $old = q{<mt:setvarblock name="js_include" append="1">};
         my $new = <<'END';
-</script>
     <script type="text/javascript" src="<mt:StaticWebPath>jquery/jquery.js"></script>
 END
-        $$template =~ s/$old/$new/;
+        $$template =~ s/$old/$old$new/;
     }
 }
 
