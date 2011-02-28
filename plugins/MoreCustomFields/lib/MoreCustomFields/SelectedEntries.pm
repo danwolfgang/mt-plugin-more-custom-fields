@@ -231,21 +231,21 @@ sub tag_selected_entries {
     
     # Grab the correct object, based on the object type from the custom field.
     my $object;
-    if ( $obj_type == 'entry' ) {
+    if ( $obj_type eq 'entry' ) {
         $object = MT::Entry->load( { id => $ctx->stash('entry')->id, } );
     }
-    elsif ( $obj_type == 'page' ) {
+    elsif ( $obj_type eq 'page' ) {
         # Entries and Pages are both stored in the mt_entry table
         $object = MT::Entry->load( { id => $ctx->stash('page')->id, } );
     }
-    elsif ( $obj_type == 'category' ) {
+    elsif ( $obj_type eq 'category' ) {
         $object = MT::Category->load( { id => $ctx->stash('category')->id, } );
     }
-    elsif ( $obj_type == 'folder' ) {
+    elsif ( $obj_type eq 'folder' ) {
         # Categories and Folders are both stored in the mt_category table
         $object = MT::Category->load( { id => $ctx->stash('category')->id, } );
     }
-    elsif ( $obj_type == 'author' ) {
+    elsif ( $obj_type eq 'author' ) {
         $object = MT::Author->load( { id => $ctx->stash('author')->id, } );
     }
     
