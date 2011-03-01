@@ -226,29 +226,20 @@ sub tag_selected_entries {
     my $field = CustomFields::Field->load( { type     => 'selected_entries',
                                              basename => $cf_basename, } );
     if (!$field) { return $ctx->error('A Selected Entries Custom Field with this basename could not be found.'); }
+
     my $basename = 'field.'.$field->basename;
-    my $obj_type = $field->obj_type;
-    
-    # Grab the correct object, based on the object type from the custom field.
-    my $object;
-    if ( $obj_type eq 'entry' ) {
-        $object = MT::Entry->load( { id => $ctx->stash('entry')->id, } );
-    }
-    elsif ( $obj_type eq 'page' ) {
-        # Entries and Pages are both stored in the mt_entry table
-        $object = MT::Entry->load( { id => $ctx->stash('page')->id, } );
-    }
-    elsif ( $obj_type eq 'category' ) {
-        $object = MT::Category->load( { id => $ctx->stash('category')->id, } );
-    }
-    elsif ( $obj_type eq 'folder' ) {
-        # Categories and Folders are both stored in the mt_category table
-        $object = MT::Category->load( { id => $ctx->stash('category')->id, } );
-    }
-    elsif ( $obj_type eq 'author' ) {
-        $object = MT::Author->load( { id => $ctx->stash('author')->id, } );
-    }
-    
+
+    # Use Custom Fields find_stashed_by_type to load the correct object. This
+    # will decide if it's an entry, page, category, folder, or author archive,
+    # then load the object and return it to us.
+    use CustomFields::Template::ContextHandlers;
+    my $object = eval {
+        CustomFields::Template::ContextHandlers::find_stashed_by_type(
+            $ctx, $field->obj_type
+        )
+    };
+    return $ctx->error($@) if $@;
+
     # Create an array of the entry IDs held in the field.
     # $object->$basename is the lookup that actually grabs the data.
     my @entryids = split(/,\s?/, $object->$basename);
