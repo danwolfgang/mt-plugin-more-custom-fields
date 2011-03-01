@@ -279,7 +279,7 @@ sub se_list_entries {
     my $pkg = $app->model($type) or return "Invalid request.";
 
     my %terms = (
-         status => '2', 
+         status => '2',
     );
     
     my @blog_ids;

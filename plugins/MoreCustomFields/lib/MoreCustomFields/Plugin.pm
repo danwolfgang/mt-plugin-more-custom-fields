@@ -12,6 +12,7 @@ use MT::Util qw( relative_date offset_time offset_time_list epoch2ts
 use MoreCustomFields::CheckboxGroup;
 use MoreCustomFields::RadioButtonsWithInput;
 use MoreCustomFields::SelectedAssets;
+use MoreCustomFields::SelectedContent;
 use MoreCustomFields::SelectedEntries;
 use MoreCustomFields::SelectedPages;
 use MoreCustomFields::SingleLineTextGroup;
@@ -100,6 +101,16 @@ sub load_customfield_types {
             options_field     => sub { MoreCustomFields::RadioButtonsWithInput::_options_field(); },
             field_html        => sub { MoreCustomFields::RadioButtonsWithInput::_field_html(); },
             field_html_params => sub { MoreCustomFields::RadioButtonsWithInput::_field_html_params(@_); },
+        },
+        selected_content => {
+            label             => 'Selected Content',
+            column_def        => 'vchar',
+            order             => 2099,
+            no_default        => 1,
+            options_delimiter => ',',
+            options_field     => sub { MoreCustomFields::SelectedContent::_options_field(); },
+            field_html        => sub { MoreCustomFields::SelectedContent::_field_html(); },
+            field_html_params => sub { MoreCustomFields::SelectedContent::_field_html_params(@_); },
         },
         selected_entries => {
             label             => 'Selected Entries',
@@ -293,7 +304,7 @@ sub post_save {
             $app->delete_param($field_name);
         }
         # Find the Selected Entries, Selected Pages, or Selected Assets field.
-        elsif( m/^customfield_(.*?)_selected(entries|pages|assets)cf_(.*?)$/ ) {
+        elsif( m/^customfield_(.*?)_selected(entries|pages|assets|content)cf_(.*?)$/ ) {
             my $field_name = $_;
             # This is the text input value
             my $input_value = $app->param($field_name);
