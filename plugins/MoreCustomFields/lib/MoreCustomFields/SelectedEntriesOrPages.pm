@@ -330,7 +330,6 @@ sub se_list_content {
             },
             code => sub {
                 my ( $obj, $row ) = @_;
-                MT->log( $obj->class );
                 $row->{ 'status_' . lc MT::Entry::status_text( $obj->status ) } = 1;
                 $row->{entry_permalink} = $obj->permalink
                     if $obj->status == MT::Entry->RELEASE();

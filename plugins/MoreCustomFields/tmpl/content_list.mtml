@@ -1,6 +1,6 @@
 <mt:unless name="json">
 <mt:SetVar name="screen_type" value="dialog-screen insert-asset-dialog">
-<mt:setvarblock name="page_title"><mt:if name="type" eq="page"><__trans phrase="Select Page"><mt:else><__trans phrase="Select Entry"></mt:if></mt:setvarblock>
+<mt:setvarblock name="page_title"><__trans phrase="Select Entry or Page"></mt:setvarblock>
 <mt:setvarblock name="html_head" append="1">
     <script type="text/javascript" src="<mt:var name="static_uri">js/tc/client.js"></script>
     <script type="text/javascript" src="<mt:var name="static_uri">js/tc/json.js"></script>
@@ -26,10 +26,33 @@
 
     var tableSelect;
     var dlg;
+    
     function init() {
         // setup
+        /* dlg = new Dialog.Simple("list-content");
+        var panel = new ListingPanel("entry");
+        dlg.panel = panel;
+
+        // hook into view updates so we can close any opened detail panel
+        var old_update = panel.datasource.onUpdate;
+        panel.datasource.onUpdate = function(ds) { viewChange(ds, old_update) };
+
+        panel.pager.setState(<mt:if name="pager_json"><mt:var name="pager_json"><mt:else>{}</mt:if>);
+        panel.parent = dlg;
+        dlg.open({}, dialogClose);
+        */
+//        $('#entry_select_radio').attr('selected');
+        alert('re_initing');
+        re_init('entry');
+    }
+    
+    function re_init(aType){
+        // setup
         dlg = new Dialog.Simple("list-content");
-        var panel = new ListingPanel("content");
+        var panel = new ListingPanel("entry");
+        if (aType!=null) {
+            panel = new ListingPanel(aType);
+        }
         dlg.panel = panel;
 
         // hook into view updates so we can close any opened detail panel
@@ -55,10 +78,13 @@
     <mt:if name="panel_searchable">
             <form action="" method="get" id="modal-search">
                 <input name="search" type="text" value="<__trans phrase="Search">" class="search-input search-query" onblur="if(this.value==''){this.style.color=''; this.form.reset()}" onfocus="if (this.value == '<__trans phrase="Search">') this.value = ''; this.style.color = '#000';" />
-                <input type="hidden" name="class" value="*"/>
                 <input type="image" class="search-command search-submit" src="<$mt:var name="static_uri"$>images/search-submit<mt:unless name="blog_id">-system</mt:unless>.gif" title="<__trans phrase="Search">" />
                 <a href="javascript:void(0)" class="search-reset hidden"><__trans phrase="Reset"></a>
             </form>
+            <div style="float: right; color: #fff">Search For:
+                <label><input id="entry_select_radio" type="radio" checked="checked" name="typeselect" value="entry" onclick="re_init(this.value)" /> Entries</label>
+                <label><input id="page_select_radio" type="radio" name="typeselect" value="page" onclick="re_init(this.value)" /> Pages</label>
+            </div>
     </mt:if>
         </div>
     </div>
@@ -93,7 +119,8 @@
                         </th>
                         <th class="title"><__trans phrase="Title"></th>
                         <th class="author" style="min-width: 70px;"><__trans phrase="Author"></th>
-                        <th class="date" style="min-width: 70px;"><__trans phrase="Created"></th>
+                        <th class="kind"><__trans phrase="Kind"></th>
+                        <th class="date" style=""><__trans phrase="Created"></th>
                         <th class="view si"><span><__trans phrase="View"></span></th>
                     </tr>
                 </thead>
@@ -110,7 +137,8 @@
                                 <td class="status si status-<mt:if name="status_draft">draft<mt:elseif name="status_publish">publish<mt:elseif name="status_review">review<mt:elseif name="status_future">future</mt:if>"><img src="<mt:var name="static_uri">images/spacer.gif" alt="<mt:if name="status_draft"><__trans phrase="Unpublished (Draft)"><mt:elseif name="status_publish"><__trans phrase="Published"><mt:elseif name="status_review"><__trans phrase="Unpublished (Review)"><mt:elseif name="status_future"><__trans phrase="Scheduled"></mt:if>" width="9" height="9" /></td>
                                 <td class="title"><mt:Var name="title" escape="html"></td>
                                 <td class="author" style="min-width: 70px;"><mt:Var name="author_name" escape="html"></td>
-                                <td class="date" style="min-width: 85px;">
+                                <td class="kind"><mt:Var name="kind" escape="html"></td>
+                                <td class="date" style="">
                                     <mt:if name="created_on_relative" and="dates_relative">
                                         <mt:var name="created_on_relative">
                                     <mt:else>
