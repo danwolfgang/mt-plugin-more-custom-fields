@@ -234,7 +234,8 @@ sub tag_selected_assets {
 
     # Create an array of the asset IDs held in the field.
     # $object->$basename is the lookup that actually grabs the data.
-    my @assetids = split(/,\s?/, $object->$basename);
+    my @assetids = split(/,\s?/, $object->$basename)
+      if ($object && $object->$basename);
     my $i = 0;
     my $vars = $ctx->{__stash}{vars} ||= {};
     foreach my $assetid (@assetids) {

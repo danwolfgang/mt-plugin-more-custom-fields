@@ -242,7 +242,8 @@ sub tag_selected_entries {
 
     # Create an array of the entry IDs held in the field.
     # $object->$basename is the lookup that actually grabs the data.
-    my @entryids = split(/,\s?/, $object->$basename);
+    my @entryids = split(/,\s?/, $object->$basename)
+      if ($object && $object->$basename);
     my $i = 0;
     my $vars = $ctx->{__stash}{vars} ||= {};
     foreach my $entryid (@entryids) {
