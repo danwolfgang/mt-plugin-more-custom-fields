@@ -66,6 +66,7 @@ If you're building your site as a theme, custom fields can be specified and auto
 * Selected Assets: `selected_assets`
 * Selected Entries: `selected_entries`
 * Selected Pages: `selected_pages`
+* Selected Entries or Pages: `selected_content`
 * Message: `message`
 
 Note that the Selected Assets field actually creates a different custom field for each type of asset field available (Selected Images, Selected Videos, etc). These fields can also be used, though because they are dynamically generated you'll need to determine the name of the field yourself. The following format is followed:
@@ -152,6 +153,21 @@ Selected Pages works exactly like the Selected Entries field does -- except it u
         </ul>
       </mt:If>
     </mt:SelectedPages>
+
+## Selected Entries or Pages
+
+Selected Entries or Pages works exactly like the Selected Entries field does -- except it allows you to select any combination of Entries and Pages for a single instance of this field. More Custom Fields includes the block tag `SelectedEntriesOrPages` to help output your selection, which works just like the SelectedEntries block does. If you've created a Selected Entries or Pages custom field with the `basename` of `featured_content` you might use the SelectedPages block like this:
+
+    <mt:SelectedEntriesOrPages basename="featured_content">
+      <mt:If name="__first__">
+        <ul>
+      </mt:If>
+        <li><mt:if tag="entryclass" eq="page"><img src="pageicon.gif"/><mt:else><img src="entryicon.gif"/></mt:if><a href="<mt:EntryPermalink>"><mt:EntryTitle></a></li>
+      <mt:If name="__last__">
+        </ul>
+      </mt:If>
+    </mt:SelectedEntriesOrPages>
+
 
 ## Selected Assets
 
