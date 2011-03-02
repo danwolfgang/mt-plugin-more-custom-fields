@@ -47,7 +47,7 @@ callbacks:
 tags:
     block:
         SelectedAssets:  $MoreCustomFields::MoreCustomFields::SelectedAssets::tag_selected_assets
-        SelectedContent: $MoreCustomFields::MoreCustomFields::SelectedContent::tag_selected_content
+        SelectedEntriesOrPages: $MoreCustomFields::MoreCustomFields::SelectedEntriesOrPages::tag_selected_content
         SelectedEntries: $MoreCustomFields::MoreCustomFields::SelectedEntries::tag_selected_entries
         SelectedPages:   $MoreCustomFields::MoreCustomFields::SelectedPages::tag_selected_pages
 
@@ -56,7 +56,7 @@ applications:
         methods:
             mcf_list_entries: $MoreCustomFields::MoreCustomFields::SelectedEntries::se_list_entries
             mcf_select_entry: $MoreCustomFields::MoreCustomFields::SelectedEntries::se_select_entry
-            mcf_list_content: $MoreCustomFields::MoreCustomFields::SelectedContent::se_list_content
-            mcf_select_content: $MoreCustomFields::MoreCustomFields::SelectedContent::se_select_content
+            mcf_list_content: $MoreCustomFields::MoreCustomFields::SelectedEntriesOrPages::se_list_content
+            mcf_select_content: $MoreCustomFields::MoreCustomFields::SelectedEntriesOrPages::se_select_content
             mcf_list_pages:   $MoreCustomFields::MoreCustomFields::SelectedPages::se_list_pages
             mcf_select_page:  $MoreCustomFields::MoreCustomFields::SelectedPages::se_select_page

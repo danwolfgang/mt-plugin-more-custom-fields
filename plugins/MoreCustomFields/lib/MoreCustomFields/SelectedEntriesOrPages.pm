@@ -1,4 +1,4 @@
-package MoreCustomFields::SelectedContent;
+package MoreCustomFields::SelectedEntriesOrPages;
 
 use strict;
 
@@ -222,7 +222,7 @@ sub tag_selected_content {
     my $cf_basename = $args->{basename};
     if ( !$cf_basename ) {
         return $ctx->error(
-            'The SelectedContent block tag requires the basename argument. The basename should be the Selected Content Custom Fields field basename.'
+            'The SelectedEntriesOrPages block tag requires the basename argument. The basename should be the Selected Content Custom Fields field basename.'
         );
     }
 

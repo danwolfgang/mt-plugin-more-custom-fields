@@ -12,7 +12,7 @@ use MT::Util qw( relative_date offset_time offset_time_list epoch2ts
 use MoreCustomFields::CheckboxGroup;
 use MoreCustomFields::RadioButtonsWithInput;
 use MoreCustomFields::SelectedAssets;
-use MoreCustomFields::SelectedContent;
+use MoreCustomFields::SelectedEntriesOrPages;
 use MoreCustomFields::SelectedEntries;
 use MoreCustomFields::SelectedPages;
 use MoreCustomFields::SingleLineTextGroup;
@@ -108,9 +108,9 @@ sub load_customfield_types {
             order             => 2099,
             no_default        => 1,
             options_delimiter => ',',
-            options_field     => sub { MoreCustomFields::SelectedContent::_options_field(); },
-            field_html        => sub { MoreCustomFields::SelectedContent::_field_html(); },
-            field_html_params => sub { MoreCustomFields::SelectedContent::_field_html_params(@_); },
+            options_field     => sub { MoreCustomFields::SelectedEntriesOrPages::_options_field(); },
+            field_html        => sub { MoreCustomFields::SelectedEntriesOrPages::_field_html(); },
+            field_html_params => sub { MoreCustomFields::SelectedEntriesOrPages::_field_html_params(@_); },
         },
         selected_entries => {
             label             => 'Selected Entries',

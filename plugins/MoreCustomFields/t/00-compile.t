@@ -10,7 +10,7 @@ require_ok('MoreCustomFields::Plugin');
 require_ok('MoreCustomFields::Message');
 require_ok('MoreCustomFields::CheckboxGroup');
 require_ok('MoreCustomFields::RadioButtonsWithInput');
-require_ok('MoreCustomFields::SelectedContent');
+require_ok('MoreCustomFields::SelectedEntriesOrPages');
 require_ok('MoreCustomFields::SelectedEntries');
 require_ok('MoreCustomFields::SelectedPages');
 require_ok('MoreCustomFields::SelectedAssets');
