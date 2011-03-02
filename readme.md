@@ -33,6 +33,7 @@ More Custom Fields creates several additional field types that are available whe
 * Radio Buttons with Input
 * Selected Entries
 * Selected Pages
+* Selected Entries or Pages
 * Selected Assets (and "child" types: Selected Images, Selected Audios, Selected Videos, Selected Files, and any other type of registered asset)
 * Multi-Use Single-Line Text Group
 * Message
@@ -44,6 +45,8 @@ The **Checkbox Group** field type options should be specified in a comma-delimit
 The **Radio Buttons with Input** field type options should be specified in a comma-delimited list. Each item in the list will become a radio button. The last item in the list will have a text input field appended to it, so you'll likely want to specify the last item as "Other" or similar.
 
 The **Selected Entries** and **Selected Pages** field types provides the ability to select Entries or Pages -- as many as needed, in whatever order is needed. Specify a blog ID as this field's option to determine which blog's Entries (or Pages) are available for selection. Blog IDs must be separated with a comma to create a string (as in "1,12,19,37,112"), or the value "all" may be used to include all blogs. Leaving this field blank will make the current blog's Entries (or Pages) available.
+
+The **Selected Entries or Pages** field type combines the functionality of the **Selected Entries** and **Selected Pages** fields into one field that provides the ability to select a combination of Entries and Pages. Specify a blog ID as this field's option to determine which blog's Entries (or Pages) are available for selection. Blog IDs must be separated with a comma to create a string (as in "1,12,19,37,112"), or the value "all" may be used to include all blogs. Leaving this field blank will make the current blog's Entries (or Pages) available.
 
 The **Selected Assets** field type (and the related asset types) work similar to the Selected Entries and Selected Pages field types: select an unlimited number of assets in any order you wish. This field type has no options and works on the current blog only.
 
