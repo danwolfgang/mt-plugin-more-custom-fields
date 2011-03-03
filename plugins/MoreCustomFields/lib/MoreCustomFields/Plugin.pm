@@ -103,7 +103,7 @@ sub load_customfield_types {
             field_html_params => sub { MoreCustomFields::RadioButtonsWithInput::_field_html_params(@_); },
         },
         selected_content => {
-            label             => 'Selected Content',
+            label             => 'Selected Entries or Pages',
             column_def        => 'vchar',
             order             => 2099,
             no_default        => 1,

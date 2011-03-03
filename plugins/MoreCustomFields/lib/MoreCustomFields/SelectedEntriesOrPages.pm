@@ -202,7 +202,7 @@ sub _field_html_params {
 
 sub tag_selected_content {
 
-    # The SelectedEntries tag will let you intelligently output the links you selected. Use:
+    # The SelectedEntriesOrPages tag will let you intelligently output the links you selected. Use:
     # <mt:SelectedEntries basename="selected_content">
     #   <mt:If name="__first__">
     #     <ul>
