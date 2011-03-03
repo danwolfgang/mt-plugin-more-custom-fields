@@ -21,7 +21,7 @@ sub init_app {
     return if $app->id eq 'wizard';
 
     my $r = $plugin->registry;
-    my $tags = sub { _load_tags( $app, $plugin ) };
+    my $tags = _load_tags( $app, $plugin );
     MT::__merge_hash($r->{tags}, $tags);
 #    $r->{tags} = sub { _load_tags( $app, $plugin ) };
 }
@@ -149,11 +149,12 @@ sub update_template {
         # Just grab onto a closing "</script>" tag. Since it's only going
         # to be grabbed once and we don't really care when jQuery is added,
         # we can use something so generic.
-        my $old = q{</script>};
+        my $old = q{</head>};
         $old = quotemeta($old);
         my $new = <<'END';
-</script>
+    <!-- insert something here -->
     <script type="text/javascript" src="<mt:StaticWebPath>jquery/jquery.js"></script>
+</head>
 END
         $$template =~ s/$old/$new/;
     }
