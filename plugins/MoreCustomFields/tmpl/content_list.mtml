@@ -42,7 +42,6 @@
         dlg.open({}, dialogClose);
         */
 //        $('#entry_select_radio').attr('selected');
-        alert('re_initing');
         re_init('entry');
     }
     
@@ -146,8 +145,8 @@
                                     </mt:if>
                                 </td>
                                 <td class="view si status-view">
-                                    <mt:if name="item_permalink">
-                                        <a href="<mt:var name="item_permalink">" target="<__trans phrase="_external_link_target">" title="<__trans phrase="View <mt:entryclass />">"><img src="<mt:var name="static_uri">images/spacer.gif" alt="<__trans phrase="View <mt:entryclass />">" width="13" height="9" /></a>
+                                    <mt:if name="entry_permalink">
+                                        <a href="<mt:var name="entry_permalink">" target="<__trans phrase="_external_link_target">" title="<__trans phrase="View <mt:var name="kind" />">"><img src="<mt:var name="static_uri">images/spacer.gif" alt="<__trans phrase="View <mt:var name="kind" />">" width="13" height="9" /></a>
                                     <mt:else>
                                         &#160;
                                     </mt:if>

@@ -6,6 +6,7 @@ The Custom Fields found in Movable Type Pro are a boon to creating a flexible an
 * Radio Buttons with Input: build a group of radio buttons, where the last option is a text input field
 * Selected Entries: select other entries from a pop-up window, to easily create a related entries list or string multi-part articles together. Also, the number of entries selected is unlimited, and the order you specify is retained!
 * Selected Pages: works just like Selected Entries, but for Pages!
+* Selected Entries Or Pages: works just like Selected Entries, but allows you to select a combination of Entries and Pages.
 * Selected Assets: as you may guess, this works just like Selected Entries and Selected Pages. Note that each asset type is registered as a separate custom field, so in addition to the generic "Selected Assets" custom field, "Selected Images," "Selected Audios," "Selected Videos," and "Selected Files" are also available to filter the types of asset you want the field to work with.
 * Multi-Use Single-Line Text Group: don't let the crazy name scare you -- this field type allows you to create a reusable group of fields, perfect for including a list of your favorite bookmarks, for example.
 * Message: administrators can edit the contents of the Message field text area, but any other use can only read the contents. Useful for displaying instructions or other data you don't want the user to edit.
@@ -23,7 +24,6 @@ To install this plugin follow the instructions found here:
 http://tinyurl.com/easy-plugin-install
 
 This plugin requires a newer version of the `YAML::Tiny` Perl module than is included with Movable Type. Included with this plugin (in the `extlib/` folder) is a newer version of YAML::Tiny. Copy from the plugin archive `extlib/YAML/Tiny.pm` to `$MT_HOME/extlib/YAML/Tiny.pm` to update Movable Type's copy of this plugin. **This is a required, non-optional step!**
-
 
 # Configuration
 
@@ -168,6 +168,7 @@ Selected Entries or Pages works exactly like the Selected Entries field does -- 
       </mt:If>
     </mt:SelectedEntriesOrPages>
 
+*Note: Because Entries and Pages use the same base object type, Entry, many of the Entry tags can be used for Pages.*
 
 ## Selected Assets
 

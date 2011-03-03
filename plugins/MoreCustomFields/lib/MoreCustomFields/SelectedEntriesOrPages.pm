@@ -341,7 +341,7 @@ sub se_list_content {
                     $row->{created_on_time_formatted} = format_ts( $datetime_format, $ts, $obj->blog,
                         $app->user ? $app->user->preferred_language : undef );
                     $row->{created_on_relative} = relative_date( $ts, time, $obj->blog );
-                    $row->{kind} = $obj->class;
+                    $row->{kind} = ucfirst($obj->class);
                 }
                 return $row;
             },
