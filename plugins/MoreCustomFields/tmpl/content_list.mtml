@@ -28,24 +28,11 @@
     var dlg;
     
     function init() {
-        // setup
-        /* dlg = new Dialog.Simple("list-content");
-        var panel = new ListingPanel("entry");
-        dlg.panel = panel;
-
-        // hook into view updates so we can close any opened detail panel
-        var old_update = panel.datasource.onUpdate;
-        panel.datasource.onUpdate = function(ds) { viewChange(ds, old_update) };
-
-        panel.pager.setState(<mt:if name="pager_json"><mt:var name="pager_json"><mt:else>{}</mt:if>);
-        panel.parent = dlg;
-        dlg.open({}, dialogClose);
-        */
-//        $('#entry_select_radio').attr('selected');
-        re_init('entry');
+        // AttachLoadEvent doesn't allow for arguments to the init, so init() is a wrapper
+        setup_dialog('entry');
     }
     
-    function re_init(aType){
+    function setup_dialog(aType){
         // setup
         dlg = new Dialog.Simple("list-content");
         var panel = new ListingPanel("entry");
@@ -81,8 +68,8 @@
                 <a href="javascript:void(0)" class="search-reset hidden"><__trans phrase="Reset"></a>
             </form>
             <div style="float: right; color: #fff">Search For:
-                <label><input id="entry_select_radio" type="radio" checked="checked" name="typeselect" value="entry" onclick="re_init(this.value)" /> Entries</label>
-                <label><input id="page_select_radio" type="radio" name="typeselect" value="page" onclick="re_init(this.value)" /> Pages</label>
+                <label><input id="entry_select_radio" type="radio" checked="checked" name="typeselect" value="entry" onclick="setup_dialog(this.value)" /> Entries</label>
+                <label><input id="page_select_radio" type="radio" name="typeselect" value="page" onclick="setup_dialog(this.value)" /> Pages</label>
             </div>
     </mt:if>
         </div>
