@@ -117,10 +117,10 @@
                             <img src="<mt:var name="static_uri">images/status_icons/invert-flag.gif" alt="<__trans phrase="Status">" title="<__trans phrase="Status">" width="9" height="9" />
                         </th>
                         <th class="title"><__trans phrase="Title"></th>
-                        <th class="author" style="min-width: 70px;"><__trans phrase="Author"></th>
-                        <th class="kind"><__trans phrase="Kind"></th>
-                        <th class="date" style=""><__trans phrase="Created"></th>
-                        <th class="view si"><span><__trans phrase="View"></span></th>
+                        <th class="author" style="width: 100px;"><__trans phrase="Author"></th>
+                        <th class="kind" style="width: 35px;"><__trans phrase="Kind"></th>
+                        <th class="date" style="width: 100px;"><__trans phrase="Created"></th>
+                        <th class="view si" style="width: 35px;"><span><__trans phrase="View"></span></th>
                     </tr>
                 </thead>
             </table>
@@ -135,16 +135,16 @@
                                 <td class="cb"><input type="hidden" id="item-<mt:var name="id">-json" value="<mt:var name="metadata_json" escape="html">" /><input type="radio" name="id" value="<mt:var name="id">" class="select" id="item-radio-<mt:var name="id">" /></td>
                                 <td class="status si status-<mt:if name="status_draft">draft<mt:elseif name="status_publish">publish<mt:elseif name="status_review">review<mt:elseif name="status_future">future</mt:if>"><img src="<mt:var name="static_uri">images/spacer.gif" alt="<mt:if name="status_draft"><__trans phrase="Unpublished (Draft)"><mt:elseif name="status_publish"><__trans phrase="Published"><mt:elseif name="status_review"><__trans phrase="Unpublished (Review)"><mt:elseif name="status_future"><__trans phrase="Scheduled"></mt:if>" width="9" height="9" /></td>
                                 <td class="title"><mt:Var name="title" escape="html"></td>
-                                <td class="author" style="min-width: 70px;"><mt:Var name="author_name" escape="html"></td>
-                                <td class="kind"><mt:Var name="kind" escape="html"></td>
-                                <td class="date" style="">
+                                <td class="author" style="width: 100px;"><mt:Var name="author_name" escape="html"></td>
+                                <td class="kind" style="width: 35px;"><mt:Var name="kind" escape="html"></td>
+                                <td class="date" style="width: 100px;">
                                     <mt:if name="created_on_relative" and="dates_relative">
                                         <mt:var name="created_on_relative">
                                     <mt:else>
                                         <mt:var name="created_on_formatted">
                                     </mt:if>
                                 </td>
-                                <td class="view si status-view">
+                                <td class="view si status-view" style="width: 35px;">
                                     <mt:if name="entry_permalink">
                                         <a href="<mt:var name="entry_permalink">" target="<__trans phrase="_external_link_target">" title="<__trans phrase="View <mt:var name="kind" />">"><img src="<mt:var name="static_uri">images/spacer.gif" alt="<__trans phrase="View <mt:var name="kind" />">" width="13" height="9" /></a>
                                     <mt:else>
