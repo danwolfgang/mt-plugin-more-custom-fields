@@ -11,9 +11,12 @@ use MT::Util qw( relative_date offset_time offset_time_list epoch2ts
 
 use MoreCustomFields::CheckboxGroup;
 use MoreCustomFields::RadioButtonsWithInput;
+use MoreCustomFields::SelectedAssets;
+use MoreCustomFields::SelectedEntriesOrPages;
 use MoreCustomFields::SelectedEntries;
 use MoreCustomFields::SelectedPages;
 use MoreCustomFields::SingleLineTextGroup;
+use MoreCustomFields::Message;
 
 sub init_app {
     my $plugin = shift;
@@ -22,8 +25,10 @@ sub init_app {
 
     my $r = $plugin->registry;
     my $tags = _load_tags( $app, $plugin );
-    MT::__merge_hash($r->{tags}, $tags);
-#    $r->{tags} = sub { _load_tags( $app, $plugin ) };
+    # If any tags were needed, merge them into the registry.
+    if ( ref($tags) eq 'HASH' ) {
+        MT::__merge_hash($r->{tags}, $tags);
+    }
 }
 
 sub _load_tags {
@@ -77,7 +82,7 @@ sub _load_tags {
 
 
 sub load_customfield_types {
-    return {
+    my $customfield_types = {
         checkbox_group => {
             label             => 'Checkbox Group',
             column_def        => 'vchar',
@@ -97,10 +102,20 @@ sub load_customfield_types {
             field_html        => sub { MoreCustomFields::RadioButtonsWithInput::_field_html(); },
             field_html_params => sub { MoreCustomFields::RadioButtonsWithInput::_field_html_params(@_); },
         },
+        selected_content => {
+            label             => 'Selected Entries or Pages',
+            column_def        => 'vchar',
+            order             => 2099,
+            no_default        => 1,
+            options_delimiter => ',',
+            options_field     => sub { MoreCustomFields::SelectedEntriesOrPages::_options_field(); },
+            field_html        => sub { MoreCustomFields::SelectedEntriesOrPages::_field_html(); },
+            field_html_params => sub { MoreCustomFields::SelectedEntriesOrPages::_field_html_params(@_); },
+        },
         selected_entries => {
             label             => 'Selected Entries',
             column_def        => 'vchar',
-            order             => 2000,
+            order             => 2100,
             no_default        => 1,
             options_delimiter => ',',
             options_field     => sub { MoreCustomFields::SelectedEntries::_options_field(); },
@@ -110,7 +125,7 @@ sub load_customfield_types {
         selected_pages => {
             label             => 'Selected Pages',
             column_def        => 'vchar',
-            order             => 2001,
+            order             => 2101,
             no_default        => 1,
             options_delimiter => ',',
             options_field     => sub { MoreCustomFields::SelectedPages::_options_field(); },
@@ -137,7 +152,69 @@ sub load_customfield_types {
             field_html        => sub { MoreCustomFields::SingleLineTextGroup::_multi_field_html(); },
             field_html_params => sub { MoreCustomFields::SingleLineTextGroup::_multi_field_html_params(@_); },
         },
+        message => {
+            label             => 'Message',
+            column_def        => 'vclob',
+            order             => 201,
+            # Disabling "no_default" means that a default *is* allowed.
+            #no_default        => 1,
+            options_field     => sub { MoreCustomFields::Message::_options_field(); },
+            field_html        => sub { MoreCustomFields::Message::_field_html(); },
+            field_html_params => sub { MoreCustomFields::Message::_field_html_params(@_); },
+        },
     };
+    
+    # Grab all registered types of assets and add a new custom field for
+    # each type. This way the field can be "Selected Images," for example
+    # and give the user a chance to include only images and not other types
+    # of assets.
+    require MT::Asset;
+    my $asset_types = MT::Asset->class_labels;
+    my @asset_types =
+      sort { $asset_types->{$a} cmp $asset_types->{$b} } keys %$asset_types;
+    
+    my $order = 2000;
+    foreach my $a_type (@asset_types) {
+        my $asset_type = $a_type;
+        $asset_type =~ s/^asset\.//;
+
+        # The $asset_type 'asset.file' returns a label of "Asset" for some
+        # reason, so just correcct that here.
+        my $label = ($asset_type eq 'file') 
+          ? 'File' 
+          : MT::Asset->class_handler($a_type)->class_label;
+        $label = 'Selected '. $label . 's';
+
+        $customfield_types->{'selected_' . $a_type . 's'} = {
+            label             => $label,
+            asset_type        => $a_type,
+            no_default        => 1,
+            column_def        => 'vchar',
+            order             => $order,
+            # Not setting the context (making the context system-wide)
+            # results in a Selected Asset custom field that is usable at the
+            # blog level as normal. However, when trying to use it for system-
+            # level objects (authors), a a permissions error pops up. I
+            # didn't investigate more because I don't need system-level
+            # support.
+            context           => 'blog',
+            sanitize          => \&MT::Util::sanitize_asset,
+            field_html        => sub { MoreCustomFields::SelectedAssets::_field_html(); },
+            field_html_params => sub {
+                # Add "asset_type" and "asset_type_label" to the template
+                # parameters before going to _field_html_params.
+                $_[2]->{asset_type} = $asset_type;
+                $_[2]->{asset_type_label} = MT->translate($asset_type);
+                MoreCustomFields::SelectedAssets::_field_html_params(@_); 
+            },
+        };
+        # Increment $order so that each custom field has a unique position.
+        $order += 1;
+    }
+    
+    # $customfield_types now holds all the different asset types, as well
+    # as the other custom field types defined above.
+    return $customfield_types;
 }
 
 sub update_template {
@@ -146,17 +223,14 @@ sub update_template {
 
     # Check if jQuery has already been loaded. If it has, just skip this.
     unless ( $$template =~ m/jquery/) {
-        # Just grab onto a closing "</script>" tag. Since it's only going
-        # to be grabbed once and we don't really care when jQuery is added,
-        # we can use something so generic.
-        my $old = q{</head>};
-        $old = quotemeta($old);
+        # Include jQuery as part of the js_include, used on the 
+        # include/header.tmpl, which is used on all pages.
+        my $old = q{<mt:setvarblock name="js_include" append="1">};
         my $new = <<'END';
-    <!-- insert something here -->
     <script type="text/javascript" src="<mt:StaticWebPath>jquery/jquery.js"></script>
 </head>
 END
-        $$template =~ s/$old/$new/;
+        $$template =~ s/$old/$old$new/;
     }
 }
 
@@ -230,10 +304,9 @@ sub post_save {
             $app->delete_param($field_name.'_beacon');
             $app->delete_param($field_name);
         }
-        # Find the Selected Entries field.
-        elsif( m/^customfield_(.*?)_selectedentriescf_(.*?)$/ ) {
-            my $field_name = "customfield_$1_selectedentriescf_$2";
-        
+        # Find the Selected Entries, Selected Pages, or Selected Assets field.
+        elsif( m/^customfield_(.*?)_selected(entries|pages|assets|content)cf_(.*?)$/ ) {
+            my $field_name = $_;
             # This is the text input value
             my $input_value = $app->param($field_name);
 
@@ -265,53 +338,23 @@ sub post_save {
             # purposefully unselected, so we need to force save the deletion of the field.
             if (!$result) { $result = ' '; }
 
-            # Save the new result to the *real* field name, which should be written to the DB.
-            $app->param("customfield_$1", $result);
-
-            # Destroy the specially-assembled fields, because they make MT barf.
-            $app->delete_param($field_name);
-        } #end of Selected Entries field.
-        # Find the Selected Pages field.
-        elsif( m/^customfield_(.*?)_selectedpagescf_(.*?)$/ ) {
-            my $field_name = "customfield_$1_selectedpagescf_$2";
-    
-            # This is the text input value
-            my $input_value = $app->param($field_name);
-
-            # This line serves two purposes:
-            # - Create the "real" customfield to write to the DB, if it doesn't exist already.
-            # - If the field has already been created (because this is the 2nd or 3rd or 4th etc
-            #   Selected Page CF option) then get it so that we can see the currently-selected
-            #   options and append a new result to them.
-            my $customfield_value = $app->param("customfield_$1");
-
-            my $result;
-            # Join all the selected entries into a list
-            if ( $customfield_value ) { #only "join" if the field has already been set
-                if ($input_value eq '0') {
-                    $result = $customfield_value;
-                }
-                else {
-                    $result = join ',', $customfield_value, $input_value;
-                }
-                $result =~ s/^\s?,(.*)$/$1/;
+            # If all objects have been deleted, we need to save that this
+            # field is now empty. To do this, we still need something to
+            # check for: a beacon. After the last Selected Asset/Entry/Page
+            # has been deleted, a beacon hidden input field is inserted.
+            # Check for this field. If it exists, then remove clear any
+            # saved data.
+            if ($3 eq 'beacon') {
+                $result = ' ';
             }
-            else { # Nothing saved yet? Just assign the variable
-                $result = $app->param($field_name);
-            }
-
-            # If the customfield held some results, then a real EntryID value exists, such as "12."
-            # If the field was empty, however, the $results variable is empty, indicating that the
-            # field should *not* be saved. This is incorrect because an empty field may be
-            # purposefully unselected, so we need to force save the deletion of the field.
-            if (!$result) { $result = ' '; }
 
             # Save the new result to the *real* field name, which should be written to the DB.
             $app->param("customfield_$1", $result);
 
             # Destroy the specially-assembled fields, because they make MT barf.
             $app->delete_param($field_name);
-        } #end of Selected Pages field.
+        } #end of Selected Entries/Pages/Assets field.
+
         # Find the Single Line Text Group field
         # The "beacon" is used to always grab the text field. This will catch
         # an empty text field.

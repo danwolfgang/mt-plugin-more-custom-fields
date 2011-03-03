@@ -48,7 +48,7 @@ sub _field_html {
                 <mt:PageTitle>
             </mt:Pages>
         </span>
-        <a style="padding: 3px 5px;" href="javascript:removeSelectedEntry('li_<mt:Var name="field_name">_selectedpagescf_<mt:Var name="__counter__">');" title="Remove selected page"><img src="<mt:StaticWebPath>images/status_icons/close.gif" width="9" height="9" alt="Remove selected page" /></a>
+        <a style="padding: 3px 5px;" href="javascript:removeSelectedPage('li_<mt:Var name="field_name">_selectedpagescf_<mt:Var name="__counter__">','<mt:Var name="field_name">');" title="Remove selected page"><img src="<mt:StaticWebPath>images/status_icons/close.gif" width="9" height="9" alt="Remove selected page" /></a>
     </li>
 </mt:Loop>
 </ul>
@@ -108,7 +108,7 @@ sub _field_html {
         var newDeleteLink = document.createElement('a');
         newDeleteLink.setAttribute('style', "margin-left: 5px;");
         newDeleteLink.setAttribute('style', 'padding: 3px 5px;');
-        var href = "javascript:removeSelectedEntry('li_" + newInputName + "');";
+        var href = "javascript:removeSelectedPage('li_" + newInputName + "','<mt:Var name="field_name">');";
         newDeleteLink.setAttribute('href', href);
         newDeleteLink.setAttribute('title', 'Remove selected page');
         newDeleteLink.appendChild(newDeleteIcon);
@@ -125,16 +125,42 @@ sub _field_html {
         var CF = document.getElementById('custom-field-selected-pages_' + cf_name);
         CF.appendChild(newListItem);
         
+        // If the beacon (added when there are no Selected Pages) is 
+        // present, remove it. After all, the user is adding an Entry now,
+        // so that state is no longer true.
+        var beacon = document.getElementById(cf_name + '_selectedpagescf_beacon');
+        if (beacon) {
+            CF.removeChild(beacon);
+        }
+
         // After the user clicks to Add a Page, they are going to want to
         // click Choose Page. We might as well save them the effort.
         openDialog(this.form, 'mcf_list_pages', 'blog_ids=' + blog_ids + '&edit_field=' + newInputName);
     }
-    function removeSelectedEntry(l) {
+    function removeSelectedPage(l,f) {
         var listItem = document.getElementById(l);
         listItem.parentNode.removeChild(listItem);
+
+        // If the user has just deleted the last Selected Entry, then add a
+        // beacon so that the state can be properly saved.
+        var ul_field = 'custom-field-selected-pages_' + f;
+        var ul = document.getElementById(ul_field);
+        var li_count = ul.getElementsByTagName('li').length
+        if (li_count == 0) {
+            // Create the beacon field.
+            var beacon = document.createElement('input');
+            beacon_field = f+ '_selectedpagescf_beacon';
+            beacon.setAttribute('name', beacon_field);
+            beacon.setAttribute('id', beacon_field);
+            beacon.setAttribute('type', 'hidden');
+            beacon.setAttribute('value', '1');
+
+            // Add the beacon field to the parent UL.
+            var CF = document.getElementById(ul_field);
+            CF.appendChild(beacon);
+        }
     }
 </script>
-<input type="hidden" name="<mt:Var name="field_name">_selectedpagescf_beacon" value=" " />
     };
 }
 
@@ -151,6 +177,11 @@ sub _field_html_params {
 
     # Several dropdowns may be needed, because several pages were selected.
     my $field_value = $tmpl_param->{field_value};
+
+    # If there is no field value, there is nothing to parse. Likely on the
+    # Edit Field screen.
+    return unless $field_value;
+
     my @page_ids = split(/,\s?/, $field_value);
 
     my @page_ids_loop;
@@ -195,32 +226,24 @@ sub tag_selected_pages {
     my $field = CustomFields::Field->load( { type     => 'selected_pages',
                                              basename => $cf_basename, } );
     if (!$field) { return $ctx->error('A Selected Pages Custom Field with this basename could not be found.'); }
+
     my $basename = 'field.'.$field->basename;
-    my $obj_type = $field->obj_type;
-    
-    # Grab the correct object, based on the object type from the custom field.
-    my $object;
-    if ( $obj_type == 'entry' ) {
-        $object = MT::Entry->load( { id => $ctx->stash('entry')->id, } );
-    }
-    elsif ( $obj_type == 'page' ) {
-        # Entries and Pages are both stored in the mt_entry table
-        $object = MT::Entry->load( { id => $ctx->stash('page')->id, } );
-    }
-    elsif ( $obj_type == 'category' ) {
-        $object = MT::Category->load( { id => $ctx->stash('category')->id, } );
-    }
-    elsif ( $obj_type == 'folder' ) {
-        # Categories and Folders are both stored in the mt_category table
-        $object = MT::Category->load( { id => $ctx->stash('category')->id, } );
-    }
-    elsif ( $obj_type == 'author' ) {
-        $object = MT::Author->load( { id => $ctx->stash('author')->id, } );
-    }
-    
+
+    # Use Custom Fields find_stashed_by_type to load the correct object. This
+    # will decide if it's an entry, page, category, folder, or author archive,
+    # then load the object and return it to us.
+    use CustomFields::Template::ContextHandlers;
+    my $object = eval {
+        CustomFields::Template::ContextHandlers::find_stashed_by_type(
+            $ctx, $field->obj_type
+        )
+    };
+    return $ctx->error($@) if $@;
+
     # Create an array of the page IDs held in the field.
     # $object->$basename is the lookup that actually grabs the data.
-    my @page_ids = split(/,\s?/, $object->$basename);
+    my @page_ids = split(/,\s?/, $object->$basename)
+      if ($object && $object->$basename);
     my $i = 0;
     my $vars = $ctx->{__stash}{vars} ||= {};
     foreach my $page_id (@page_ids) {
