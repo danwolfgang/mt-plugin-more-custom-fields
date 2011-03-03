@@ -242,7 +242,8 @@ sub tag_selected_pages {
 
     # Create an array of the page IDs held in the field.
     # $object->$basename is the lookup that actually grabs the data.
-    my @page_ids = split(/,\s?/, $object->$basename);
+    my @page_ids = split(/,\s?/, $object->$basename)
+      if ($object && $object->$basename);
     my $i = 0;
     my $vars = $ctx->{__stash}{vars} ||= {};
     foreach my $page_id (@page_ids) {
