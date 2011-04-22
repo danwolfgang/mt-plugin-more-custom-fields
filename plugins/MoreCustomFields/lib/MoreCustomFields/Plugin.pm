@@ -228,6 +228,7 @@ sub update_template {
         my $old = q{<mt:setvarblock name="js_include" append="1">};
         my $new = <<'END';
     <script type="text/javascript" src="<mt:StaticWebPath>jquery/jquery.js"></script>
+</head>
 END
         $$template =~ s/$old/$old$new/;
     }
