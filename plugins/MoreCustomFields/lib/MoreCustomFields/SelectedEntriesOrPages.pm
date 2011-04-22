@@ -5,7 +5,8 @@ use strict;
 use MT 4.2;
 use base qw(MT::Plugin);
 use CustomFields::Util qw( get_meta save_meta field_loop _get_html );
-use MT::Util qw( relative_date offset_time offset_time_list epoch2ts ts2epoch format_ts encode_html dirify );
+use MT::Util
+    qw( relative_date offset_time offset_time_list epoch2ts ts2epoch format_ts encode_html dirify );
 
 sub _options_field {
     return q{
@@ -186,9 +187,9 @@ sub _field_html_params {
     my @itemids_loop;
     foreach my $itemid (@itemids) {
 
-        # Verify that $itemid is a number. If no Selected Entries are found,
-        # it's possible $itemid could be just a space character, which throws
-        # an error. So, this check ensures we always have a valid entry or page ID.
+   # Verify that $itemid is a number. If no Selected Entries are found,
+   # it's possible $itemid could be just a space character, which throws
+   # an error. So, this check ensures we always have a valid entry or page ID.
         if ( $itemid =~ m/\d+/ ) {
             push @itemids_loop,
                 {
@@ -202,16 +203,16 @@ sub _field_html_params {
 
 sub tag_selected_content {
 
-    # The SelectedEntriesOrPages tag will let you intelligently output the links you selected. Use:
-    # <mt:SelectedEntries basename="selected_content">
-    #   <mt:If name="__first__">
-    #     <ul>
-    #   </mt:If>
-    #     <li><a href="<mt:EntryPermalink>"><mt:EntryTitle></a></li>
-    #   <mt:If name="__last__">
-    #     </ul>
-    #   </mt:If>
-    # </mt:SelectedEntries>
+# The SelectedEntriesOrPages tag will let you intelligently output the links you selected. Use:
+# <mt:SelectedEntries basename="selected_content">
+#   <mt:If name="__first__">
+#     <ul>
+#   </mt:If>
+#     <li><a href="<mt:EntryPermalink>"><mt:EntryTitle></a></li>
+#   <mt:If name="__last__">
+#     </ul>
+#   </mt:If>
+# </mt:SelectedEntries>
     my ( $ctx, $args, $cond ) = @_;
     my $builder = $ctx->stash('builder');
     my $tokens  = $ctx->stash('tokens');
@@ -234,7 +235,9 @@ sub tag_selected_content {
         }
     );
     if ( !$field ) {
-        return $ctx->error('A Selected Entries Custom Field with this basename could not be found.');
+        return $ctx->error(
+            'A Selected Entries Custom Field with this basename could not be found.'
+        );
     }
     my $basename = 'field.' . $field->basename;
     my $obj_type = $field->obj_type;
@@ -244,9 +247,8 @@ sub tag_selected_content {
     # then load the object and return it to us.
     use CustomFields::Template::ContextHandlers;
     my $object = eval {
-        CustomFields::Template::ContextHandlers::find_stashed_by_type(
-            $ctx, $field->obj_type
-        )
+        CustomFields::Template::ContextHandlers::find_stashed_by_type( $ctx,
+            $field->obj_type );
     };
     return $ctx->error($@) if $@;
 
@@ -263,9 +265,9 @@ sub tag_selected_content {
         if ( $itemid =~ m/\d+/ ) {
 
             # Assign the meta vars
-            local $vars->{__first__}   = !$i;
-            local $vars->{__last__}    = !defined $itemids[ $i + 1 ];
-            local $vars->{__odd__}     = ( $i % 2 ) == 0;               # 0-based $i
+            local $vars->{__first__} = !$i;
+            local $vars->{__last__}  = !defined $itemids[ $i + 1 ];
+            local $vars->{__odd__}     = ( $i % 2 ) == 0;    # 0-based $i
             local $vars->{__even__}    = ( $i % 2 ) == 1;
             local $vars->{__counter__} = $i + 1;
 
@@ -330,18 +332,23 @@ sub se_list_content {
             },
             code => sub {
                 my ( $obj, $row ) = @_;
-                $row->{ 'status_' . lc MT::Entry::status_text( $obj->status ) } = 1;
+                $row->{ 'status_'
+                        . lc MT::Entry::status_text( $obj->status ) } = 1;
                 $row->{entry_permalink} = $obj->permalink
                     if $obj->status == MT::Entry->RELEASE();
                 if ( my $ts = $obj->authored_on ) {
-                    my $date_format     = MT::App::CMS->LISTING_DATE_FORMAT();
-                    my $datetime_format = MT::App::CMS->LISTING_DATETIME_FORMAT();
-                    $row->{created_on_formatted} = format_ts( $date_format, $ts, $obj->blog,
+                    my $date_format = MT::App::CMS->LISTING_DATE_FORMAT();
+                    my $datetime_format
+                        = MT::App::CMS->LISTING_DATETIME_FORMAT();
+                    $row->{created_on_formatted}
+                        = format_ts( $date_format, $ts, $obj->blog,
                         $app->user ? $app->user->preferred_language : undef );
-                    $row->{created_on_time_formatted} = format_ts( $datetime_format, $ts, $obj->blog,
+                    $row->{created_on_time_formatted}
+                        = format_ts( $datetime_format, $ts, $obj->blog,
                         $app->user ? $app->user->preferred_language : undef );
-                    $row->{created_on_relative} = relative_date( $ts, time, $obj->blog );
-                    $row->{kind} = ucfirst($obj->class);
+                    $row->{created_on_relative}
+                        = relative_date( $ts, time, $obj->blog );
+                    $row->{kind} = ucfirst( $obj->class );
                 }
                 return $row;
             },
@@ -371,6 +378,57 @@ sub se_select_content {
         }
     );
     return $tmpl;
+}
+
+sub ca_handler {
+    my $app = shift;
+    my ( $ctx, $field_id, $field, $value ) = @_;
+    my $out;
+    my ( $obj, $obj_name );
+    my $obj_class = '';
+
+    # The $value is the object ID. Only if $value exists should we try to
+    # load the object. Otherwise, the most recent entry/page is loaded
+    # and the $obj_name is incorrectly populated with the most recent object
+    # title. This way, $obj_name is blank if there is no $value, which is
+    # clearer to the user.
+    if ($value) {
+        $obj = MT->model($obj_class)->load($value);
+        $obj_name = ( $obj ? $obj->title : '' ) || '';
+    }
+    my $blog_id = $field->{all_blogs} ? 0 : $app->blog->id;
+    unless ( $ctx->var('entry_or_page_chooser_js') ) {
+        $out .= <<EOH;
+        <script type="text/javascript">
+            function insertSelectedItem(html, val, id) {
+                \$('#'+id).val(val);
+                try {
+                    \$('#'+id+'_preview').html(html);
+                } catch(e) {
+                    log.error(e);
+                };
+            }
+        </script>
+EOH
+        $ctx->var( 'entry_or_page_chooser_js', 1 );
+    }
+    my $class = MT->model($obj_class);
+    my $label = 'Entry or Page';
+    $ctx->var( 'entry_class_label', $label );
+    $out .= <<EOH;
+    <div class="pkg">
+      <input name="$field_id" id="$field_id" class="hidden" type="hidden" value="$value" />
+      <button type="submit"
+              onclick="return openDialog(this.form, 'mcf_list_content', 'blog_id=$blog_id&edit_field=$field_id')">Choose $label</button>
+      <div id="${field_id}_preview" class="preview">
+        $obj_name
+      </div>
+    </div>
+EOH
+
+    # $ctx->stash('object_class','');
+    return $out;
+
 }
 
 1;
