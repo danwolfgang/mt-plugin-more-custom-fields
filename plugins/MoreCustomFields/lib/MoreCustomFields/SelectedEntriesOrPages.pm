@@ -385,7 +385,7 @@ sub ca_handler {
     my ( $ctx, $field_id, $field, $value ) = @_;
     my $out;
     my ( $obj, $obj_name );
-    my $obj_class = '';
+    my $obj_class = 'entry';
 
     # The $value is the object ID. Only if $value exists should we try to
     # load the object. Otherwise, the most recent entry/page is loaded
