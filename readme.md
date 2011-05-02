@@ -170,36 +170,6 @@ Selected Entries or Pages works exactly like the Selected Entries field does -- 
 
 *Note: Because Entries and Pages use the same base object type, Entry, many of the Entry tags can be used for Pages.*
 
-### Config Assistant Custom Field Type
-
-In addition to the custom field described here, More Custom Fields also provides a custom field handler for Config Assistant for a type called `selected_entry_or_page`. In your `config.yaml`, specify a plugin option like this:
-
-    homepage_feature_1:
-      type: selected_entry_or_page
-      label: "Feature #1"
-      tag: HomepageFeature1
-      fieldset: homepage
-      order: 3
-      republish: main_index
-
-The result in your theme options will look like this example:
-
-<img src="https://img.skitch.com/20110425-mp188ff6e1fq78w2hkk23chxiw.png" style="border: 1px solid #999" />
-
-Click the button to pick an entry or page for that field. In your templates, you'll have to test for each kind of object (entry or page), since Config Assistant is not using an actual SelectEntriesOrPages field:
-
-    <mt:setvartemplate name="home_feature">
-    <mt:Pages id="$eid">
-        <p><a href="<$mt:PagePermalink$>"><$mt:var name="feature_image_entry" pref_w="140" pref_h="94" pref_c="Feature: Small Thumbnail"$></a></p>
-        <p><a href="<$mt:PagePermalink$>"><$mt:PageTitle$></a></p>
-    </mt:Pages>
-    <mt:Entries id="$eid">
-        <p><a href="<$mt:EntryPermalink$>"><$mt:var name="feature_image_entry" pref_w="140" pref_h="94" pref_c="Feature: Small Thumbnail"$></a></p>
-        <p><a href="<$mt:EntryPermalink$>"><$mt:EntryTitle$></a></p>
-    </mt:Entries>
-    </mt:setvartemplate>
-
-
 ## Selected Assets
 
 Selected Assets also works like Selected Entries and Selected Pages -- except it uses assets. More Custom Fields includes the block tag `SelectedAssets` to help output your selection, which works just like the SelectedEntries block does. If you've created a Selected Assets custom field with the `basename` of `my_favorite_assets` you might use the SelectedPages block like this:

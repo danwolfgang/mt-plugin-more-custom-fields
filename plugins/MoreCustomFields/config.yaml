@@ -43,10 +43,6 @@ callbacks:
         handler: $MoreCustomFields::MoreCustomFields::SelectedAssets::asset_insert_param
         priority: 1
 
-config_types:
-    selected_entry_or_page:
-        handler: $MoreCustomFields::MoreCustomFields::SelectedEntriesOrPages::ca_handler
-
 tags:
     block:
         SelectedAssets:  $MoreCustomFields::MoreCustomFields::SelectedAssets::tag_selected_assets
