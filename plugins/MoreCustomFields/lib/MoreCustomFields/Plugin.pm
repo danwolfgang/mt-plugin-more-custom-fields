@@ -155,7 +155,7 @@ sub load_customfield_types {
         message => {
             label             => 'Message',
             column_def        => 'vclob',
-            order             => 201,
+            order             => 210,
             # Disabling "no_default" means that a default *is* allowed.
             #no_default        => 1,
             options_field     => sub { MoreCustomFields::Message::_options_field(); },
