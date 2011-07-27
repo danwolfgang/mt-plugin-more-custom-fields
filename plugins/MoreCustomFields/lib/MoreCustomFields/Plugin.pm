@@ -102,16 +102,6 @@ sub load_customfield_types {
             field_html        => sub { MoreCustomFields::RadioButtonsWithInput::_field_html(); },
             field_html_params => sub { MoreCustomFields::RadioButtonsWithInput::_field_html_params(@_); },
         },
-        selected_content => {
-            label             => 'Selected Entries or Pages',
-            column_def        => 'vchar',
-            order             => 2099,
-            no_default        => 1,
-            options_delimiter => ',',
-            options_field     => sub { MoreCustomFields::SelectedEntriesOrPages::_options_field(); },
-            field_html        => sub { MoreCustomFields::SelectedEntriesOrPages::_field_html(); },
-            field_html_params => sub { MoreCustomFields::SelectedEntriesOrPages::_field_html_params(@_); },
-        },
         selected_entries => {
             label             => 'Selected Entries',
             column_def        => 'vchar',
@@ -131,6 +121,16 @@ sub load_customfield_types {
             options_field     => sub { MoreCustomFields::SelectedPages::_options_field(); },
             field_html        => sub { MoreCustomFields::SelectedPages::_field_html(); },
             field_html_params => sub { MoreCustomFields::SelectedPages::_field_html_params(@_); },
+        },
+        selected_content => {
+            label             => 'Selected Entries or Pages',
+            column_def        => 'vchar',
+            order             => 2102,
+            no_default        => 1,
+            options_delimiter => ',',
+            options_field     => sub { MoreCustomFields::SelectedEntriesOrPages::_options_field(); },
+            field_html        => sub { MoreCustomFields::SelectedEntriesOrPages::_field_html(); },
+            field_html_params => sub { MoreCustomFields::SelectedEntriesOrPages::_field_html_params(@_); },
         },
 #        single_line_text_group => {
 #            label             => 'Single-Line Text Group',
