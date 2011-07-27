@@ -456,7 +456,7 @@ sub post_save {
         }
     }
     
-    1; # For some reason necessary to make author, category, and folder pages save without error.
+    1; # Callbacks should always return true
 }
 
 1;
