@@ -310,7 +310,7 @@ sub post_save {
         # Find the Multi-Use Single Line Text Group field
         # The "beacon" is used to always grab the text field. This will catch
         # an empty text field.
-        if(m/^customfield_(.*?)_multiusesinglelinetextgroupcf_(.*?)_cb_beacon$/) {
+        elsif (m/^customfield_(.*?)_multiusesinglelinetextgroupcf_(.*?)_cb_beacon$/) {
             MoreCustomFields::SingleLineTextGroup::_save({
                 app             => $app,
                 object          => $obj,
