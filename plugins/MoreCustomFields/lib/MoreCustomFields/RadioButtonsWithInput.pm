@@ -111,6 +111,39 @@ sub _field_html_params {
     }
 }
 
+# This is called by MoreCustomFields::Plugin::post_save, which is the 
+# post-save callback handler. Save the data for this custom field type.
+sub _save {
+    my ($arg_ref) = shift;
+    my $app            = $arg_ref->{app};
+    my $obj            = $arg_ref->{object};
+    my $field_basename = $arg_ref->{field_basename};
+
+    my $field_name = 'customfield_' . $field_basename . '_radiobuttonswithinput';
+
+    # This is the text input value
+    my $input_value = $app->param($field_name);
+
+    if ($input_value) {
+        # The "beacon" is the name of the last field.
+        my $selected = $app->param($field_name."_beacon");
+
+        # This is the selected radio button
+        my $customfield_value = $app->param('customfield_' . $field_basename);
+
+        # Compare the beacon and selected value. Only if they match should the 
+        # text input be saved.
+        if ($selected eq $customfield_value) {
+            $customfield_value .= ': '.$input_value;
+        }
+
+        $app->param('customfield_' . $field_basename, $customfield_value);
+    }
+
+    # Destroy the specially-assembled fields, because they make MT barf.
+    $app->delete_param($field_name.'_beacon');
+    $app->delete_param($field_name);
+}
 1;
 
 __END__

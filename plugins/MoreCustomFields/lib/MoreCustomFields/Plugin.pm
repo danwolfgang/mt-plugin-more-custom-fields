@@ -242,67 +242,19 @@ sub post_save {
         # The "beacon" is used to always grab the checkboxes. After all are 
         # captured, then we can check their status (checked or not).
         if(m/^customfield_(.*?)_checkboxgroupcf_(.*?)_cb_beacon$/) { 
-            my $count = $2;
-            # Now look at the individual checkbox in the group to determine if 
-            # it's checked.
-            if( $app->param( /^customfield_(.*?)_checkboxgroupcf_$count$/ ) ) { 
-                my $field_name = "customfield_$1_checkboxgroupcf_$count";
-                
-                # This line serves two purposes:
-                # - Create the "real" customfield to write to the DB, if it doesn't exist already.
-                # - If the field has already been created (because this is the 2nd or 3rd or 4th etc
-                #   Checkbox Group CF option) then get it so that we can see the currently-selected
-                #   options and append a new result to them.
-                my $customfield_value = $app->param("customfield_$1");
-
-                # Join all the checkboxes into a list
-                my $result;
-                if ( $customfield_value ) { #only "join" if the field has already been set
-                    $result = join ', ', $customfield_value, $app->param($field_name);
-                }
-                else { # Nothing saved yet? Just assign the variable
-                    $result = $app->param($field_name);
-                }
-
-                # If the customfield held some results, then a real text value exists, such as "blue."
-                # If the field was empty, however, the $results variable is empty, indicating that the
-                # field should *not* be saved. This is incorrect because an empty field may be
-                # purposefully unselected, so we need to force save the deletion of the field.
-                if (!$result) { $result = ' '; }
-
-                # Save the new result to the *real* field name, which should be written to the DB.
-                $app->param("customfield_$1", $result);
-
-                # Destory the specially-assembled fields, because they make MT barf.
-                $app->delete_param($field_name);
-                $app->delete_param($field_name.'_cb_beacon');
-            }
+            MoreCustomFields::CheckboxGroup::_save({
+                app    => $app,
+                object => $obj,
+                count  => $2,
+            });
         }
         # Find the Radio Buttons with Input field.
         elsif (m/^customfield_(.*?)_radiobuttonswithinput$/) {
-            my $field_name = "customfield_$1_radiobuttonswithinput";
-
-            # This is the text input value
-            my $input_value = $app->param($field_name);
-
-            if ($input_value) {
-                # The "beacon" is the name of the last field.
-                my $selected = $app->param($field_name."_beacon");
-
-                # This is the selected radio button
-                my $customfield_value = $app->param("customfield_$1");
-
-                # Compare the beacon and selected value. Only if they match should the text input be saved.
-                if ($selected eq $customfield_value) {
-                    $customfield_value .= ': '.$input_value;
-                }
-
-                $app->param("customfield_$1", $customfield_value);
-            }
-
-            # Destroy the specially-assembled fields, because they make MT barf.
-            $app->delete_param($field_name.'_beacon');
-            $app->delete_param($field_name);
+            MoreCustomFields::CheckboxGroup::_save({
+                app            => $app,
+                object         => $obj,
+                field_basename => $1,
+            });
         }
         # Find the Selected Entries, Selected Pages, or Selected Assets field.
         elsif( m/^customfield_(.*?)_selected(entries|pages|assets|content)cf_(.*?)$/ ) {
@@ -355,104 +307,15 @@ sub post_save {
             $app->delete_param($field_name);
         } #end of Selected Entries/Pages/Assets field.
 
-        # Find the Single Line Text Group field
-        # The "beacon" is used to always grab the text field. This will catch
-        # an empty text field.
-        if(m/^customfield_(.*?)_singlelinetextgroupcf_(.*?)_cb_beacon$/) { 
-            my $user_field_name = $2;
-            # Now look at the individual text field in the group to determine if 
-            # it's checked.
-            if( $app->param( /^customfield_(.*?)_singlelinetextgroupcf_$user_field_name$/ ) ) { 
-                my $field_name = "customfield_$1_singlelinetextgroupcf_$user_field_name";
-
-                # Store this field's data as YAML.
-                my $yaml = YAML::Tiny->new;
-
-                # If any options for this CF have already been read and set,
-                # grab them so we can just continue appending to them.
-                if ( $app->param("customfield_$1") ) {
-                    $yaml = YAML::Tiny->read_string( $app->param("customfield_$1") );
-                }
-
-                # Write the YAML for the current field.
-                $yaml->[0]->{$1}->{$user_field_name} = $app->param($field_name);
-
-                # Turn that YAML into a plain old string.
-                my $result = $yaml->write_string();
-
-                # Save the new result to the *real* field name, which should be written to the DB.
-                $app->param("customfield_$1", $result);
-
-                # Destory the specially-assembled fields, because they make MT barf.
-                $app->delete_param($field_name);
-                $app->delete_param($field_name.'_cb_beacon');
-            }
-        }
         # Find the Multi-Use Single Line Text Group field
         # The "beacon" is used to always grab the text field. This will catch
         # an empty text field.
         if(m/^customfield_(.*?)_multiusesinglelinetextgroupcf_(.*?)_cb_beacon$/) {
-            my $user_field_name = $2;
-            # Now look at the individual text field in the group to determine if 
-            # it's checked.
-            if( $app->param( /^customfield_(.*?)_multiusesinglelinetextgroupcf_$user_field_name$/ ) ) { 
-                my $field_name = "customfield_$1_multiusesinglelinetextgroupcf_$user_field_name";
-
-                # Use a group number to hold each group of text boxes together.
-                my $group_num = 1;
-                # Save the values to an array
-                my @field_data = $app->param($field_name);
-                # ...and note the size of the array. We use this to see if
-                # the last text group might be empty
-                my $last_group = scalar @field_data;
-
-                # If $last_group is 0, then it means there is no data to
-                # save. The user is probably trying to delete all data, so
-                # we need to "write" nothing so that the customfield erases
-                # any previously-saved data.
-                if ($last_group == 0) {
-                    $app->param("customfield_$1", '');
-                }
-                
-                foreach my $field_value ( @field_data ) {
-                    # Is this the last text group?
-                    if ( $last_group == $group_num ) {
-                        # This is the last text group. Is there a value
-                        # saved, or is it just an emtpy field? If empty,
-                        # just give up.
-                        if ($field_value eq '') {
-                            next;
-                        }
-                    }
-
-                    # Store this field's data as YAML.
-                    my $yaml = YAML::Tiny->new;
-
-                    # If any options for this CF have already been read and set,
-                    # grab them so we can just continue appending to them.
-                    if ( $app->param("customfield_$1") ) {
-                        $yaml = YAML::Tiny->read_string( $app->param("customfield_$1") );
-                    }
-
-                    # Write the YAML.
-                    $yaml->[0]->{$1}->{$group_num}->{$user_field_name} = $field_value;
-                    # Turn that YAML into a plain old string.
-                    my $result = $yaml->write_string();
-
-                    # Save the new result to the *real* field name, which
-                    # should be written to the DB.
-                    $app->param("customfield_$1", $result);
-
-                    # Increment the group number so that the next text group 
-                    # gets its own YAML key.
-                    $group_num++;
-                }
-
-                # Destory the specially-assembled fields, because they make MT barf.
-                $app->delete_param($field_name);
-                $app->delete_param($field_name.'_cb_beacon');
-                $app->delete_param($field_name.'_invisible')
-            }
+            MoreCustomFields::SingleLineTextGroup::_save({
+                app             => $app,
+                object          => $obj,
+                user_field_name => $2,
+            });
         }
     }
     

@@ -226,7 +226,75 @@ sub _multi_field_html_params {
     if ($field) {
         $tmpl_param->{text_group_label} = $field->name;
     }
-    
+}
+
+# This is called by MoreCustomFields::Plugin::post_save, which is the 
+# post-save callback handler. Save the data for this custom field type.
+sub _save {
+    my ($arg_ref) = shift;
+    my $app             = $arg_ref->{app};
+    my $obj             = $arg_ref->{object};
+    my $user_field_name = $arg_ref->{user_field_name};
+
+    # Now look at the individual text field in the group to determine if 
+    # it's checked.
+    if( $app->param( /^customfield_(.*?)_multiusesinglelinetextgroupcf_$user_field_name$/ ) ) { 
+        my $field_basename = $1;
+        my $field_name = "customfield_$1_multiusesinglelinetextgroupcf_$user_field_name";
+
+        # Use a group number to hold each group of text boxes together.
+        my $group_num = 1;
+        # Save the values to an array
+        my @field_data = $app->param($field_name);
+        # ...and note the size of the array. We use this to see if the last 
+        # text group might be empty
+        my $last_group = scalar @field_data;
+
+        # If $last_group is 0, then it means there is no data to save. The 
+        # user is probably trying to delete all data, so we need to "write"
+        # nothing so that the customfield erases any previously-saved data.
+        if ($last_group == 0) {
+            $app->param("customfield_$1", '');
+        }
+
+        foreach my $field_value ( @field_data ) {
+            # Is this the last text group?
+            if ( $last_group == $group_num ) {
+                # This is the last text group. Is there a value saved, or is
+                # it just an emtpy field? If empty, just give up.
+                if ($field_value eq '') {
+                    next;
+                }
+            }
+
+            # Store this field's data as YAML.
+            my $yaml = YAML::Tiny->new;
+
+            # If any options for this CF have already been read and set,
+            # grab them so we can just continue appending to them.
+            if ( $app->param("customfield_$1") ) {
+                $yaml = YAML::Tiny->read_string( $app->param("customfield_$1") );
+            }
+
+            # Write the YAML.
+            $yaml->[0]->{$1}->{$group_num}->{$user_field_name} = $field_value;
+            # Turn that YAML into a plain old string.
+            my $result = $yaml->write_string();
+
+            # Save the new result to the *real* field name, which
+            # should be written to the DB.
+            $app->param("customfield_$1", $result);
+
+            # Increment the group number so that the next text group 
+            # gets its own YAML key.
+            $group_num++;
+        }
+
+        # Destory the specially-assembled fields, because they make MT barf.
+        $app->delete_param($field_name);
+        $app->delete_param($field_name.'_cb_beacon');
+        $app->delete_param($field_name.'_invisible')
+    }
 }
 
 1;
