@@ -17,6 +17,7 @@ use MoreCustomFields::SelectedEntries;
 use MoreCustomFields::SelectedPages;
 use MoreCustomFields::SingleLineTextGroup;
 use MoreCustomFields::Message;
+use MoreCustomFields::TimestampedTextarea;
 
 sub init_app {
     my $plugin = shift;
@@ -40,6 +41,10 @@ sub _load_tags {
     $tags = MoreCustomFields::SingleLineTextGroup::_create_tags({
         tags => $tags,
     });
+    $tags = MoreCustomFields::TimestampedTextarea::_create_tags({
+        tags => $tags,
+    });
+
     return $tags;
 }
 
@@ -114,6 +119,14 @@ sub load_customfield_types {
             options_field     => sub { MoreCustomFields::SingleLineTextGroup::_options_field(); },
             field_html        => sub { MoreCustomFields::SingleLineTextGroup::_multi_field_html(); },
             field_html_params => sub { MoreCustomFields::SingleLineTextGroup::_multi_field_html_params(@_); },
+        },
+        multi_use_timestamped_multi_line_text => {
+            label             => 'Multi-Use Time Stamped Multi-Line Text',
+            column_def        => 'vblob',
+            order             => 201,
+            no_default        => 1,
+            field_html        => sub { MoreCustomFields::TimestampedTextarea::_field_html(); },
+            field_html_params => sub { MoreCustomFields::TimestampedTextarea::_field_html_params(@_); },
         },
         message => {
             label             => 'Message',
@@ -278,6 +291,17 @@ sub post_save {
                 app             => $app,
                 object          => $obj,
                 user_field_name => $2,
+            });
+        }
+
+        # Find the Multi-Use Time Stamped Multi-Line Text Group field
+        # The "beacon" is used to always grab the text field. This will catch
+        # an empty text field.
+        elsif (m/^customfield_(.*?)_multiusetimestampedmultilinetextcf_cb_beacon$/) {
+            MoreCustomFields::TimestampedTextarea::_save({
+                app            => $app,
+                object         => $obj,
+                field_basename => $1,
             });
         }
     }

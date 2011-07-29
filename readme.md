@@ -34,6 +34,10 @@ however, get More Custom Fields!
   area, but any other use can only read the contents. Useful for displaying
   instructions or other data you don't want the user to edit.
 
+* Multi-Use Time Stamped Multi-Line Text: another mouthful of a field name,
+  but easy to use. This field type provides a reusable Multi-Line text field.
+  When saved, each Multi-Line text field has a time stamp saved with it.
+
 
 # Prerequisites
 
@@ -66,6 +70,7 @@ when defining custom fields:
   Selected Videos, Selected Files, and any other type of registered asset)
 * Multi-Use Single-Line Text Group
 * Message
+* Multi-Use Time Stamped Multi-Line Text
 
 Use these field types as you would any other: from the Preferences menu select
 Custom Fields, and create a new custom field.
@@ -115,6 +120,8 @@ The **Message** field type should receive a default value. This value is the
 specify whether *no* user should be able to edit the field data, or if
 administrators should be able to override the supplied default.
 
+The **Multi-Use Time Stamped Multi-Line Text** field type is another mouthful. Breaking down this field: The Multi-Line Text field is included with MT Pro and lets you create a textarea field. This field type also lets you create a textarea field, and it can be re-used over and over simply by clicking an "add another..." link. Additionally, each instance of the textarea is saved with a time stamp, marking when the data in that textarea was added. This field has no options.
+
 Lastly, use your new fields! Don't forget to place them in your templates.
 
 ## Using More Custom Fields with your Theme
@@ -132,6 +139,7 @@ which may help expedite your theme creation.
 * Selected Pages: `selected_pages`
 * Selected Entries or Pages: `selected_content`
 * Message: `message`
+* Multi-Use Time Stamped Multi-Line Text: `multi_use_timestamped_multi_line_text`
 
 Note that the Selected Assets field actually creates a different custom field
 for each type of asset field available (Selected Images, Selected Videos,
@@ -346,6 +354,50 @@ template, or rewrite the Javascript for the field to work how you prefer.
 
 The Message custom field can be output simply using the tag you define for the
 field. There are no special capabilities.
+
+## Multi-Use Time Stamped Multi-Line Text
+
+A long name, but the idea is simple: this field provides a multi-line text
+field that is saved with a time stamp. Add additional instances of this field
+by clicking the "add another..." link. The time stamp will be saved with each
+instance of the multi-line textarea. This field has no configuration options.
+
+This field can be used in a "breaking news"-type entry, where there may be
+many updates to the story as it unfolds. Since the textarea is time stamped
+after each use, the exact time of each story addition can be published, making
+it easy for readers to see exactly how and when this breaking news is
+unfolding.
+
+Outputting the contents of this field requires some special handling, and a special block tag is created to help with this. The text "loop" is appended to the specified template tag name to create this special tag. In this example the custom field-created template tag is `BreakingNewsUpdates`, so the special block tag is `BreakingNewsUpdatesLoop`.
+
+Within this new tag we can output the variables containing the content added to this field. The variables `text` and `date` are used, as in the example below:
+
+    <mt:BreakingNewsUpdatesLoop>
+    <div class="breaking-news-update">
+        <p><mt:Var name="text"></p>
+        <p>Updated at <mt:Var name="date"></p>
+    </div>
+    </mt:BreakingNewsUpdatesLoop>
+
+I've entered some simple text in the field, and when published it output the following:
+
+    <div class="breaking-news-update">
+        <p>This is my first update to this story.</p>
+        <p>Updated at July 27, 2011 4:56 PM</p>
+    </div>
+    <div class="breaking-news-update">
+        <p>Another story update.</p>
+        <p>Updated at July 28, 2011 8:12 AM</p>
+    </div>
+
+The `text` variable can be optionally formatted with the [`filters` modifier](http://www.movabletype.org/documentation/appendices/modifiers/filters.html). The `date` variable can be optionally formatted with the [date formats modifiers](http://www.movabletype.org/documentation/appendices/date-formats.html), though placement of the arguments is unique. In the example below notice the placement of the `format` argument: inside the Loop block.
+
+    <mt:BreakingNewsUpdatesLoop format="%Y-%m-%e">
+    <div class="breaking-news-update">
+        <mt:Var name="text" filters="markdown_with_smartypants">
+        <p>Updated at <mt:Var name="date"></p>
+    </div>
+    </mt:BreakingNewsUpdatesLoop>
 
 
 # Known Issues
