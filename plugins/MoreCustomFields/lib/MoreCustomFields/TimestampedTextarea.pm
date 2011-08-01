@@ -33,7 +33,7 @@ sub _field_html {
             name="<mt:var name="field_name">_multiusetimestampedmultilinetextcf_text" 
             id="<mt:var name="field_name">_multiusetimestampedmultilinetextcf_text"
             style="border:1px solid #ccc; background-color:#fff; margin-bottom: 3px;" 
-            class="full-width"><mt:Var name="text" escape="html"></textarea>
+            class="full-width"><mt:Var name="ts_text" escape="html"></textarea>
 
     <mt:If name="timestamp">
         <div>Time stamp: <mt:Var name="timestamp"></div>
@@ -158,7 +158,7 @@ sub _field_html_params {
                 
                 # Now push the saved field value into the option loop.
                 push @fields_loop, {
-                    text      => $field->{$group_num}->{text},
+                    ts_text   => $field->{$group_num}->{text},
                     timestamp => $formatted_ts,
                 };
                 push @group_loop, {
@@ -173,7 +173,8 @@ sub _field_html_params {
     # point.
     if ( ! scalar @group_loop ) {
         my @fields_loop = [{
-            date_added => '',
+            ts_text   => '',
+            timestamp => '',
         }];
 
         push @group_loop, {
