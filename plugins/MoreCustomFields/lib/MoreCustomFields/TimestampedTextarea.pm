@@ -340,10 +340,22 @@ sub _create_tags {
                 my $vars = $ctx->{__stash}{vars};
                 my $count = 0;
 
+                # Sort the timestamped textarea based on the order it was,
+                # added (and by extension saved and therefore timestamped).
+                # Sort the fields in ascending date by default, just as they
+                # are displayed on the admin interface.
+                my @sorted;
+                if ($args->{'sort_order'} eq 'descend') {
+                    @sorted = sort { $field->{$b} <=> $field->{$a} } keys %{$field};
+                }
+                else {
+                    @sorted = sort { $field->{$a} <=> $field->{$b} } keys %{$field};
+                }
+
                 # The $group_num is the group order/parent of the values.
                 # Sort it so that they are displayed in the order they
                 # were saved.
-                foreach my $group_num ( sort keys %{$field} ) {
+                foreach my $group_num ( @sorted ) {
                     local $vars->{'__first__'} = ($count++ == 0);
                     local $vars->{'__last__'} = ($count == scalar keys %{$field});
 

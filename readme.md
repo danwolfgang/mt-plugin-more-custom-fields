@@ -368,9 +368,15 @@ after each use, the exact time of each story addition can be published, making
 it easy for readers to see exactly how and when this breaking news is
 unfolding.
 
-Outputting the contents of this field requires some special handling, and a special block tag is created to help with this. The text "loop" is appended to the specified template tag name to create this special tag. In this example the custom field-created template tag is `BreakingNewsUpdates`, so the special block tag is `BreakingNewsUpdatesLoop`.
+Outputting the contents of this field requires some special handling, and a
+special block tag is created to help with this. The text "loop" is appended to
+the specified template tag name to create this special tag. In this example
+the custom field-created template tag is `BreakingNewsUpdates`, so the special
+block tag is `BreakingNewsUpdatesLoop`.
 
-Within this new tag we can output the variables containing the content added to this field. The variables `text` and `date` are used, as in the example below:
+Within this new tag we can output the variables containing the content added
+to this field. The variables `text` and `date` are used, as in the example
+below:
 
     <mt:BreakingNewsUpdatesLoop>
     <div class="breaking-news-update">
@@ -379,7 +385,8 @@ Within this new tag we can output the variables containing the content added to 
     </div>
     </mt:BreakingNewsUpdatesLoop>
 
-I've entered some simple text in the field, and when published it output the following:
+I've entered some simple text in the field, and when published it output the
+following:
 
     <div class="breaking-news-update">
         <p>This is my first update to this story.</p>
@@ -390,9 +397,18 @@ I've entered some simple text in the field, and when published it output the fol
         <p>Updated at July 28, 2011 8:12 AM</p>
     </div>
 
-The `text` variable can be optionally formatted with the [`filters` modifier](http://www.movabletype.org/documentation/appendices/modifiers/filters.html). The `date` variable can be optionally formatted with the [date formats modifiers](http://www.movabletype.org/documentation/appendices/date-formats.html), though placement of the arguments is unique. In the example below notice the placement of the `format` argument: inside the Loop block.
+This custom field can be sorted in ascending or descending order (according to
+the timestamp, of course). Use the `sort_order` key to specify "ascend" or
+"descend". Ascend is the default.
 
-    <mt:BreakingNewsUpdatesLoop format="%Y-%m-%e">
+The `text` variable can be optionally formatted with the [`filters`
+modifier](http://www.movabletype.org/documentation/appendices/modifiers/filters.html).
+The `date` variable can be optionally formatted with the [date formats
+modifiers](http://www.movabletype.org/documentation/appendices/date-formats.html),
+though placement of the arguments is unique. In the example below notice the
+placement of the `format` argument: inside the Loop block.
+
+    <mt:BreakingNewsUpdatesLoop format="%Y-%m-%e" sort_order="descend">
     <div class="breaking-news-update">
         <mt:Var name="text" filters="markdown_with_smartypants">
         <p>Updated at <mt:Var name="date"></p>
