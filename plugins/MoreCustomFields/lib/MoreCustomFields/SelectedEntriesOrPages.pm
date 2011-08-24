@@ -359,6 +359,27 @@ sub se_list_content {
     );
 }
 
+sub se_select_content {
+    my $app = shift;
+
+    my $entry_id = $app->param('id')
+        or return $app->errtrans('No id');
+    my $entry = MT->model('entry')->load($entry_id)
+        or return $app->errtrans( 'No entry #[_1]', $entry_id );
+    my $edit_field = $app->param('edit_field')
+        or return $app->errtrans('No edit_field');
+
+    my $plugin = MT->component('MoreCustomFields');
+    my $tmpl   = $plugin->load_tmpl(
+        'select_item.mtml',
+        {   entry_id    => $entry->id,
+            entry_title => $entry->title,
+            edit_field  => $edit_field,
+        }
+    );
+    return $tmpl;
+}
+
 1;
 
 __END__
