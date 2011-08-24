@@ -300,7 +300,7 @@ sub se_list_content {
     );
 
     my @blog_ids;
-    if ( $blog_ids == 'all' ) {
+    if ( $blog_ids eq 'all' ) {
 
         # @blog_ids should stay empty so all blogs are loaded.
     }
