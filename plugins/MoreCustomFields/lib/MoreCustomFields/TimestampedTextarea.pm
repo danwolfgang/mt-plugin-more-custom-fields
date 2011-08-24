@@ -79,7 +79,7 @@ sub _field_html {
                     <a href="javascript:void(0)" 
                         onclick="jQuery(this).parent().parent().remove()" 
                         class="icon-left icon-error">
-                        Delete this <mt:Var name="text_group_label"> field group
+                        Delete this <mt:Var name="text_group_label"> field
                     </a>
                 </li>
             </ul>
@@ -91,7 +91,7 @@ sub _field_html {
             <a href="javascript:void(0);" 
                 onclick="addGroup('<mt:Var name="field_name">_multiusetimestampedmultilinetextcf_container','<mt:Var name="field_name">')" 
                 class="icon-left icon-create">
-                Add another <mt:Var name="text_group_label"> field group
+                Add another <mt:Var name="text_group_label"> field
             </a>
         </p>
     </mt:If>
@@ -107,7 +107,7 @@ sub _field_html {
                         <a href="javascript:void(0)" 
                             onclick="jQuery(this).parent().parent().remove()" 
                             class="icon-left icon-error">
-                            Delete this <mt:Var name="text_group_label"> field group
+                            Delete this <mt:Var name="text_group_label"> field
                         </a>
                     </li>
                 </ul>
