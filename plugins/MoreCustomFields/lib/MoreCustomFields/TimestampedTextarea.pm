@@ -36,7 +36,7 @@ sub _field_html {
             class="full-width"><mt:Var name="ts_text" escape="html"></textarea>
 
     <mt:If name="timestamp">
-        <div>Time stamp: <mt:Var name="timestamp"></div>
+        <div>Time stamp: <mt:Var name="timestamp_formatted"></div>
         <input type="hidden"
             name="<mt:var name="field_name">_multiusetimestampedmultilinetextcf_timestamp" 
             id="<mt:var name="field_name">_multiusetimestampedmultilinetextcf_timestamp"
@@ -158,8 +158,9 @@ sub _field_html_params {
                 
                 # Now push the saved field value into the option loop.
                 push @fields_loop, {
-                    ts_text   => $field->{$group_num}->{text},
-                    timestamp => $formatted_ts,
+                    ts_text             => $field->{$group_num}->{text},
+                    timestamp           => $field->{$group_num}->{timestamp},
+                    timestamp_formatted => $formatted_ts,
                 };
                 push @group_loop, {
                     fields_loop => \@fields_loop,
@@ -270,12 +271,12 @@ sub _save {
                 # Finally, format the timestamp according to the user prefs.
                 # (Is this actually necessary? The $ts above is probably all
                 # that is needed, I think.)
-                $ts = format_ts( 
-                    "%Y%m%d%H%M%S", 
-                    $ts, 
-                    $app->blog, 
-                    $app && $app->user ? $app->user->preferred_language : undef 
-                );
+                # $ts = format_ts( 
+                #     "%Y%m%d%H%M%S", 
+                #     $ts, 
+                #     $app->blog, 
+                #     $app && $app->user ? $app->user->preferred_language : undef 
+                # );
             }
 
             # Write the YAML.
