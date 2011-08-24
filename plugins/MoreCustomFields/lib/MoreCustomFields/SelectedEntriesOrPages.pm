@@ -108,7 +108,7 @@ sub _field_html {
         var newDeleteLink = document.createElement('a');
         newDeleteLink.setAttribute('style', "margin-left: 5px;");
         newDeleteLink.setAttribute('style', 'padding: 3px 5px;');
-        var href = "javascript:removeSelectedEntry('li_" + newInputName + "','<mt:Var name="field_name">');";
+        var href = "javascript:removeSelectedItem('li_" + newInputName + "','<mt:Var name="field_name">');";
         newDeleteLink.setAttribute('href', href);
         newDeleteLink.setAttribute('title', 'Remove selected entry or page');
         newDeleteLink.appendChild(newDeleteIcon);
