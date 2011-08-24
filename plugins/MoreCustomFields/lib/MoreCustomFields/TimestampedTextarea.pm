@@ -348,10 +348,14 @@ sub _create_tags {
                 # are displayed on the admin interface.
                 my @sorted;
                 if ($args->{'sort_order'} eq 'descend') {
-                    @sorted = sort { $field->{$b} <=> $field->{$a} } keys %{$field};
+                    @sorted = sort { 
+                        $field->{$b}->{timestamp} <=> $field->{$a}->{timestamp} 
+                    } keys %{$field};
                 }
                 else {
-                    @sorted = sort { $field->{$a} <=> $field->{$b} } keys %{$field};
+                    @sorted = sort { 
+                        $field->{$a}->{timestamp} <=> $field->{$b}->{timestamp} 
+                    } keys %{$field};
                 }
 
                 # The $group_num is the group order/parent of the values.
