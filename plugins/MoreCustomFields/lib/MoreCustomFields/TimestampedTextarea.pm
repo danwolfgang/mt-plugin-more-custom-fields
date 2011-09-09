@@ -21,6 +21,11 @@ sub _field_html {
             id="<mt:var name="field_name">_multiusetimestampedmultilinetextcf_text"
             style="border:1px solid #ccc; background-color:#fff; margin-bottom: 3px;" 
             class="full-width ti"></textarea>
+
+        <input type="hidden"
+            name="<mt:var name="field_name">_multiusetimestampedmultilinetextcf_timestamp" 
+            id="<mt:var name="field_name">_multiusetimestampedmultilinetextcf_timestamp"
+            value="" />
     </li>
 </mt:SetVarTemplate>
 <mt:SetVarTemplate name="field_template">
@@ -51,8 +56,10 @@ sub _field_html {
         jQuery('#' + field_name + '_multiusetimestampedmultilinetextcf_invisible-field')
             .clone()
             .appendTo('#' + parent);
+
         // Switch to display:block so that the field is visible.
         jQuery('#' + parent + ' .cf-text-group').css('display', 'block');
+
         // The text input field has "_invisible" appended so that it isn't
         // inadvertently saved. Remove that trailing identifier so that the
         // field can be properly used.
@@ -60,6 +67,32 @@ sub _field_html {
             var name = $(this).attr('name');
             name = name.replace(/_invisible$/, '');
             var name = $(this).attr('name', name);
+        });
+
+        jQuery('#' + parent + ' ul.cf-text-group input[name=<mt:var name="field_name">_multiusetimestampedmultilinetextcf_timestamp]').each(function(index) {
+            if ( jQuery(this).val() == '' ) {
+                var d = new Date();
+                var year = d.getFullYear();
+                var month = d.getMonth() + 1;
+                if (month < 10) { month = 0 + month.toString(); }
+                var date = d.getDate();
+                if (date < 10) { date = 0 + date.toString(); }
+                var hours = d.getHours();
+                if (hours < 10) { hours = 0 + hours.toString(); }
+                var min = d.getMinutes();
+                if (min < 10) { min = 0 + min.toString(); }
+                var sec = d.getSeconds();
+                if (min < 10) { min = 0 + min.toString(); }
+
+                var ts = year.toString()
+                    + month.toString()
+                    + date.toString()
+                    + hours.toString()
+                    + min.toString()
+                    + sec.toString();
+
+                jQuery(this).val( ts );
+            }
         });
     }
     </script>
