@@ -76,7 +76,7 @@ sub _field_html {
         var min = d.getMinutes();
         if (min < 10) { min = 0 + min.toString(); }
         var sec = d.getSeconds();
-        if (min < 10) { min = 0 + min.toString(); }
+        if (sec < 10) { sec = 0 + sec.toString(); }
 
         var ts = year.toString()
             + month.toString()
