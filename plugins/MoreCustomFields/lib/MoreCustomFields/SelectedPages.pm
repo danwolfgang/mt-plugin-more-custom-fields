@@ -282,7 +282,7 @@ sub se_list_pages {
     $terms->{status} = '2';
 
     my @blog_ids;
-    if ($blog_ids == 'all') {
+    if ($blog_ids eq 'all') {
         # @blog_ids should stay empty so all blogs are loaded.
     }
     else {
@@ -302,7 +302,7 @@ sub se_list_pages {
     my $plugin = MT->component('MoreCustomFields');
     my $tmpl = $plugin->load_tmpl('entry_list.mtml');
     $tmpl->param('type', 'page');
-    
+
     # For some reason the 'page' _type doesn't get set/picked up for
     # searches, so just set it here.
     $app->param('_type','page');

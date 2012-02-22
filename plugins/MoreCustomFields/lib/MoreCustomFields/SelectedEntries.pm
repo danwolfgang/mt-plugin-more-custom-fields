@@ -282,9 +282,9 @@ sub se_list_entries {
     my %terms = (
          status => '2',
     );
-    
+
     my @blog_ids;
-    if ($blog_ids == 'all') {
+    if ($blog_ids eq 'all') {
         # @blog_ids should stay empty so all blogs are loaded.
     }
     else {
@@ -292,7 +292,7 @@ sub se_list_entries {
         @blog_ids = split(/,/, $blog_ids);
         $terms{blog_id} = [@blog_ids];
     }
-    
+
     my %args = (
         sort      => 'authored_on',
         direction => 'descend',
