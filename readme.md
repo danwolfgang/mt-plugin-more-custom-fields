@@ -38,6 +38,16 @@ however, get More Custom Fields!
   but easy to use. This field type provides a reusable Multi-Line text field.
   When saved, each Multi-Line text field has a time stamp saved with it.
 
+* Reciprocal Entry Association: used to link two entries together. When
+  editing Entry A and linking Entry B, an association from Entry B back to
+  Entry A is automatically created. When deleting an association, the
+  reciprocal is also removed. The best part: on the Edit Entry screen is a
+  link to edit the reciprocal Entry, allowing authors to easily jump between
+  Entries.
+
+* Reciprocal Page Association: just like Reciprocal Entry Association, but for
+  Pages.
+
 
 # Prerequisites
 
@@ -71,6 +81,8 @@ when defining custom fields:
 * Multi-Use Single-Line Text Group
 * Message
 * Multi-Use Time Stamped Multi-Line Text
+* Reciprocal Entry Association
+* Reciprocal Page Association
 
 Use these field types as you would any other: from the Preferences menu select
 Custom Fields, and create a new custom field.
@@ -122,7 +134,20 @@ administrators should be able to override the supplied default.
 
 The **Multi-Use Time Stamped Multi-Line Text** field type is another mouthful. Breaking down this field: The Multi-Line Text field is included with MT Pro and lets you create a textarea field. This field type also lets you create a textarea field, and it can be re-used over and over simply by clicking an "add another..." link. Additionally, each instance of the textarea is saved with a time stamp, marking when the data in that textarea was added. This field has no options.
 
+The **Reciprocal Entry Association** and **Reciprocal Page Association** field
+types allow you to link to an object of the same type, and automatically
+create a reciprocal link: when you link Entry A and Entry B, Entry B is
+automatically linked to Entry A. Note that the Reciprocal Entry Association
+field can only associate Entries, and that the Reciprocal Page Association
+field can only associate Pages. This field is non-functional for categories,
+folders, and users. Specify a blog ID as this field's option to determine
+which blog's Entries (or Pages) are available for selection. Blog IDs must be
+separated with a comma to create a string (as in "1,12,19,37,112"), or the
+value "all" may be used to include all blogs. Leaving this field blank will
+use the current blog.
+
 Lastly, use your new fields! Don't forget to place them in your templates.
+
 
 ## Using More Custom Fields with your Theme
 
@@ -139,7 +164,10 @@ which may help expedite your theme creation.
 * Selected Pages: `selected_pages`
 * Selected Entries or Pages: `selected_content`
 * Message: `message`
-* Multi-Use Time Stamped Multi-Line Text: `multi_use_timestamped_multi_line_text`
+* Multi-Use Time Stamped Multi-Line Text:
+  `multi_use_timestamped_multi_line_text`
+* Reciprocal Entry Association: `reciprocal_entry`
+* Reciprocal Page Association: `reciprocal_page`
 
 Note that the Selected Assets field actually creates a different custom field
 for each type of asset field available (Selected Images, Selected Videos,
@@ -414,6 +442,25 @@ placement of the `format` argument: inside the Loop block.
         <p>Updated at <mt:Var name="date"></p>
     </div>
     </mt:BreakingNewsUpdatesLoop>
+
+
+## Reciprocal Entry Association
+
+The Reciprocal Entry Association field type allows you to link entries together. Output the linked entry with a special block tag, `ReciprocalEntry`. This tag takes one argument: basename. The basename of your custom field was created when you saved it; in this example it's `my_reciprocal_entry`.
+
+    <mt:ReciprocalEntry basename="my_reciprocal_entry">
+        <p>Read this in Spanish: <a href="<mt:EntryPermalink>"><mt:EntryTitle></a></p>
+    </mt:ReciprocalEntry>
+
+As the text in the above example implies, the reciprocal entry could be formatted with "read this in English" text to allow the user to go to their preferred language.
+
+## Reciprocal Page Association
+
+The Reciprocal Page Association field type works just like the Reciprocal Entry Association field type does, except that it uses a different block tag, `ReciprocalPage`.
+
+    <mt:ReciprocalPage basename="my_reciprocal_page">
+        <p>Read this in Spanish: <a href="<mt:PagePermalink>"><mt:PageTitle></a></p>
+    </mt:ReciprocalPage>
 
 
 # Known Issues
