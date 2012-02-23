@@ -346,9 +346,10 @@ sub se_select_entry {
 
     my $plugin = MT->component('MoreCustomFields');
     my $tmpl = $plugin->load_tmpl('select_entry.mtml', {
-        entry_id    => $entry->id,
-        entry_title => $entry->title,
-        edit_field  => $edit_field,
+        entry_id      => $entry->id,
+        entry_title   => $entry->title,
+        entry_blog_id => $entry->blog_id,
+        edit_field    => $edit_field,
     });
     return $tmpl;
 }

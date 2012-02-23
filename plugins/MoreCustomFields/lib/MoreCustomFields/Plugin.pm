@@ -18,6 +18,7 @@ use MoreCustomFields::SelectedPages;
 use MoreCustomFields::SingleLineTextGroup;
 use MoreCustomFields::Message;
 use MoreCustomFields::TimestampedTextarea;
+use MoreCustomFields::ReciprocalObject;
 
 sub init_app {
     my $plugin = shift;
@@ -138,8 +139,26 @@ sub load_customfield_types {
             field_html        => sub { MoreCustomFields::Message::_field_html(); },
             field_html_params => sub { MoreCustomFields::Message::_field_html_params(@_); },
         },
+        reciprocal_entry => {
+            label             => 'Reciprocal Entry Association',
+            column_def        => 'vchar',
+            order             => 801,
+            no_default        => 1,
+            options_field     => sub { MoreCustomFields::ReciprocalObject::_options_field(); },
+            field_html        => sub { MoreCustomFields::ReciprocalObject::_field_html('entry'); },
+            field_html_params => sub { MoreCustomFields::ReciprocalObject::_field_html_params(@_,'entry'); },
+        },
+        reciprocal_page => {
+            label             => 'Reciprocal Page Association',
+            column_def        => 'vchar',
+            order             => 802,
+            no_default        => 1,
+            options_field     => sub { MoreCustomFields::ReciprocalObject::_options_field(); },
+            field_html        => sub { MoreCustomFields::ReciprocalObject::_field_html('page'); },
+            field_html_params => sub { MoreCustomFields::ReciprocalObject::_field_html_params(@_,'page'); },
+        },
     };
-    
+
     # Grab all registered types of assets and add a new custom field for
     # each type. This way the field can be "Selected Images," for example
     # and give the user a chance to include only images and not other types
@@ -148,7 +167,7 @@ sub load_customfield_types {
     my $asset_types = MT::Asset->class_labels;
     my @asset_types =
       sort { $asset_types->{$a} cmp $asset_types->{$b} } keys %$asset_types;
-    
+
     my $order = 2000;
     foreach my $a_type (@asset_types) {
         my $asset_type = $a_type;
@@ -299,6 +318,15 @@ sub post_save {
         # an empty text field.
         elsif (m/^customfield_(.*?)_multiusetimestampedmultilinetextcf_cb_beacon$/) {
             MoreCustomFields::TimestampedTextarea::_save({
+                app            => $app,
+                object         => $obj,
+                field_basename => $1,
+            });
+        }
+
+        # Find the Reciprocal Entry Association field.
+        elsif (m/^customfield_(.*?)_reciprocal_(entry|page)$/) {
+            MoreCustomFields::ReciprocalObject::_save({
                 app            => $app,
                 object         => $obj,
                 field_basename => $1,

@@ -49,6 +49,8 @@ tags:
         SelectedEntriesOrPages: $MoreCustomFields::MoreCustomFields::SelectedEntriesOrPages::tag_selected_content
         SelectedEntries: $MoreCustomFields::MoreCustomFields::SelectedEntries::tag_selected_entries
         SelectedPages:   $MoreCustomFields::MoreCustomFields::SelectedPages::tag_selected_pages
+        ReciprocalEntry: $MoreCustomFields::MoreCustomFields::ReciprocalObject::tag_reciprocal_entry
+        ReciprocalPage:  $MoreCustomFields::MoreCustomFields::ReciprocalObject::tag_reciprocal_page
 
 applications:
     cms:
@@ -59,3 +61,4 @@ applications:
             mcf_select_content: $MoreCustomFields::MoreCustomFields::SelectedEntriesOrPages::se_select_content
             mcf_list_pages:   $MoreCustomFields::MoreCustomFields::SelectedPages::se_list_pages
             mcf_select_page:  $MoreCustomFields::MoreCustomFields::SelectedPages::se_select_page
+            unlink_reciprocal: $MoreCustomFields::MoreCustomFields::ReciprocalObject::ajax_unlink
