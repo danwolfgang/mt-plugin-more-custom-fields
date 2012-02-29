@@ -35,9 +35,12 @@ sub _field_html_params {
     my $obj = MT->model( $type )->load({
         id => $tmpl_param->{field_value},
     });
-    $tmpl_param->{recip_obj_title}   = $obj->title;
-    $tmpl_param->{recip_obj_id}      = $obj->id;
-    $tmpl_param->{recip_obj_blog_id} = $obj->blog_id;
+
+    if ($obj) {
+        $tmpl_param->{recip_obj_title}   = $obj->title;
+        $tmpl_param->{recip_obj_id}      = $obj->id;
+        $tmpl_param->{recip_obj_blog_id} = $obj->blog_id;
+    }
 }
 
 sub _field_html {
