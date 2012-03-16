@@ -45,7 +45,7 @@ sub _field_html {
         </button>
         <span id="<mt:Var name="field_name">_selectedcontentcf_<mt:Var name="__counter__">_preview" class="preview" style="padding-left: 8px;">
             <mt:setvarblock name="itemtitle"><mt:Entries blog_ids="$blogids" lastn="999999" id="$selecteditem"><mt:EntryTitle></mt:Entries></mt:setvarblock>
-            <mt:if name="itemtitle" eq=""><mt:setvarblock name="itemtitle"><mt:Pages blog_ids="$blogids" lastn="999999" id="$selecteditem"><mt:PageTitle></mt:Pages></mt:setvarblock></mt:if>                    
+            <mt:if name="itemtitle" eq=""><mt:setvarblock name="itemtitle"><mt:Pages blog_ids="$blogids" lastn="999999" id="$selecteditem"><mt:PageTitle></mt:Pages></mt:setvarblock></mt:if>
             <mt:var name="itemtitle" />
         </span>
         <a style="padding: 3px 5px;" href="javascript:removeSelectedItem('li_<mt:Var name="field_name">_selectedcontentcf_<mt:Var name="__counter__">','<mt:Var name="field_name">');" title="Remove selected entry or page"><img src="<mt:StaticWebPath>images/status_icons/close.gif" width="9" height="9" alt="Remove selected entry or page" /></a>

@@ -54,9 +54,19 @@
         <div class="listing-filter-inner inner pkg">
     <mt:if name="panel_searchable">
             <form action="" method="get" id="modal-search">
-                <input name="search" type="text" value="<__trans phrase="Search">" class="search-input search-query" onblur="if(this.value==''){this.style.color=''; this.form.reset()}" onfocus="if (this.value == '<__trans phrase="Search">') this.value = ''; this.style.color = '#000';" />
-                <input type="image" class="search-command search-submit" src="<$mt:var name="static_uri"$>images/search-submit<mt:unless name="blog_id">-system</mt:unless>.gif" title="<__trans phrase="Search">" />
-                <a href="javascript:void(0)" class="search-reset hidden"><__trans phrase="Reset"></a>
+                <input name="search" 
+                    type="text" 
+                    value="<__trans phrase="Search">" 
+                    class="search-input search-query" 
+                    onblur="if(this.value==''){this.style.color=''; this.form.reset()}" 
+                    onfocus="if (this.value == '<__trans phrase="Search">') this.value = ''; this.style.color = '#000';" />
+                <input type="image" 
+                    class="search-command search-submit" 
+                    src="<$mt:var name="static_uri"$>images/search-submit<mt:unless name="blog_id">-system</mt:unless>.gif" 
+                    title="<__trans phrase="Search">" />
+                <a href="javascript:void(0)" class="search-reset hidden">
+                    <__trans phrase="Reset">
+                </a>
             </form>
     </mt:if>
         </div>
@@ -77,7 +87,7 @@
         </mt:if>
         <mt:if name="user_id">
         <input type="hidden" name="user_id" value="<mt:var name="user_id">" />
-        </mt:if>        
+        </mt:if>
     </form>
 
     <div class="list-wrapper" style="position: relative;">
