@@ -54,15 +54,15 @@
         <div class="listing-filter-inner inner pkg">
     <mt:if name="panel_searchable">
             <form action="" method="get" id="modal-search">
-                <input name="search" 
-                    type="text" 
-                    value="<__trans phrase="Search">" 
-                    class="search-input search-query" 
-                    onblur="if(this.value==''){this.style.color=''; this.form.reset()}" 
+                <input name="search"
+                    type="text"
+                    value="<__trans phrase="Search">"
+                    class="search-input search-query"
+                    onblur="if(this.value==''){this.style.color=''; this.form.reset()}"
                     onfocus="if (this.value == '<__trans phrase="Search">') this.value = ''; this.style.color = '#000';" />
-                <input type="image" 
-                    class="search-command search-submit" 
-                    src="<$mt:var name="static_uri"$>images/search-submit<mt:unless name="blog_id">-system</mt:unless>.gif" 
+                <input type="image"
+                    class="search-command search-submit"
+                    src="<$mt:var name="static_uri"$>images/search-submit<mt:unless name="blog_id">-system</mt:unless>.gif"
                     title="<__trans phrase="Search">" />
                 <a href="javascript:void(0)" class="search-reset hidden">
                     <__trans phrase="Reset">
@@ -115,10 +115,27 @@
                         <tbody>
     <mt:loop name="object_loop">
                             <tr id="entry-<mt:var name="id">" class="<mt:if name="__odd__">odd<mt:else>even</mt:if>">
-                                <td class="cb"><input type="hidden" id="entry-<mt:var name="id">-json" value="<mt:var name="metadata_json" escape="html">" /><input type="radio" name="id" value="<mt:var name="id">" class="select" id="entry-radio-<mt:var name="id">" /></td>
-                                <td class="status si status-<mt:if name="status_draft">draft<mt:elseif name="status_publish">publish<mt:elseif name="status_review">review<mt:elseif name="status_future">future</mt:if>"><img src="<mt:var name="static_uri">images/spacer.gif" alt="<mt:if name="status_draft"><__trans phrase="Unpublished (Draft)"><mt:elseif name="status_publish"><__trans phrase="Published"><mt:elseif name="status_review"><__trans phrase="Unpublished (Review)"><mt:elseif name="status_future"><__trans phrase="Scheduled"></mt:if>" width="9" height="9" /></td>
-                                <td class="title"><mt:Var name="title" escape="html"></td>
-                                <td class="author" style="width: 100px;"><mt:Var name="author_name" escape="html"></td>
+                                <td class="cb">
+                                    <input type="hidden"
+                                        id="entry-<mt:var name="id">-json"
+                                        value="<mt:var name="metadata_json" escape="html">" />
+                                    <input type="radio"
+                                        name="id"
+                                        value="<mt:var name="id">"
+                                        class="select"
+                                        id="entry-radio-<mt:var name="id">" />
+                                </td>
+                                <td class="status si status-<mt:if name="status_draft">draft<mt:elseif name="status_publish">publish<mt:elseif name="status_review">review<mt:elseif name="status_future">future</mt:if>">
+                                    <img src="<mt:var name="static_uri">images/spacer.gif"
+                                        alt="<mt:if name="status_draft"><__trans phrase="Unpublished (Draft)"><mt:elseif name="status_publish"><__trans phrase="Published"><mt:elseif name="status_review"><__trans phrase="Unpublished (Review)"><mt:elseif name="status_future"><__trans phrase="Scheduled"></mt:if>"
+                                        width="9" height="9" />
+                                </td>
+                                <td class="title">
+                                    <mt:Var name="title" escape="html">
+                                </td>
+                                <td class="author" style="width: 100px;">
+                                    <mt:Var name="author_name" escape="html">
+                                </td>
                                 <td class="date" style="width: 100px;">
                                     <mt:if name="created_on_relative" and="dates_relative">
                                         <mt:var name="created_on_relative">
@@ -128,7 +145,13 @@
                                 </td>
                                 <td class="view si status-view" style="width: 35px;">
                                     <mt:if name="entry_permalink">
-                                        <a href="<mt:var name="entry_permalink">" target="<__trans phrase="_external_link_target">" title="<__trans phrase="View entry">"><img src="<mt:var name="static_uri">images/spacer.gif" alt="<__trans phrase="View entry">" width="13" height="9" /></a>
+                                        <a href="<mt:var name="entry_permalink">"
+                                            target="<__trans phrase="_external_link_target">"
+                                            title="<__trans phrase="View entry">">
+                                            <img src="<mt:var name="static_uri">images/spacer.gif"
+                                                alt="<__trans phrase="View entry">"
+                                                width="13" height="9" />
+                                        </a>
                                     <mt:else>
                                         &#160;
                                     </mt:if>
