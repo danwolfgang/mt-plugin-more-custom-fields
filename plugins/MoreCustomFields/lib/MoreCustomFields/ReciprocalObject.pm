@@ -75,7 +75,7 @@ sub _field_html {
 <button
     style="background: #333 url('<mt:StaticWebPath>images/buttons/button.gif') no-repeat 0 center; border:none; border-top:1px solid #d4d4d4; font-weight: bold; font-size: 14px; line-height: 1.3; text-decoration: none; color: #eee; cursor: pointer; padding: 2px 10px 4px;"
     type="submit"
-    onclick="return openDialog(this.form, 'mcf_list_<mt:Var name="recip_types">', 'blog_ids=<mt:Var name="blogids">&edit_field=<mt:Var name="field_name">')">
+    onclick="return openDialog(this.form, 'mcf_list_<mt:Var name="recip_types">', 'blog_ids=<mt:Var name="blogids">&blog_id=<mt:Var name="blog_id">&edit_field=<mt:Var name="field_name">')">
     Choose <mt:Var name="recip_type" capitalize="1">
 </button>
 
