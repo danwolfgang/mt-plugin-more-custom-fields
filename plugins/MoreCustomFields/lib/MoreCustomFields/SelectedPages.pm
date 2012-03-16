@@ -331,6 +331,10 @@ sub se_list_pages {
                     $app->user ? $app->user->preferred_language : undef);
                 $row->{created_on_relative} = relative_date($ts, time, $obj->blog);
             }
+
+            my $author = MT->model('author')->load( $obj->author_id );
+            $row->{author_name} = $author ? $author->nickname : '';
+
             return $row;
         },
         terms => $terms,
