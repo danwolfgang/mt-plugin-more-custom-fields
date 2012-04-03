@@ -290,6 +290,10 @@ sub _save {
 
     # Grab the selected entry ID.
     my $recip_entry_id = $app->param($field_name);
+    
+    # Give up if there's no reciprocal ID, because that just means the field
+    # isn't used.
+    return unless $recip_entry_id;
 
     # Save the selected entry ID to the *real* custom field.
     $app->param("customfield_${field_basename}", $recip_entry_id);
