@@ -290,16 +290,16 @@ sub _save {
 
     # Grab the selected entry ID.
     my $recip_entry_id = $app->param($field_name);
-    
-    # Give up if there's no reciprocal ID, because that just means the field
-    # isn't used.
-    return unless $recip_entry_id;
 
     # Save the selected entry ID to the *real* custom field.
     $app->param("customfield_${field_basename}", $recip_entry_id);
 
     # Destory the specially-assembled fields, because they make MT barf.
     $app->delete_param($field_name);
+
+    # Give up if there's no reciprocal ID, because that just means the field
+    # isn't used.
+    return unless $recip_entry_id;
 
     # Load the reciprocal entry and associate it with the current entry.
     my $recip_entry = MT->model( $type )->load({ id => $recip_entry_id })
