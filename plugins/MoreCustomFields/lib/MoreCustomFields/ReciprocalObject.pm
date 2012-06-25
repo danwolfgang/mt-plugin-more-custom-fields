@@ -93,7 +93,7 @@ sub _field_html {
 
 <a style="padding: 3px 5px;"
     id="<mt:Var name="field_name">_delete"
-    href="javascript:deleteReciprocalEntryAssociation('<mt:Var name="field_name">', jQuery('#<mt:Var name="field_name">_reciprocal_<mt:Var name="recip_type">').val());" 
+    href="javascript:deleteReciprocalAssociation('<mt:Var name="field_name">', jQuery('#<mt:Var name="field_name">_reciprocal_<mt:Var name="recip_type">').val());" 
     title="Remove selected <mt:Var name="recip_type">">
         <img src="<mt:StaticWebPath>images/status_icons/close.gif" width="9" height="9" alt="Remove selected <mt:Var name="recip_type">" />
 </a>
@@ -107,83 +107,6 @@ sub _field_html {
             $('#<mt:Var name="field_name">_delete').hide();
         }
     });
-
-    // The popup dialog uses this function to insert the selected entry.
-    function insertSelectedEntry(entrytitle, recip_entry_id, field, blog_id) {
-        // If a reciprocal association already exists, we need to delete it
-        // before creating a new association.
-        if ( jQuery('#'+field+'_reciprocal_<mt:Var name="recip_type">').val() ) {
-            deleteReciprocalEntryAssociation(
-                field, 
-                jQuery('#'+field+'_reciprocal_<mt:Var name="recip_type">').val(), 
-                entrytitle, 
-                recip_entry_id,
-                blog_id
-            );
-        }
-        // No existing association exists, so just create the new reciprocal
-        // entry association.
-        else {
-            createReciprocalEntryAssociation(
-                entrytitle,
-                recip_entry_id,
-                field,
-                blog_id
-            );
-        }
-    }
-
-    // Create the reciprocal entry association. This happens after selecting
-    // an entry from the popup.
-    function createReciprocalEntryAssociation(entrytitle, recip_entry_id, field, blog_id) {
-        jQuery('#'+field+'_reciprocal_<mt:Var name="recip_type">').val( recip_entry_id );
-
-        jQuery('#'+field+'_preview').html(
-            '<a href="<mt:Var name="script_uri">?__mode=view'
-            + '&amp;_type=<mt:Var name="recip_type">&amp;blog_id=' + blog_id + '&amp;id='
-            + recip_entry_id + '">' + entrytitle + '</a>'
-        );
-
-        jQuery('#'+field+'_delete').show();
-    }
-
-    // Unlink the selected entry from the current entry.
-    function deleteReciprocalEntryAssociation(field, recip_entry_id, entrytitle, new_recip_entry_id, blog_id) {
-        jQuery.get(
-            '<mt:Var name="script_uri">?__mode=unlink_reciprocal',
-            {
-                'recip_field_basename': field,
-                'recip_entry_id': recip_entry_id,
-                'cur_entry_id': jQuery('input[name=id]').val(),
-                'recip_obj_type': '<mt:Var name="recip_type">'
-            },
-            function(data) {
-                jQuery('#'+field+'_status').html(data.message).show(500);
-
-                // The association was successfully deleted from the database,
-                // so delete the visible data.
-                if (data.status == 1) {
-                    jQuery('#'+field+'_reciprocal_<mt:Var name="recip_type">').val('');
-                    jQuery('#'+field+'_preview').html('');
-                    jQuery('#'+field+'_delete').hide();
-                    setTimeout(function() {
-                        $('#'+field+'_status').hide(1000)
-                    }, 7000);
-
-                    // Is a new entry supposed to be linked now? If so, do it!
-                    if (entrytitle) {
-                        createReciprocalEntryAssociation(
-                            entrytitle,
-                            new_recip_entry_id,
-                            field,
-                            blog_id
-                        );
-                    }
-                }
-            },
-            'json'
-        );
-    }
 </script>
         };
     } # Closing if ( $app->param('_type') !~ /(entry|page)/ )

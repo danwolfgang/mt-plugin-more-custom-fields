@@ -19,16 +19,6 @@ sub _options_field {
 
 sub _field_html {
     return q{
-<script type="text/javascript">
-    function insertSelectedEntry(html, val, id) {
-        var se = document.getElementById(id);
-        se.setAttribute('value', val);
-
-        var se_preview_id = id + '_preview';
-        document.getElementById(se_preview_id).innerHTML = html;
-    }
-</script>
-
 <mt:SetVarBlock name="blogids"><mt:If name="options"><mt:Var name="options"><mt:Else><mt:Var name="blog_id"></mt:If></mt:SetVarBlock>
 
 <ul class="custom-field-selected-entries" id="custom-field-selected-entries_<mt:Var name="field_name">" style="margin-top: 3px;">
@@ -63,103 +53,7 @@ sub _field_html {
     <span id="se-new-preview-<mt:Var name="field_name">" class="preview" style="display: none;">
     </span>
 
-
 <input type="hidden" id="se-adder-<mt:Var name="field_name">" value="1" />
-
-<script type="text/javascript">
-    function addSelectedEntry(cf_name, blog_ids) {
-        // Update the counter, so that each addition gets a unique number
-        var adder_el = 'se-adder-' + cf_name;
-        var numi = document.getElementById(adder_el);
-        var num = (document.getElementById(adder_el).value -1) + 2;
-        numi.value = num;
-
-        // Create the new input field.
-        var newInputName = cf_name + '_selectedentriescf_new' + num;
-        var new_el = 'se-new-input-' + cf_name;
-        var newInput = document.getElementById(new_el).cloneNode(true);
-        newInput.setAttribute('name', newInputName);
-        newInput.setAttribute('id',   newInputName);
-
-        // Create the new button
-        var new_el = 'se-new-button-' + cf_name;
-        var newButton = document.getElementById(new_el).cloneNode(true);
-        newButton.removeAttribute('id');
-        newButton.setAttribute('style', "background: #333 url('<mt:StaticWebPath>images/buttons/button.gif') no-repeat 0 center; border:none; border-top:1px solid #d4d4d4; font-weight: bold; font-size: 14px; line-height: 1.3; text-decoration: none; color: #eee; cursor: pointer; padding: 2px 10px 4px;");
-        var onclick = "return openDialog(this.form, 'mcf_list_entries', 'blog_ids=" + blog_ids + "&edit_field=" + newInputName + "')";
-        newButton.setAttribute('onclick', onclick);
-
-        // Create the preview area
-        var newPreviewName = cf_name + '_selectedentriescf_new' + num + '_preview';
-        var new_el = 'se-new-preview-' + cf_name;
-        var newPreview = document.getElementById(new_el).cloneNode(true);
-        newPreview.setAttribute('id', newPreviewName);
-        newPreview.setAttribute('style', 'padding: 0 3px 0 8px;');
-
-        // Add the "delete" icon
-        var newDeleteIcon = document.createElement('img');
-        newDeleteIcon.setAttribute('src', '<mt:StaticWebPath>images/status_icons/close.gif');
-        newDeleteIcon.setAttribute('width', '9');
-        newDeleteIcon.setAttribute('height', '9');
-        newDeleteIcon.setAttribute('alt', 'Remove selected entry');
-
-        //Add the "delete" link
-        var newDeleteLink = document.createElement('a');
-        newDeleteLink.setAttribute('style', "margin-left: 5px;");
-        newDeleteLink.setAttribute('style', 'padding: 3px 5px;');
-        var href = "javascript:removeSelectedEntry('li_" + newInputName + "','<mt:Var name="field_name">');";
-        newDeleteLink.setAttribute('href', href);
-        newDeleteLink.setAttribute('title', 'Remove selected entry');
-        newDeleteLink.appendChild(newDeleteIcon);
-
-        // Create a new list item and add the new select drop-down to it.
-        var newListItem = document.createElement('li');
-        newListItem.setAttribute('id', 'li_' + newInputName);
-        newListItem.appendChild(newInput);
-        newListItem.appendChild(newButton);
-        newListItem.appendChild(newPreview);
-        newListItem.appendChild(newDeleteLink);
-
-        // Place the new list item in the drop-down selectors list.
-        var CF = document.getElementById('custom-field-selected-entries_' + cf_name);
-        CF.appendChild(newListItem);
-        
-        // If the beacon (added when there are no Selected Assets) is 
-        // present, remove it. After all, the user is adding an Asset now,
-        // so that state is no longer true.
-        var beacon = document.getElementById(cf_name + '_selectedentriescf_beacon');
-        if (beacon) {
-            CF.removeChild(beacon);
-        }
-
-        // After the user clicks to Add an Entry, they are going to want to
-        // click Choose Entry. We might as well save them the effort.
-        openDialog(this.form, 'mcf_list_entries', 'blog_ids=' + blog_ids + '&edit_field=' + newInputName);
-    }
-    function removeSelectedEntry(l,f) {
-        var listItem = document.getElementById(l);
-        listItem.parentNode.removeChild(listItem);
-        
-        // If the user has just deleted the last Selected Entry, then add a
-        // beacon so that the state can be properly saved.
-        var ul_field = 'custom-field-selected-entries_' + f;
-        var ul = document.getElementById(ul_field);
-        var li_count = ul.getElementsByTagName('li').length
-        if (li_count == 0) {
-            // Create the beacon field.
-            var beacon = document.createElement('input');
-            beacon_field = f+ '_selectedentriescf_beacon';
-            beacon.setAttribute('name', beacon_field);
-            beacon.setAttribute('id', beacon_field);
-            beacon.setAttribute('type', 'hidden');
-            beacon.setAttribute('value', '1');
-
-            // Add the beacon field to the parent UL.
-            var CF = document.getElementById(ul_field);
-            CF.appendChild(beacon);
-        }
-    }
-</script>
     };
 }
 
