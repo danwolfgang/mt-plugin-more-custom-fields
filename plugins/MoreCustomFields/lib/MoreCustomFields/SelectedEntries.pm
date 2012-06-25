@@ -1,12 +1,11 @@
 package MoreCustomFields::SelectedEntries;
 
 use strict;
+use warnings;
 
 use MT 4.2;
 use base qw(MT::Plugin);
-use CustomFields::Util qw( get_meta save_meta field_loop _get_html );
-use MT::Util
-  qw( relative_date offset_time offset_time_list epoch2ts ts2epoch format_ts encode_html dirify );
+use MoreCustomFields::SelectedObject;
 
 sub _options_field {
     return q{
@@ -273,89 +272,16 @@ sub tag_selected_entries {
     return $res;
 }
 
-sub se_list_entries {
-    my $app = shift;
-    my $blog_ids = $app->param('blog_ids');
-    my $type = 'entry';
-    my $pkg = $app->model($type) or return "Invalid request.";
-
-    my %terms = (
-         status => '2',
-    );
-
-    my @blog_ids;
-    if ($blog_ids eq 'all') {
-        # @blog_ids should stay empty so all blogs are loaded.
-    }
-    else {
-        # Turn this into an array so that all specified blogs can be loaded.
-        @blog_ids = split(/,/, $blog_ids);
-        $terms{blog_id} = [@blog_ids];
-    }
-
-    my %args = (
-        sort      => 'authored_on',
-        direction => 'descend',
-    );
-
-    my $plugin = MT->component('MoreCustomFields');
-    my $tmpl = $plugin->load_tmpl('entry_list.mtml');
-    $tmpl->param('type', $type);
-
-    return $app->listing({
-        type => 'entry',
-        template => $tmpl,
-        params => {
-            panel_searchable => 1,
-            edit_blog_id     => $blog_ids,
-            edit_field       => $app->param('edit_field'),
-            search           => $app->param('search'),
-            blog_id          => $blog_ids,
-        },
-        code => sub {
-            my ($obj, $row) = @_;
-            $row->{'status_' . lc MT::Entry::status_text($obj->status)} = 1;
-            $row->{entry_permalink} = $obj->permalink
-                if $obj->status == MT::Entry->RELEASE();
-            if (my $ts = $obj->authored_on) {
-                my $date_format = MT::App::CMS->LISTING_DATE_FORMAT();
-                my $datetime_format = MT::App::CMS->LISTING_DATETIME_FORMAT();
-                $row->{created_on_formatted} = format_ts($date_format, $ts, $obj->blog,
-                    $app->user ? $app->user->preferred_language : undef);
-                $row->{created_on_time_formatted} = format_ts($datetime_format, $ts, $obj->blog,
-                    $app->user ? $app->user->preferred_language : undef);
-                $row->{created_on_relative} = relative_date($ts, time, $obj->blog);
-            }
-
-            my $author = MT->model('author')->load( $obj->author_id );
-            $row->{author_name} = $author ? $author->nickname : '';
-
-            return $row;
-        },
-        terms => \%terms,
-        args  => \%args,
-        limit => 10,
-    });
-}
-
-sub se_select_entry {
+sub list_entries {
     my $app = shift;
 
-    my $entry_id = $app->param('id')
-        or return $app->errtrans('No id');
-    my $entry = MT->model('entry')->load($entry_id)
-        or return $app->errtrans('No entry #[_1]', $entry_id);
-    my $edit_field = $app->param('edit_field')
-        or return $app->errtrans('No edit_field');
-
-    my $plugin = MT->component('MoreCustomFields');
-    my $tmpl = $plugin->load_tmpl('select_entry.mtml', {
-        entry_id      => $entry->id,
-        entry_title   => $entry->title,
-        entry_blog_id => $entry->blog_id,
-        edit_field    => $edit_field,
+    MoreCustomFields::SelectedObject::list_objects({
+        app        => $app,
+        blog_ids   => $app->param('blog_ids'),
+        type       => 'entry',
+        edit_field => $app->param('edit_field'),
+        search     => $app->param('search') || '',
     });
-    return $tmpl;
 }
 
 1;

@@ -55,10 +55,9 @@ tags:
 applications:
     cms:
         methods:
-            mcf_list_entries: $MoreCustomFields::MoreCustomFields::SelectedEntries::se_list_entries
-            mcf_select_entry: $MoreCustomFields::MoreCustomFields::SelectedEntries::se_select_entry
-            mcf_list_content: $MoreCustomFields::MoreCustomFields::SelectedEntriesOrPages::se_list_content
+            mcf_list_entries:   $MoreCustomFields::MoreCustomFields::SelectedEntries::list_entries
+            mcf_list_pages:     $MoreCustomFields::MoreCustomFields::SelectedPages::list_pages
+            mcf_select_object:  $MoreCustomFields::MoreCustomFields::SelectedObject::select_object
+            mcf_list_content:   $MoreCustomFields::MoreCustomFields::SelectedEntriesOrPages::se_list_content
             mcf_select_content: $MoreCustomFields::MoreCustomFields::SelectedEntriesOrPages::se_select_content
-            mcf_list_pages:   $MoreCustomFields::MoreCustomFields::SelectedPages::se_list_pages
-            mcf_select_page:  $MoreCustomFields::MoreCustomFields::SelectedPages::se_select_page
-            unlink_reciprocal: $MoreCustomFields::MoreCustomFields::ReciprocalObject::ajax_unlink
+            unlink_reciprocal:  $MoreCustomFields::MoreCustomFields::ReciprocalObject::ajax_unlink
