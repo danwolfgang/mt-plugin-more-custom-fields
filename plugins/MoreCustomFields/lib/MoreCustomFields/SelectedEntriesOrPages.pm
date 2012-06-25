@@ -4,9 +4,7 @@ use strict;
 
 use MT 4.2;
 use base qw(MT::Plugin);
-use CustomFields::Util qw( get_meta save_meta field_loop _get_html );
-use MT::Util
-    qw( relative_date offset_time offset_time_list epoch2ts ts2epoch format_ts encode_html dirify );
+use MT::Util qw( relative_date format_ts );
 
 sub _options_field {
     return q{
@@ -295,7 +293,7 @@ sub se_list_content {
     my $pkg      = $app->model($type) or return "Invalid request.";
 
     my %terms = (
-        status => '2',
+        status => MT::Entry->RELEASE(),
         class  => '*',
     );
 
@@ -327,7 +325,7 @@ sub se_list_content {
                 panel_searchable => 1,
                 edit_blog_id     => $blog_ids,
                 edit_field       => $app->param('edit_field'),
-                search           => $app->param('search'),
+                search           => $app->param('search') || '',
                 blog_id          => $blog_ids,
             },
             code => sub {
