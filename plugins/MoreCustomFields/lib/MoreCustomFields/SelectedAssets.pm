@@ -295,12 +295,12 @@ sub asset_insert_param {
 <mt:include name="dialog/header.tmpl">
 <script type="text/javascript">
     window.parent.insertSelectedAsset('$html', '<mt:AssetID>', '<mt:var name="edit_field" escape="js">');
-    closeDialog();
+    parent.jQuery.fn.mtDialog.close();
 </script>
 <div class="actions-bar-inner pkg actions">
     <form action="" method="get" onsubmit="return false">
         <button
-            onclick="closeDialog(); return false"
+            onclick="parent.jQuery.fn.mtDialog.close(); return false"
             type="submit"
             accesskey="x"
             class="cancel"

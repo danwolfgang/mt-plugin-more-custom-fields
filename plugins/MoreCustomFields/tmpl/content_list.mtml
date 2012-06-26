@@ -10,7 +10,7 @@
     /* <![CDATA[ */
     function dialogClose(data) {
         if (!data) {
-            closeDialog();
+            parent.jQuery.fn.mtDialog.close();
             return;
         }
         // user made a selection and clicked insert...
@@ -164,7 +164,7 @@
                 disabled="true"
                 ><__trans phrase="Select"></button>
             <button
-                onclick="closeDialog(); return false"
+                onclick="parent.jQuery.fn.mtDialog.close(); return false"
                 type="submit"
                 accesskey="x"
                 class="cancel"
@@ -186,7 +186,7 @@
         <div class="actions-bar-inner pkg actions">
             <form action="" method="get" onsubmit="return false">
                 <button
-                    onclick="closeDialog(); return false"
+                    onclick="parent.jQuery.fn.mtDialog.close(); return false"
                     type="submit"
                     accesskey="x"
                     class="cancel"

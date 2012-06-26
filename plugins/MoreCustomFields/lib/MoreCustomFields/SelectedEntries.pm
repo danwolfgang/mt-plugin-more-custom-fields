@@ -40,7 +40,8 @@ sub _field_html {
         <button
             style="background: #333 url('<mt:StaticWebPath>images/buttons/button.gif') no-repeat 0 center; border:none; border-top:1px solid #d4d4d4; font-weight: bold; font-size: 14px; line-height: 1.3; text-decoration: none; color: #eee; cursor: pointer; padding: 2px 10px 4px;"
             type="submit"
-            onclick="return openDialog(this.form, 'mcf_list_entries', 'blog_id=<mt:Var name="blogids">&edit_field=<mt:Var name="field_name">_selectedentriescf_<mt:Var name="__counter__">')">
+            class="mt-open-dialog"
+            onclick="jQuery.fn.mtDialog.open('mt.cgi?__mode=mcf_list_entries&blog_id=<mt:Var name="blogids">&edit_field=<mt:Var name="field_name">_selectedentriescf_<mt:Var name="__counter__">'); return false;">
             Choose Entry
         </button>
         <span id="<mt:Var name="field_name">_selectedentriescf_<mt:Var name="__counter__">_preview" class="preview" style="padding-left: 8px;">
@@ -87,8 +88,9 @@ sub _field_html {
         var newButton = document.getElementById(new_el).cloneNode(true);
         newButton.removeAttribute('id');
         newButton.setAttribute('style', "background: #333 url('<mt:StaticWebPath>images/buttons/button.gif') no-repeat 0 center; border:none; border-top:1px solid #d4d4d4; font-weight: bold; font-size: 14px; line-height: 1.3; text-decoration: none; color: #eee; cursor: pointer; padding: 2px 10px 4px;");
-        var onclick = "return openDialog(this.form, 'mcf_list_entries', 'blog_ids=" + blog_ids + "&edit_field=" + newInputName + "')";
-        newButton.setAttribute('onclick', onclick);
+        //var onclick = "return openDialog(this.form, 'mcf_list_entries', 'blog_ids=" + blog_ids + "&edit_field=" + newInputName + "')";
+        newButton.setAttribute('onclick', jQuery.fn.mtDialog.open("mt.cgi?__mode=mcf_list_entries&blog_ids=" + blog_ids + "&edit_field=" + newInputName));
+        newButton.className += "mt-open-dialog";
 
         // Create the preview area
         var newPreviewName = cf_name + '_selectedentriescf_new' + num + '_preview';

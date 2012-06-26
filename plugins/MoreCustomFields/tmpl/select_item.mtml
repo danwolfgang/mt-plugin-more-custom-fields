@@ -2,7 +2,7 @@
 
 <script type="text/javascript">
     window.parent.insertSelectedItem( '<mt:Var name="entry_title" escape="html" escape="JS">', '<mt:Var name="entry_id">', '<mt:Var name="edit_field">' );
-    closeDialog();
+    parent.jQuery.fn.mtDialog.close();
 </script>
 
 <mt:Include name="dialog/footer.tmpl">
