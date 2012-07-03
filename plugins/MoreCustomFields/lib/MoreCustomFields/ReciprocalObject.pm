@@ -93,7 +93,7 @@ sub _field_html {
 
 <a style="padding: 3px 5px;"
     id="<mt:Var name="field_name">_delete"
-    href="javascript:deleteReciprocalAssociation('<mt:Var name="field_name">', jQuery('#<mt:Var name="field_name">_reciprocal_<mt:Var name="recip_type">').val());" 
+    href="javascript:deleteReciprocalAssociation('<mt:Var name="field_name">', jQuery('#<mt:Var name="field_name">_reciprocal_<mt:Var name="recip_type">').val());"
     title="Remove selected <mt:Var name="recip_type">">
         <img src="<mt:StaticWebPath>images/status_icons/close.gif" width="9" height="9" alt="Remove selected <mt:Var name="recip_type">" />
 </a>
@@ -129,7 +129,7 @@ sub tag_reciprocal_entry {
     # It's used later, to load the field data.
     my $cf_basename = $args->{basename};
     if (!$cf_basename) {
-        return $ctx->error( 
+        return $ctx->error(
             'The Reciprocal' . ucfirst($type) . ' block tag requires the '
             . 'basename argument. The basename should be the Reciprocal '
             . ucfirst($type) . ' Association Custom Field&rsquo;s field '
@@ -137,7 +137,7 @@ sub tag_reciprocal_entry {
         );
     }
 
-    # Grab the field name with the collected data from above. The basename 
+    # Grab the field name with the collected data from above. The basename
     # must be unique so it's a good thing to key off of!
     my $field = CustomFields::Field->load({
         type     => "reciprocal_$type",
@@ -166,7 +166,7 @@ sub tag_reciprocal_entry {
     my $entryid = $object->$basename
         if ($object && $object->$basename);
 
-    # Verify that $entryid is a number. If no Selected Entries are found, 
+    # Verify that $entryid is a number. If no Selected Entries are found,
     # it's possible $entryid could be just a space character, which throws
     # an error. So, this check ensures we always have a valid entry ID.
     if ($entryid =~ m/\d+/) {
@@ -199,7 +199,7 @@ sub tag_reciprocal_page {
     tag_reciprocal_entry($ctx, $args, $cond, 'page');
 }
 
-# This is called by MoreCustomFields::Plugin::post_save, which is the 
+# This is called by MoreCustomFields::Plugin::post_save, which is the
 # post-save callback handler. Save the data for this custom field type.
 sub _save {
     my ($arg_ref) = @_;
@@ -226,8 +226,8 @@ sub _save {
 
     # Load the reciprocal entry and associate it with the current entry.
     my $recip_entry = MT->model( $type )->load({ id => $recip_entry_id })
-        or die "The $type specified in the Reciprocal " . ucfirst($type) 
-            . " Association custom field could not be loaded: $type ID " 
+        or die "The $type specified in the Reciprocal " . ucfirst($type)
+            . " Association custom field could not be loaded: $type ID "
             . $recip_entry_id;
 
     my $cf_basename = 'field.' . $field_basename;
@@ -253,7 +253,7 @@ sub _save {
 }
 
 # Reciprocal links need to be unlinked when deleted, removing the existing
-# association in the database. Do this through an AJAX call to make a good 
+# association in the database. Do this through an AJAX call to make a good
 # experience for the user and offer immediate feedback.
 sub ajax_unlink {
     my $app = MT->instance;
@@ -271,14 +271,14 @@ sub ajax_unlink {
     my $recip_entry = MT->model( $recip_obj_type )->load({ 
         id => $recip_entry_id,
     })
-        or return MT::Util::to_json({ 
+        or return MT::Util::to_json({
             status  => 0,
             message => "Error: couldn't load the associated $recip_obj_type.",
         });
 
     $recip_entry->$basename(undef);
     $recip_entry->save
-        or return MT::Util::to_json({ 
+        or return MT::Util::to_json({
             status  => 0,
             message => "Error: couldn't unlink the associated $recip_obj_type.",
         });
@@ -303,7 +303,7 @@ sub ajax_unlink {
 
     $cur_entry->$basename(undef);
     $cur_entry->save
-        or return MT::Util::to_json({ 
+        or return MT::Util::to_json({
             status  => 0,
             message => "Error: couldn't unlink the current $recip_obj_type.",
         });
@@ -314,15 +314,15 @@ sub ajax_unlink {
         author_id => $cur_entry->author_id,
         blog_id   => $cur_entry->blog_id,
         message   => "A reciprocal $recip_obj_type association was deleted "
-            . 'between "' . $cur_entry->title . '" (ID ' . $cur_entry->id 
-            . ') and "' . $recip_entry->title . '" (ID ' . $recip_entry->id 
+            . 'between "' . $cur_entry->title . '" (ID ' . $cur_entry->id
+            . ') and "' . $recip_entry->title . '" (ID ' . $recip_entry->id
             . ').',
     });
 
     return MT::Util::to_json({
         status  => 1,
         message => "Successfully deleted the reciprocal $recip_obj_type "
-            . 'association between &ldquo;' . $cur_entry->title 
+            . 'association between &ldquo;' . $cur_entry->title
             . '&rdquo; and &ldquo;' . $recip_entry->title . '.&rdquo;',
     });
 }
