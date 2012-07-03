@@ -240,6 +240,19 @@ sub _save {
     $recip_entry->$cf_basename( $obj->id );
     $recip_entry->save or die $recip_entry->errstr;
 
+    # Republish the reciprocal object. Save a message to the Activity Log if
+    # publishing failed.
+    $app->rebuild_entry(Entry => $recip_entry)
+        or MT->log({
+            level     => MT->model('log')->INFO(),
+            class     => $type,
+            author_id => $obj->author_id,
+            blog_id   => $obj->blog_id,
+            message   => "Publishing the reciprocal $type \""
+                . $recip_entry->title . '" (' . $recip_entry->id
+                . ') failed: ' . $app->errstr,
+        });
+
     MT->log({
         level     => MT->model('log')->INFO(),
         class     => $type,
@@ -267,8 +280,17 @@ sub ajax_unlink {
     # linked entry.
     $basename =~ s/customfield_/field./;
 
-    # Remove the association from the linked entry.
-    my $recip_entry = MT->model( $recip_obj_type )->load({ 
+    # First load the current object and the reciprocal object, then remove the
+    # association from each.
+    my $cur_entry = MT->model( $recip_obj_type )->load({
+        id => $cur_entry_id,
+    })
+        or return MT::Util::to_json({
+            status  => 0,
+            message => "Error: couldn't load the current $recip_obj_type.",
+        });
+
+    my $recip_entry = MT->model( $recip_obj_type )->load({
         id => $recip_entry_id,
     })
         or return MT::Util::to_json({
@@ -276,11 +298,25 @@ sub ajax_unlink {
             message => "Error: couldn't load the associated $recip_obj_type.",
         });
 
+    # Remove the association from the linked entry.
     $recip_entry->$basename(undef);
     $recip_entry->save
         or return MT::Util::to_json({
             status  => 0,
             message => "Error: couldn't unlink the associated $recip_obj_type.",
+        });
+
+    # Republish the reciprocal object. Save a message to the Activity Log if
+    # publishing failed.
+    $app->rebuild_entry(Entry => $recip_entry)
+        or MT->log({
+            level     => MT->model('log')->INFO(),
+            class     => $recip_obj_type,
+            author_id => $cur_entry->author_id,
+            blog_id   => $cur_entry->blog_id,
+            message   => "Publishing the reciprocal $recip_obj_type \""
+                . $recip_entry->title . '" (' . $recip_entry->id
+                . ') failed: ' . $app->errstr,
         });
 
     # If there is no current entry ID, that means the current entry is a new,
@@ -293,14 +329,6 @@ sub ajax_unlink {
         if !$cur_entry_id;
 
     # Now unlink the current entry association.
-    my $cur_entry = MT->model( $recip_obj_type )->load({
-        id => $cur_entry_id,
-    })
-        or return MT::Util::to_json({ 
-            status  => 0,
-            message => "Error: couldn't load the current $recip_obj_type.",
-        });
-
     $cur_entry->$basename(undef);
     $cur_entry->save
         or return MT::Util::to_json({
