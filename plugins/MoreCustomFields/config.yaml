@@ -36,11 +36,8 @@ callbacks:
         handler: $MoreCustomFields::MoreCustomFields::Plugin::post_save
         priority: 2
     # Load jQuery.
-    MT::App::CMS::template_source.edit_entry:    $MoreCustomFields::MoreCustomFields::Plugin::update_template
-    MT::App::CMS::template_source.edit_author:   $MoreCustomFields::MoreCustomFields::Plugin::update_template
-    MT::App::CMS::template_source.edit_category: $MoreCustomFields::MoreCustomFields::Plugin::update_template
-    MT::App::CMS::template_source.edit_folder:   $MoreCustomFields::MoreCustomFields::Plugin::update_template
-    template_param.asset_insert: 
+    MT::App::CMS::template_source.header: $MoreCustomFields::MoreCustomFields::Plugin::update_template
+    template_param.asset_insert:
         handler: $MoreCustomFields::MoreCustomFields::SelectedAssets::asset_insert_param
         priority: 1
 

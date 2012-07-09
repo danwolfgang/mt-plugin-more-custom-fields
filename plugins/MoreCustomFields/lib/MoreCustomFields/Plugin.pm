@@ -216,7 +216,7 @@ sub update_template {
     # This is responsible for loading jQuery in the head of the site.
     my ($cb, $app, $template) = @_;
 
-    my $old = q{<mt:setvarblock name="js_include" append="1">};
+    my $old = q{</head>};
     my $new;
 
     # Check if jQuery has already been loaded. If it has, just skip this.
@@ -230,7 +230,7 @@ END
 
     # Insert the More Custom Fields javascript.
     $new .= <<'END';
-    <script type="text/javascript" src="<mt:PluginStaticWebPath component="MoreCustomFields">app.js"></script>
+    <script type="text/javascript" src="<mt:StaticWebPath>support/plugins/morecustomfields/app.js"></script>
 END
     $$template =~ s/$old/$old$new/;
 }
