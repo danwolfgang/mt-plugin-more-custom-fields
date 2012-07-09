@@ -8,100 +8,75 @@ use base qw(MT::Plugin);
 use MoreCustomFields::SelectedObject;
 
 sub _options_field {
-    return q{
-<div class="textarea-wrapper">
-    <input name="options" id="options" class="full-width" value="<mt:Var name="options" escape="html">" />
-</div>
-<p class="hint">Enter the ID(s) of the blog(s) whose pages should be available for selection. Leave this field blank to use the current blog only.</p>
-<p class="hint">Blog IDs should be comma-separated (as in &rdquo;1,12,19,37,112&ldquo;), or the &rdquo;all&ldquo; value may be specified to include all blogs&rsquo; pages.</p>
-    };
+    MoreCustomFields::SelectedObject::options_field({
+        type => 'pages',
+    });
 }
 
 sub _field_html {
     return q{
+<input name="<mt:Var name="field_name">"
+    id="<mt:Var name="field_id">"
+    class="full-width selected-entries hidden"
+    type="hidden"
+    value="<mt:Var name="field_value">" />
+<input name="<mt:Var name="field_name">_cb_beacon"
+    id="<mt:Var name="field_id">"
+    class="hidden"
+    type="hidden"
+    value="1" />
+
 <mt:SetVarBlock name="blogids"><mt:If name="options"><mt:Var name="options"><mt:Else><mt:Var name="blog_id"></mt:If></mt:SetVarBlock>
 
-<ul class="custom-field-selected-pages" id="custom-field-selected-pages_<mt:Var name="field_name">" style="margin-top: 3px;">
-<mt:Loop name="selectedpages_loop">
-    <li style="padding-bottom: 3px;" id="li_<mt:Var name="field_name">_selectedpagescf_<mt:Var name="__counter__">">
-        <mt:SetVarBlock name="selectedpage"><mt:Var name="field_selected"></mt:SetVarBlock>
-        <input name="<mt:Var name="field_name">_selectedpagescf_<mt:Var name="__counter__">" id="<mt:Var name="field_name">_selectedpagescf_<mt:Var name="__counter__">" class="hidden" type="hidden" value="<mt:Var name="field_selected">" />
-        <button
-            style="background: #333 url('<mt:StaticWebPath>images/buttons/button.gif') no-repeat 0 center; border:none; border-top:1px solid #d4d4d4; font-weight: bold; font-size: 14px; line-height: 1.3; text-decoration: none; color: #eee; cursor: pointer; padding: 2px 10px 4px;"
-            type="submit"
-            onclick="return openDialog(this.form, 'mcf_list_pages', 'blog_id=<mt:Var name="blogids">&edit_field=<mt:Var name="field_name">_selectedpagescf_<mt:Var name="__counter__">')">
-            Choose Page
-        </button>
-        <span id="<mt:Var name="field_name">_selectedpagescf_<mt:Var name="__counter__">_preview" class="preview" style="padding-left: 8px;">
-            <mt:Pages blog_ids="$blogids" lastn="999999" id="$selectedpage">
-                <mt:PageTitle>
-            </mt:Pages>
-        </span>
-        <a style="padding: 3px 5px;" href="javascript:removeSelectedPage('li_<mt:Var name="field_name">_selectedpagescf_<mt:Var name="__counter__">','<mt:Var name="field_name">');" title="Remove selected page"><img src="<mt:StaticWebPath>images/status_icons/close.gif" width="9" height="9" alt="Remove selected page" /></a>
+<a
+<mt:If tag="Version" lt="5">
+    onclick="return openDialog(this.form, 'mcf_list_pages', 'blog_id=<mt:Var name="blogids">&edit_field=<mt:Var name="field_id">')"
+<mt:Else>
+    onclick="jQuery.fn.mtDialog.open('<mt:Var name="script_uri">?__mode=mcf_list_pages&amp;blog_id=<mt:Var name="blogids">&amp;edit_field=<mt:Var name="field_id">')"
+</mt:If>
+    class="<mt:If tag="Version" lt="5">mt4-choose </mt:If>button">
+    Choose page
+</a>
+
+<ul class="custom-field-selected-entries mcf-listing"
+    id="custom-field-selected-entries_<mt:Var name="field_name">">
+<mt:Loop name="selected_objects_loop">
+    <li id="obj-<mt:Var name="obj_id">" class="sortable">
+        <span class="obj-title"><mt:Var name="obj_title"></span>
+        <a href="<mt:Var name="script_uri">?__mode=view&amp;_type=<mt:Var name="obj_class">&amp;id=<mt:Var name="obj_id">&amp;blog_id=<mt:Var name="obj_blog_id">"
+            class="edit"
+            target="_blank"
+            title="Edit in a new window."><img 
+                src="<mt:StaticWebPath>images/status_icons/draft.gif"
+                width="9" height="9" alt="Edit" /></a>
+        <a href="<mt:Var name="obj_permalink">"
+            class="view"
+            target="_blank"
+            title="View in a new window."><img
+                src="<mt:StaticWebPath>images/status_icons/view.gif"
+                width="13" height="9" alt="View" /></a>
+        <img class="remove"
+            alt="Remove selected entry"
+            title="Remove selected entry"
+            src="<mt:StaticWebPath>images/status_icons/close.gif"
+            width="9" height="9" />
     </li>
 </mt:Loop>
 </ul>
-<p><a class="add-category-new-parent-link" href="javascript:addSelectedPage('<mt:Var name="field_name">', '<mt:Var name="blogids">');">Add a page</a></p>
-
-    <input id="se-new-input-<mt:Var name="field_name">" style="display: none;" class="hidden" type="hidden" />
-    <button
-        style="display: none;"
-        id="se-new-button-<mt:Var name="field_name">"
-        type="submit">
-        Choose Page
-    </button>
-    <span id="se-new-preview-<mt:Var name="field_name">" class="preview" style="display: none;">
-    </span>
-
-<input type="hidden" id="se-adder-<mt:Var name="field_name">" value="1" />
     };
 }
 
-sub _field_html_params {
-    my ($key, $tmpl_key, $tmpl_param) = @_;
-    my $app = MT->instance;
-
-    my $id       = $app->param('id');
-    my $blog     = $app->blog;
-    my $blog_id  = $blog ? $blog->id : 0;
-    my $obj_type = $tmpl_param->{obj_type};
-
-    my $field_name  = $tmpl_param->{field_name};
-
-    # Several dropdowns may be needed, because several pages were selected.
-    my $field_value = $tmpl_param->{field_value};
-
-    # If there is no field value, there is nothing to parse. Likely on the
-    # Edit Field screen.
-    return unless $field_value;
-
-    my @page_ids = split(/,\s?/, $field_value);
-
-    my @page_ids_loop;
-    foreach my $page_id (@page_ids) {
-        # Verify that $page_id is a number. If no Selected Pages are found, 
-        # it's possible $page_id could be just a space character, which throws
-        # an error. So, this check ensures we always have a valid page ID.
-        if ($page_id =~ m/\d+/) {
-            push @page_ids_loop, { field_basename => $field_name,
-                                   field_selected => $page_id,
-                                 };
-        }
-    }
-    $tmpl_param->{selectedpages_loop} = \@page_ids_loop;
-}
-
+# The SelectedPages tag will let you intelligently output the links you selected. Use:
+# <mt:SelectedPages basename="selected_pages">
+#   <mt:If name="__first__">
+#     <ul>
+#   </mt:If>
+#     <li><a href="<mt:PagePermalink>"><mt:PageTitle></a></li>
+#   <mt:If name="__last__">
+#     </ul>
+#   </mt:If>
+# </mt:SelectedPages>
 sub tag_selected_pages {
-    # The SelectedPages tag will let you intelligently output the links you selected. Use:
-    # <mt:SelectedPages basename="selected_pages">
-    #   <mt:If name="__first__">
-    #     <ul>
-    #   </mt:If>
-    #     <li><a href="<mt:PagePermalink>"><mt:PageTitle></a></li>
-    #   <mt:If name="__last__">
-    #     </ul>
-    #   </mt:If>
-    # </mt:SelectedPages>
     my ($ctx, $args, $cond) = @_;
     my $builder = $ctx->stash('builder');
     my $tokens  = $ctx->stash('tokens');
@@ -166,12 +141,12 @@ sub tag_selected_pages {
     return $res;
 }
 
+# The popup dialog page chooser.
 sub list_pages {
     my $app = shift;
-
     MoreCustomFields::SelectedObject::list_objects({
         app        => $app,
-        blog_ids   => $app->param('blog_ids'),
+        blog_ids   => $app->param('blog_id'),
         type       => 'page',
         edit_field => $app->param('edit_field'),
         search     => $app->param('search') || '',

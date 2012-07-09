@@ -56,13 +56,21 @@
             <form action="" method="get" id="modal-search">
                 <input name="search"
                     type="text"
-                    value="<__trans phrase="Search">"
-                    class="search-input search-query"
+                    value=""
+                    class="search-input text med <mt:If tag="Version" lt="5">search-query</mt:If>"
+                    placeholder="<__trans phrase="Search">"
+                <mt:If tag="Version" lt="5">
                     onblur="if(this.value==''){this.style.color=''; this.form.reset()}"
-                    onfocus="if (this.value == '<__trans phrase="Search">') this.value = ''; this.style.color = '#000';" />
+                    onfocus="if (this.value == '<__trans phrase="Search">') this.value = ''; this.style.color = '#000';"
+                </mt:If>
+                    />
                 <input type="image"
                     class="search-command search-submit"
-                    src="<$mt:var name="static_uri"$>images/search-submit<mt:unless name="blog_id">-system</mt:unless>.gif"
+                <mt:If tag="Version" lt="5">
+                    src="<mt:Var name="static_uri">images/search-submit<mt:unless name="blog_id">-system</mt:unless>.gif"
+                <mt:Else>
+                    src="<mt:Var name="static_uri">images/search-submit-dialog.png"
+                </mt:If>
                     title="<__trans phrase="Search">" />
                 <a href="javascript:void(0)" class="search-reset hidden">
                     <__trans phrase="Reset">
@@ -90,81 +98,92 @@
         </mt:if>
     </form>
 
-    <div class="list-wrapper" style="position: relative;">
-    <div class="selector listing" id="selector">
+    <div id="selector" class="selector listing list-data">
         <form action="" method="get" onsubmit="return false">
-            <table cellspacing="0" class="list-heading entry-listing-table <mt:unless name="edit_blog_id">show-weblog </mt:unless><mt:if name="view_expanded">expanded<mt:else>compact</mt:if>">
-                <thead>
+            <table class="legacy listing-table list-heading">
+                <mt:SetVarBlock name="table_header">
                     <tr>
-                        <th class="cb"><img src="<mt:var name="static_uri">images/spacer.gif" width="15" height="1"></th>
-                        <th class="status si">
+                        <th class="col head cb">
+                            <img src="<mt:var name="static_uri">images/spacer.gif" width="15" height="1">
+                        </th>
+                        <th class="col head status si">
                             <img src="<mt:var name="static_uri">images/status_icons/invert-flag.gif" alt="<__trans phrase="Status">" title="<__trans phrase="Status">" width="9" height="9" />
                         </th>
-                        <th class="title"><__trans phrase="Title"></th>
-                        <th class="author" style="width: 100px;"><__trans phrase="Author"></th>
-                        <th class="date" style="width: 100px;"><__trans phrase="Created"></th>
-                        <th class="view si" style="width: 35px;"><span><__trans phrase="View"></span></th>
+                        <th class="col head primary title">
+                            <span class="col-label"><__trans phrase="Title"></span>
+                        </th>
+                        <th class="col head author" style="width: 125px;">
+                            <span class="col-label"><__trans phrase="Author"></span>
+                        </th>
+                        <th class="col head date" style="width: 110px;">
+                            <span class="col-label"><__trans phrase="Created"></span>
+                        </th>
+                        <th class="col head view si" style="width: 40px;">
+                            <span class="col-label"><__trans phrase="View"></span>
+                        </th>
                     </tr>
+                </mt:SetVarBlock>
+                <thead>
+                    <mt:Var name="table_header">
                 </thead>
-            </table>
+        <mt:If tag="Version" ge="5">
+                <tfoot>
+                    <mt:Var name="table_header">
+                </tfoot>
+        </mt:If>
 
-            <div class="list-data-wrapper-modal list-data">
     </mt:unless>
-                <div class="list-data-layout-modal">
-                    <table cellspacing="0" class="list-data scrollable" id="entryDisplay">
-                        <tbody>
-    <mt:loop name="object_loop">
-                            <tr id="entry-<mt:var name="id">" class="<mt:if name="__odd__">odd<mt:else>even</mt:if>">
-                                <td class="cb">
-                                    <input type="hidden"
-                                        id="entry-<mt:var name="id">-json"
-                                        value="<mt:var name="metadata_json" escape="html">" />
-                                    <input type="radio"
-                                        name="id"
-                                        value="<mt:var name="id">"
-                                        class="select"
-                                        id="entry-radio-<mt:var name="id">" />
-                                </td>
-                                <td class="status si status-<mt:if name="status_draft">draft<mt:elseif name="status_publish">publish<mt:elseif name="status_review">review<mt:elseif name="status_future">future</mt:if>">
+                <tbody>
+        <mt:loop name="object_loop">
+                    <tr id="entry-<mt:var name="id">" class="<mt:if name="__odd__">odd<mt:else>even</mt:if>">
+                        <td class="col cb">
+                            <input type="hidden"
+                                id="entry-<mt:var name="id">-json"
+                                value="<mt:var name="metadata_json" escape="html">" />
+                            <input type="radio"
+                                name="id"
+                                value="<mt:var name="id">"
+                                class="select"
+                                id="entry-radio-<mt:var name="id">" />
+                        </td>
+                        <td class="col status si status-<mt:if name="status_draft">draft<mt:elseif name="status_publish">publish<mt:elseif name="status_review">review<mt:elseif name="status_future">future</mt:if>">
+                            <img src="<mt:var name="static_uri">images/spacer.gif"
+                                alt="<mt:if name="status_draft"><__trans phrase="Unpublished (Draft)"><mt:elseif name="status_publish"><__trans phrase="Published"><mt:elseif name="status_review"><__trans phrase="Unpublished (Review)"><mt:elseif name="status_future"><__trans phrase="Scheduled"></mt:if>"
+                                width="9" height="9" />
+                        </td>
+                        <td class="col title">
+                            <mt:Var name="title" escape="html">
+                        </td>
+                        <td class="col author" style="width: 100px;">
+                            <mt:Var name="author_name" escape="html">
+                        </td>
+                        <td class="col date" style="width: 100px;">
+                            <mt:if name="created_on_relative" and="dates_relative">
+                                <mt:var name="created_on_relative">
+                            <mt:else>
+                                <mt:var name="created_on_formatted">
+                            </mt:if>
+                        </td>
+                        <td class="col view si status-view" style="width: 35px;">
+                            <mt:if name="entry_permalink">
+                                <a href="<mt:var name="entry_permalink">"
+                                    target="<__trans phrase="_external_link_target">"
+                                    title="<__trans phrase="View entry">">
                                     <img src="<mt:var name="static_uri">images/spacer.gif"
-                                        alt="<mt:if name="status_draft"><__trans phrase="Unpublished (Draft)"><mt:elseif name="status_publish"><__trans phrase="Published"><mt:elseif name="status_review"><__trans phrase="Unpublished (Review)"><mt:elseif name="status_future"><__trans phrase="Scheduled"></mt:if>"
-                                        width="9" height="9" />
-                                </td>
-                                <td class="title">
-                                    <mt:Var name="title" escape="html">
-                                </td>
-                                <td class="author" style="width: 100px;">
-                                    <mt:Var name="author_name" escape="html">
-                                </td>
-                                <td class="date" style="width: 100px;">
-                                    <mt:if name="created_on_relative" and="dates_relative">
-                                        <mt:var name="created_on_relative">
-                                    <mt:else>
-                                        <mt:var name="created_on_formatted">
-                                    </mt:if>
-                                </td>
-                                <td class="view si status-view" style="width: 35px;">
-                                    <mt:if name="entry_permalink">
-                                        <a href="<mt:var name="entry_permalink">"
-                                            target="<__trans phrase="_external_link_target">"
-                                            title="<__trans phrase="View entry">">
-                                            <img src="<mt:var name="static_uri">images/spacer.gif"
-                                                alt="<__trans phrase="View entry">"
-                                                width="13" height="9" />
-                                        </a>
-                                    <mt:else>
-                                        &#160;
-                                    </mt:if>
-                                </td>
-                            </tr>
-    </mt:loop>
-                        <tbody>
-                    </table>
-                </div>
+                                        alt="<__trans phrase="View entry">"
+                                        width="13" height="9" />
+                                </a>
+                            <mt:else>
+                                &#160;
+                            </mt:if>
+                        </td>
+                    </tr>
+        </mt:loop>
+                <tbody>
     <mt:unless name="json">
-            </div>
-        </form>
-    </div>
+            </table>
+        </div>
+    </form>
 </div>
 
 <div class="pagination"></div>
@@ -178,14 +197,14 @@
                 type="submit"
                 accesskey="s"
                 title="<__trans phrase="Select (s)">"
-                class="primary-button close disabled-button"
+                class="close action primary button primary-button disabled-button"
                 disabled="true"
                 ><__trans phrase="Select"></button>
             <button
-                onclick="closeDialog(); return false"
+                onclick="<mt:If tag="Version" lt="5">closeDialog(); return false</mt:If>"
                 type="submit"
                 accesskey="x"
-                class="cancel"
+                class="cancel action button mt-close-dialog"
                 title="<__trans phrase="Cancel (x)">"
                 ><__trans phrase="Cancel"></button>
         </form>
@@ -197,17 +216,21 @@
     <mtapp:statusmsg
         id="no-assets"
         class="info">
-        <__trans phrase="No entries could be found.">
+        <mt:If name="type" eq="page">
+            <__trans phrase="No pages could be found.">
+        <mt:Else>
+            <__trans phrase="No entries could be found.">
+        </mt:If>
     </mtapp:statusmsg>
     <mt:unless name="json">
     <div class="actions-bar">
         <div class="actions-bar-inner pkg actions">
             <form action="" method="get" onsubmit="return false">
                 <button
-                    onclick="closeDialog(); return false"
+                    onclick="<mt:If tag="Version" lt="5">closeDialog(); return false</mt:If>"
                     type="submit"
                     accesskey="x"
-                    class="cancel"
+                    class="cancel action button mt-close-dialog"
                     title="<__trans phrase="Cancel (x)">"
                     ><__trans phrase="Cancel"></button>
             </form>

@@ -1,5 +1,17 @@
 <mt:Include name="dialog/header.tmpl">
 
+<h2>The object should have been inserted, and you shouldn't even see this page.</h2>
+<p>Object title: <mt:Var name="obj_title"></p>
+<p>Object ID: <mt:Var name="obj_id"></p>
+<p>Edit field: <mt:Var name="edit_field"></p>
+<p>Object Blog ID: <mt:Var name="obj_blog_id"></p>
+
+<button
+   type="submit"
+   accesskey="x"
+   class="cancel action button mt-close-dialog">
+  <__trans phrase="Close"></button>
+
 <script type="text/javascript">
     window.parent.insertSelectedEntry(
         '<mt:Var name="obj_title" escape="html" escape="JS">',
@@ -7,7 +19,11 @@
         '<mt:Var name="edit_field">',
         '<mt:Var name="obj_blog_id">'
     );
+<mt:If tag="Version" lt="5">
     closeDialog();
+<mt:Else>
+    parent.jQuery.fn.mtDialog.close();
+</mt:If>
 </script>
 
 <mt:Include name="dialog/footer.tmpl">

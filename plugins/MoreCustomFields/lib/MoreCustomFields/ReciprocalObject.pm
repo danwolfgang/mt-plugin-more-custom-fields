@@ -37,9 +37,10 @@ sub _field_html_params {
     });
 
     if ($obj) {
-        $tmpl_param->{recip_obj_title}   = $obj->title;
-        $tmpl_param->{recip_obj_id}      = $obj->id;
-        $tmpl_param->{recip_obj_blog_id} = $obj->blog_id;
+        $tmpl_param->{obj_title}     = $obj->title;
+        $tmpl_param->{obj_id}        = $obj->id;
+        $tmpl_param->{obj_blog_id}   = $obj->blog_id;
+        $tmpl_param->{obj_permalink} = $obj->permalink;
     }
 }
 
@@ -65,49 +66,49 @@ sub _field_html {
 <mt:SetVarBlock name="blogids"><mt:If name="options"><mt:Var name="options"><mt:Else><mt:Var name="blog_id"></mt:If></mt:SetVarBlock>
 
 <div id="<mt:Var name="field_name">_status"
-    style="background: #ccffcc; padding: 5px 8px; margin-bottom: 5px; display: none;"></div>
+    class="<mt:If tag="Version" lt="5">mt4 </mt:If>msg-success custom-field-reciprocal-status"></div>
 
 <input name="<mt:Var name="field_name">_reciprocal_<mt:Var name="recip_type">"
-    id="<mt:Var name="field_name">_reciprocal_<mt:Var name="recip_type">"
+    id="<mt:Var name="field_name">"
+    class="reciprocal-object hidden"
     type="hidden"
     value="<mt:Var name="field_value">" />
 
-<button
-    style="background: #333 url('<mt:StaticWebPath>images/buttons/button.gif') no-repeat 0 center; border:none; border-top:1px solid #d4d4d4; font-weight: bold; font-size: 14px; line-height: 1.3; text-decoration: none; color: #eee; cursor: pointer; padding: 2px 10px 4px;"
-    type="submit"
-    onclick="return openDialog(this.form, 'mcf_list_<mt:Var name="recip_types">', 'blog_ids=<mt:Var name="blogids">&blog_id=<mt:Var name="blog_id">&edit_field=<mt:Var name="field_name">')">
-    Choose <mt:Var name="recip_type" capitalize="1">
-</button>
-
-<span id="<mt:Var name="field_name">_preview"
-    class="preview"
-    style="padding-left: 8px;">
-<mt:If name="field_value">
-        <a href="<mt:Var name="script_uri">?__mode=view&amp;_type=<mt:Var name="recip_type">&amp;blog_id=<mt:Var name="recip_obj_blog_id">&amp;id=<mt:Var name="recip_obj_id">"
-            target="_blank"
-            title="Edit this <mt:Var name="recip_type"> in a new window">
-            <mt:Var name="recip_obj_title">
-        </a>
+<a
+<mt:If tag="Version" lt="5">
+    onclick="return openDialog(this.form, 'mcf_list_<mt:Var name="recip_types">', 'blog_id=<mt:Var name="blogids">&edit_field=<mt:Var name="field_id">')"
+<mt:Else>
+    onclick="jQuery.fn.mtDialog.open('<mt:Var name="script_uri">?__mode=mcf_list_<mt:Var name="recip_types">&amp;blog_id=<mt:Var name="blogids">&amp;edit_field=<mt:Var name="field_id">')"
 </mt:If>
-</span>
-
-<a style="padding: 3px 5px;"
-    id="<mt:Var name="field_name">_delete"
-    href="javascript:deleteReciprocalAssociation('<mt:Var name="field_name">', jQuery('#<mt:Var name="field_name">_reciprocal_<mt:Var name="recip_type">').val());"
-    title="Remove selected <mt:Var name="recip_type">">
-        <img src="<mt:StaticWebPath>images/status_icons/close.gif" width="9" height="9" alt="Remove selected <mt:Var name="recip_type">" />
+    class="<mt:If tag="Version" lt="5">mt4-choose </mt:If>button">
+    Choose <mt:Var name="recip_type">
 </a>
 
-<script type="text/javascript">
-    jQuery(document).ready(function($) {
-        if ( $('#<mt:Var name="field_name">_reciprocal_<mt:Var name="recip_type">').val() ) {
-            $('#<mt:Var name="field_name">_delete').show();
-        }
-        else {
-            $('#<mt:Var name="field_name">_delete').hide();
-        }
-    });
-</script>
+<ul class="custom-field-reciprocal mcf-listing"
+    id="custom-field-reciprocal-<mt:Var name="field_name">">
+<mt:If name="field_value">
+    <li id="obj-<mt:Var name="obj_id">">
+        <span class="obj-title"><mt:Var name="obj_title"></span>
+        <a href="<mt:Var name="script_uri">?__mode=view&amp;_type=<mt:Var name="obj_class">&amp;id=<mt:Var name="obj_id">&amp;blog_id=<mt:Var name="obj_blog_id">"
+            class="edit"
+            target="_blank"
+            title="Edit in a new window."><img 
+                src="<mt:StaticWebPath>images/status_icons/draft.gif"
+                width="9" height="9" alt="Edit" /></a>
+        <a href="<mt:Var name="obj_permalink">"
+            class="view"
+            target="_blank"
+            title="View in a new window."><img
+                src="<mt:StaticWebPath>images/status_icons/view.gif"
+                width="13" height="9" alt="View" /></a>
+        <img class="remove"
+            alt="Remove selected entry"
+            title="Remove selected entry"
+            src="<mt:StaticWebPath>images/status_icons/close.gif"
+            width="9" height="9" />
+    </li>
+</mt:If>
+</ul>
         };
     } # Closing if ( $app->param('_type') !~ /(entry|page)/ )
 }
@@ -129,7 +130,7 @@ sub tag_reciprocal_entry {
     # It's used later, to load the field data.
     my $cf_basename = $args->{basename};
     if (!$cf_basename) {
-        return $ctx->error(
+        return $ctx->error( 
             'The Reciprocal' . ucfirst($type) . ' block tag requires the '
             . 'basename argument. The basename should be the Reciprocal '
             . ucfirst($type) . ' Association Custom Field&rsquo;s field '
@@ -137,7 +138,7 @@ sub tag_reciprocal_entry {
         );
     }
 
-    # Grab the field name with the collected data from above. The basename
+    # Grab the field name with the collected data from above. The basename 
     # must be unique so it's a good thing to key off of!
     my $field = CustomFields::Field->load({
         type     => "reciprocal_$type",
@@ -166,7 +167,7 @@ sub tag_reciprocal_entry {
     my $entryid = $object->$basename
         if ($object && $object->$basename);
 
-    # Verify that $entryid is a number. If no Selected Entries are found,
+    # Verify that $entryid is a number. If no Selected Entries are found, 
     # it's possible $entryid could be just a space character, which throws
     # an error. So, this check ensures we always have a valid entry ID.
     if ($entryid =~ m/\d+/) {
@@ -199,7 +200,7 @@ sub tag_reciprocal_page {
     tag_reciprocal_entry($ctx, $args, $cond, 'page');
 }
 
-# This is called by MoreCustomFields::Plugin::post_save, which is the
+# This is called by MoreCustomFields::Plugin::post_save, which is the 
 # post-save callback handler. Save the data for this custom field type.
 sub _save {
     my ($arg_ref) = @_;
@@ -226,8 +227,8 @@ sub _save {
 
     # Load the reciprocal entry and associate it with the current entry.
     my $recip_entry = MT->model( $type )->load({ id => $recip_entry_id })
-        or die "The $type specified in the Reciprocal " . ucfirst($type)
-            . " Association custom field could not be loaded: $type ID "
+        or die "The $type specified in the Reciprocal " . ucfirst($type) 
+            . " Association custom field could not be loaded: $type ID " 
             . $recip_entry_id;
 
     my $cf_basename = 'field.' . $field_basename;
@@ -239,19 +240,6 @@ sub _save {
     # Associate the current entry with the "other" entry.
     $recip_entry->$cf_basename( $obj->id );
     $recip_entry->save or die $recip_entry->errstr;
-
-    # Republish the reciprocal object. Save a message to the Activity Log if
-    # publishing failed.
-    $app->rebuild_entry(Entry => $recip_entry)
-        or MT->log({
-            level     => MT->model('log')->INFO(),
-            class     => $type,
-            author_id => $obj->author_id,
-            blog_id   => $obj->blog_id,
-            message   => "Publishing the reciprocal $type \""
-                . $recip_entry->title . '" (' . $recip_entry->id
-                . ') failed: ' . $app->errstr,
-        });
 
     MT->log({
         level     => MT->model('log')->INFO(),
@@ -266,7 +254,7 @@ sub _save {
 }
 
 # Reciprocal links need to be unlinked when deleted, removing the existing
-# association in the database. Do this through an AJAX call to make a good
+# association in the database. Do this through an AJAX call to make a good 
 # experience for the user and offer immediate feedback.
 sub ajax_unlink {
     my $app = MT->instance;
@@ -280,43 +268,20 @@ sub ajax_unlink {
     # linked entry.
     $basename =~ s/customfield_/field./;
 
-    # First load the current object and the reciprocal object, then remove the
-    # association from each.
-    my $cur_entry = MT->model( $recip_obj_type )->load({
-        id => $cur_entry_id,
-    })
-        or return MT::Util::to_json({
-            status  => 0,
-            message => "Error: couldn't load the current $recip_obj_type.",
-        });
-
-    my $recip_entry = MT->model( $recip_obj_type )->load({
+    # Remove the association from the linked entry.
+    my $recip_entry = MT->model( $recip_obj_type )->load({ 
         id => $recip_entry_id,
     })
-        or return MT::Util::to_json({
+        or return MT::Util::to_json({ 
             status  => 0,
             message => "Error: couldn't load the associated $recip_obj_type.",
         });
 
-    # Remove the association from the linked entry.
     $recip_entry->$basename(undef);
     $recip_entry->save
-        or return MT::Util::to_json({
+        or return MT::Util::to_json({ 
             status  => 0,
             message => "Error: couldn't unlink the associated $recip_obj_type.",
-        });
-
-    # Republish the reciprocal object. Save a message to the Activity Log if
-    # publishing failed.
-    $app->rebuild_entry(Entry => $recip_entry)
-        or MT->log({
-            level     => MT->model('log')->INFO(),
-            class     => $recip_obj_type,
-            author_id => $cur_entry->author_id,
-            blog_id   => $cur_entry->blog_id,
-            message   => "Publishing the reciprocal $recip_obj_type \""
-                . $recip_entry->title . '" (' . $recip_entry->id
-                . ') failed: ' . $app->errstr,
         });
 
     # If there is no current entry ID, that means the current entry is a new,
@@ -329,9 +294,17 @@ sub ajax_unlink {
         if !$cur_entry_id;
 
     # Now unlink the current entry association.
+    my $cur_entry = MT->model( $recip_obj_type )->load({
+        id => $cur_entry_id,
+    })
+        or return MT::Util::to_json({ 
+            status  => 0,
+            message => "Error: couldn't load the current $recip_obj_type.",
+        });
+
     $cur_entry->$basename(undef);
     $cur_entry->save
-        or return MT::Util::to_json({
+        or return MT::Util::to_json({ 
             status  => 0,
             message => "Error: couldn't unlink the current $recip_obj_type.",
         });
@@ -342,15 +315,15 @@ sub ajax_unlink {
         author_id => $cur_entry->author_id,
         blog_id   => $cur_entry->blog_id,
         message   => "A reciprocal $recip_obj_type association was deleted "
-            . 'between "' . $cur_entry->title . '" (ID ' . $cur_entry->id
-            . ') and "' . $recip_entry->title . '" (ID ' . $recip_entry->id
+            . 'between "' . $cur_entry->title . '" (ID ' . $cur_entry->id 
+            . ') and "' . $recip_entry->title . '" (ID ' . $recip_entry->id 
             . ').',
     });
 
     return MT::Util::to_json({
         status  => 1,
         message => "Successfully deleted the reciprocal $recip_obj_type "
-            . 'association between &ldquo;' . $cur_entry->title
+            . 'association between &ldquo;' . $cur_entry->title 
             . '&rdquo; and &ldquo;' . $recip_entry->title . '.&rdquo;',
     });
 }

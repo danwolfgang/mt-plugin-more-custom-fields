@@ -1,18 +1,69 @@
+jQuery(document).ready(function() {
+
+    // Delete a Selected Entry
+    jQuery(document).on('click', 'ul.custom-field-selected-entries li img.remove', function(){
+        var obj_id = jQuery(this).parent().attr('id');
+        obj_id = obj_id.replace('obj-','');
+
+        var obj_ids = jQuery(this).parent().parent().parent().find('input.selected-entries').val();
+        var re = new RegExp(',?'+obj_id);
+        obj_ids = obj_ids.replace(re,'');
+
+        // Write the updated list of Selected Entries back to the field.
+        jQuery(this).parent().parent().parent().find('input.selected-entries').val( obj_ids );
+
+        // Finally, actually remove the item.
+        jQuery(this).parent().remove();
+    });
+
+    // Delete a Reciprocal Object
+    jQuery(document).on('click', 'ul.custom-field-reciprocal li img.remove', function(){
+        var $field = jQuery(this).parent().parent().parent().find('input.reciprocal-object');
+
+        deleteReciprocalAssociation(
+            $field.attr('id'),
+            $field.val()
+        );
+    });
+
+
+    // Objects in the selected entries/pages CF are sortable. After sorting,
+    // update the hdiden field with the object IDs.
+    jQuery('ul.custom-field-selected-entries').sortable({
+        revert: true,
+        stop: function(event, ui) {
+            var objects = new Array();
+
+            jQuery(this).find('li').each(function(index,value){
+                var id = jQuery(this).attr('id');
+                id = id.replace('obj-','');
+                objects.push(id);
+            });
+
+            jQuery(this).parent().find('input.selected-entries').val( objects.join(',') );
+        }
+    }).disableSelection();
+
+});
+
+
 // The popup dialog uses this function to insert the Selected Entry, Selected
 // Page, or Reciprocal Association.
 function insertSelectedEntry(entry_title, entry_id, field, blog_id) {
     // Check if this is a reciprocal association, or just a standard Selected
     // Entry/Page.
-    var type = jQuery('#entry_form input[name=_type]').val();
-    if ( jQuery('#'+field+'_reciprocal_'+type).length ) {
+    if ( jQuery('input#'+field+'.reciprocal-object').length ) {
         // If a reciprocal association already exists, we need to delete it
         // before creating a new association.
-        if ( jQuery('#'+field+'_reciprocal_'+type).val() ) {
+        if ( jQuery('input#'+field+'.reciprocal-object').val() ) {
             deleteReciprocalAssociation(
                 field,
-                jQuery('#'+field+'_reciprocal_'+type).val(),
+                jQuery('input#'+field+'.reciprocal-object').val()
+            );
+            createReciprocalAssociation(
                 entry_title,
                 entry_id,
+                field,
                 blog_id
             );
         }
@@ -29,28 +80,78 @@ function insertSelectedEntry(entry_title, entry_id, field, blog_id) {
     }
     // This is just a standard Selected Entries or Selected Pages insert.
     else {
-        jQuery('#'+field).val(entry_id);
-        jQuery('#'+field+'_preview').text(entry_title);
+        // Create a list item populated with title, edit, view, and remove links.
+        var $li = createObjectListing(entry_title, entry_id, blog_id);
+
+        // Insert the list item with the button, preview, etc into the field area.
+        jQuery('ul#custom-field-selected-entries_'+field)
+            .append($li)
+
+        var objects = new Array();
+        objects[0] = jQuery('input#'+field).val();
+        objects.push(entry_id);
+        jQuery('input#'+field).val( objects.join(',') );
     }
+}
+
+// Create an object listing for an entry or page. This is used for Selected
+// Entry, Selected Page, and Reciprocal Objects.
+function createObjectListing(entry_title, entry_id, blog_id) {
+    var $preview = jQuery('<span/>')
+        .addClass('obj-title')
+        .text(entry_title);
+    // Edit link.
+    var $edit = jQuery('<a/>')
+        .attr('href', CMSScriptURI+'?__mode=view&_type=entry&id='+entry_id+'&blog_id='+blog_id)
+        .addClass('edit')
+        .attr('target', '_blank')
+        .attr('title', 'Edit in a new window')
+        .html('<img src="'+StaticURI+'images/status_icons/draft.gif" width="9" height="9" alt="Edit" />');
+    // View link.
+    var $view = jQuery('<a/>')
+        .attr('href', '')
+        .addClass('view')
+        .attr('target', '_blank')
+        .attr('title', 'View in a new window')
+        .html('<img src="'+StaticURI+'images/status_icons/view.gif" width="13" height="9" alt="View" />');
+    // Delete button.
+    var $remove = jQuery('<img/>')
+        .addClass('remove')
+        .attr('title', 'Remove selected entry')
+        .attr('alt', 'Remove selected entry')
+        .attr('src', StaticURI+'images/status_icons/close.gif')
+        .attr('width', 9)
+        .attr('height', 9);
+
+    // Insert all of the above into a list item.
+    var $li = jQuery('<li/>')
+        .addClass('obj-'+entry_id)
+        .append($preview)
+        .append($edit)
+        .append($view)
+        .append($remove);
+
+    return $li;
 }
 
 // Create the reciprocal entry association. This happens after selecting
 // an entry from the popup.
-function createReciprocalAssociation(entrytitle, recip_entry_id, field, blog_id) {
-    var type = jQuery('#entry_form input[name=_type]').val();
-    jQuery('#'+field+'_reciprocal_'+type).val( recip_entry_id );
+function createReciprocalAssociation(entry_title, recip_entry_id, field, blog_id) {
+    jQuery('input#'+field+'.reciprocal-object').val( recip_entry_id );
 
-    jQuery('#'+field+'_preview').html(
-        '<a href="' + CMSScriptURI + '?__mode=view'
-        + '&amp;_type=' + type + '&amp;blog_id=' + blog_id + '&amp;id='
-        + recip_entry_id + '">' + entrytitle + '</a>'
+    // Create a list item populated with title, edit, view, and remove links.
+    var $li = createObjectListing(
+        entry_title,
+        recip_entry_id,
+        blog_id
     );
 
-    jQuery('#'+field+'_delete').show();
+    jQuery('ul#custom-field-reciprocal-'+field)
+        .append($li);
 }
 
-// Unlink the selected entry from the current entry.
-function deleteReciprocalAssociation(field, recip_entry_id, entrytitle, new_recip_entry_id, blog_id) {
+// Unlink the selected entry from the current entry for a Reciprocal Association.
+function deleteReciprocalAssociation(field, recip_entry_id) {
     var type = jQuery('#entry_form input[name=_type]').val();
     jQuery.get(
         CMSScriptURI + '?__mode=unlink_reciprocal',
@@ -66,214 +167,13 @@ function deleteReciprocalAssociation(field, recip_entry_id, entrytitle, new_reci
             // The association was successfully deleted from the database,
             // so delete the visible data.
             if (data.status == 1) {
-                jQuery('#'+field+'_reciprocal_'+type).val('');
-                jQuery('#'+field+'_preview').html('');
-                jQuery('#'+field+'_delete').hide();
+                jQuery('input#'+field).val('');
+                jQuery('ul#custom-field-reciprocal-'+field).children().remove();
                 setTimeout(function() {
                     jQuery('#'+field+'_status').hide(1000)
                 }, 7000);
-
-                // Is a new entry supposed to be linked now? If so, do it!
-                if (entrytitle) {
-                    createReciprocalAssociation(
-                        entrytitle,
-                        new_recip_entry_id,
-                        field,
-                        blog_id
-                    );
-                }
             }
         },
         'json'
     );
-}
-
-// Selected Entries CF
-function addSelectedEntry(cf_name, blog_ids) {
-    // Update the counter, so that each addition gets a unique number
-    var adder_el = 'se-adder-' + cf_name;
-    var numi = document.getElementById(adder_el);
-    var num = (document.getElementById(adder_el).value -1) + 2;
-    numi.value = num;
-
-    // Create the new input field.
-    var newInputName = cf_name + '_selectedentriescf_new' + num;
-    var new_el = 'se-new-input-' + cf_name;
-    var newInput = document.getElementById(new_el).cloneNode(true);
-    newInput.setAttribute('name', newInputName);
-    newInput.setAttribute('id',   newInputName);
-
-    // Create the new button
-    var new_el = 'se-new-button-' + cf_name;
-    var newButton = document.getElementById(new_el).cloneNode(true);
-    newButton.removeAttribute('id');
-    newButton.setAttribute('style', "background: #333 url('" + StaticURI + "images/buttons/button.gif') no-repeat 0 center; border:none; border-top:1px solid #d4d4d4; font-weight: bold; font-size: 14px; line-height: 1.3; text-decoration: none; color: #eee; cursor: pointer; padding: 2px 10px 4px;");
-    var onclick = "return openDialog(this.form, 'mcf_list_entries', 'blog_ids=" + blog_ids + "&edit_field=" + newInputName + "')";
-    newButton.setAttribute('onclick', onclick);
-
-    // Create the preview area
-    var newPreviewName = cf_name + '_selectedentriescf_new' + num + '_preview';
-    var new_el = 'se-new-preview-' + cf_name;
-    var newPreview = document.getElementById(new_el).cloneNode(true);
-    newPreview.setAttribute('id', newPreviewName);
-    newPreview.setAttribute('style', 'padding: 0 3px 0 8px;');
-
-    // Add the "delete" icon
-    var newDeleteIcon = document.createElement('img');
-    newDeleteIcon.setAttribute('src', StaticURI + 'images/status_icons/close.gif');
-    newDeleteIcon.setAttribute('width', '9');
-    newDeleteIcon.setAttribute('height', '9');
-    newDeleteIcon.setAttribute('alt', 'Remove selected entry');
-
-    //Add the "delete" link
-    var newDeleteLink = document.createElement('a');
-    newDeleteLink.setAttribute('style', "margin-left: 5px;");
-    newDeleteLink.setAttribute('style', 'padding: 3px 5px;');
-    var href = "javascript:removeSelectedEntry('li_" + newInputName + "', '" + cf_name + "');";
-    newDeleteLink.setAttribute('href', href);
-    newDeleteLink.setAttribute('title', 'Remove selected entry');
-    newDeleteLink.appendChild(newDeleteIcon);
-
-    // Create a new list item and add the new select drop-down to it.
-    var newListItem = document.createElement('li');
-    newListItem.setAttribute('id', 'li_' + newInputName);
-    newListItem.appendChild(newInput);
-    newListItem.appendChild(newButton);
-    newListItem.appendChild(newPreview);
-    newListItem.appendChild(newDeleteLink);
-
-    // Place the new list item in the drop-down selectors list.
-    var CF = document.getElementById('custom-field-selected-entries_' + cf_name);
-    CF.appendChild(newListItem);
-    
-    // If the beacon (added when there are no Selected Assets) is 
-    // present, remove it. After all, the user is adding an Asset now,
-    // so that state is no longer true.
-    var beacon = document.getElementById(cf_name + '_selectedentriescf_beacon');
-    if (beacon) {
-        CF.removeChild(beacon);
-    }
-
-    // After the user clicks to Add an Entry, they are going to want to
-    // click Choose Entry. We might as well save them the effort.
-    openDialog(this.form, 'mcf_list_entries', 'blog_ids=' + blog_ids + '&edit_field=' + newInputName);
-}
-
-function removeSelectedEntry(l,f) {
-    var listItem = document.getElementById(l);
-    listItem.parentNode.removeChild(listItem);
-    
-    // If the user has just deleted the last Selected Entry, then add a
-    // beacon so that the state can be properly saved.
-    var ul_field = 'custom-field-selected-entries_' + f;
-    var ul = document.getElementById(ul_field);
-    var li_count = ul.getElementsByTagName('li').length
-    if (li_count == 0) {
-        // Create the beacon field.
-        var beacon = document.createElement('input');
-        beacon_field = f+ '_selectedentriescf_beacon';
-        beacon.setAttribute('name', beacon_field);
-        beacon.setAttribute('id', beacon_field);
-        beacon.setAttribute('type', 'hidden');
-        beacon.setAttribute('value', '1');
-
-        // Add the beacon field to the parent UL.
-        var CF = document.getElementById(ul_field);
-        CF.appendChild(beacon);
-    }
-}
-
-// Selected Pages CF
-function addSelectedPage(cf_name, blog_ids) {
-    // Update the counter, so that each addition gets a unique number
-    var adder_el = 'se-adder-' + cf_name;
-    var numi = document.getElementById(adder_el);
-    var num = (document.getElementById(adder_el).value -1) + 2;
-    numi.value = num;
-
-    // Create the new input field.
-    var newInputName = cf_name + '_selectedpagescf_new' + num;
-    var new_el = 'se-new-input-' + cf_name;
-    var newInput = document.getElementById(new_el).cloneNode(true);
-    newInput.setAttribute('name', newInputName);
-    newInput.setAttribute('id',   newInputName);
-
-    // Create the new button
-    var new_el = 'se-new-button-' + cf_name;
-    var newButton = document.getElementById(new_el).cloneNode(true);
-    newButton.removeAttribute('id');
-    newButton.setAttribute('style', "background: #333 url('" + StaticURI + "images/buttons/button.gif') no-repeat 0 center; border:none; border-top:1px solid #d4d4d4; font-weight: bold; font-size: 14px; line-height: 1.3; text-decoration: none; color: #eee; cursor: pointer; padding: 2px 10px 4px;");
-    var onclick = "return openDialog(this.form, 'mcf_list_pages', 'blog_ids=" + blog_ids + "&edit_field=" + newInputName + "')";
-    newButton.setAttribute('onclick', onclick);
-
-    // Create the preview area
-    var newPreviewName = cf_name + '_selectedpagescf_new' + num + '_preview';
-    var new_el = 'se-new-preview-' + cf_name;
-    var newPreview = document.getElementById(new_el).cloneNode(true);
-    newPreview.setAttribute('id', newPreviewName);
-    newPreview.setAttribute('style', 'padding: 0 3px 0 8px;');
-
-    // Add the "delete" icon
-    var newDeleteIcon = document.createElement('img');
-    newDeleteIcon.setAttribute('src', StaticURI + 'images/status_icons/close.gif');
-    newDeleteIcon.setAttribute('width', '9');
-    newDeleteIcon.setAttribute('height', '9');
-    newDeleteIcon.setAttribute('alt', 'Remove selected page');
-
-    //Add the "delete" link
-    var newDeleteLink = document.createElement('a');
-    newDeleteLink.setAttribute('style', "margin-left: 5px;");
-    newDeleteLink.setAttribute('style', 'padding: 3px 5px;');
-    var href = "javascript:removeSelectedPage('li_" + newInputName + "','" + cf_name + "');";
-    newDeleteLink.setAttribute('href', href);
-    newDeleteLink.setAttribute('title', 'Remove selected page');
-    newDeleteLink.appendChild(newDeleteIcon);
-
-    // Create a new list item and add the new select drop-down to it.
-    var newListItem = document.createElement('li');
-    newListItem.setAttribute('id', 'li_' + newInputName);
-    newListItem.appendChild(newInput);
-    newListItem.appendChild(newButton);
-    newListItem.appendChild(newPreview);
-    newListItem.appendChild(newDeleteLink);
-
-    // Place the new list item in the drop-down selectors list.
-    var CF = document.getElementById('custom-field-selected-pages_' + cf_name);
-    CF.appendChild(newListItem);
-    
-    // If the beacon (added when there are no Selected Pages) is 
-    // present, remove it. After all, the user is adding an Entry now,
-    // so that state is no longer true.
-    var beacon = document.getElementById(cf_name + '_selectedpagescf_beacon');
-    if (beacon) {
-        CF.removeChild(beacon);
-    }
-
-    // After the user clicks to Add a Page, they are going to want to
-    // click Choose Page. We might as well save them the effort.
-    openDialog(this.form, 'mcf_list_pages', 'blog_ids=' + blog_ids + '&edit_field=' + newInputName);
-}
-
-function removeSelectedPage(l,f) {
-    var listItem = document.getElementById(l);
-    listItem.parentNode.removeChild(listItem);
-
-    // If the user has just deleted the last Selected Entry, then add a
-    // beacon so that the state can be properly saved.
-    var ul_field = 'custom-field-selected-pages_' + f;
-    var ul = document.getElementById(ul_field);
-    var li_count = ul.getElementsByTagName('li').length
-    if (li_count == 0) {
-        // Create the beacon field.
-        var beacon = document.createElement('input');
-        beacon_field = f+ '_selectedpagescf_beacon';
-        beacon.setAttribute('name', beacon_field);
-        beacon.setAttribute('id', beacon_field);
-        beacon.setAttribute('type', 'hidden');
-        beacon.setAttribute('value', '1');
-
-        // Add the beacon field to the parent UL.
-        var CF = document.getElementById(ul_field);
-        CF.appendChild(beacon);
-    }
 }

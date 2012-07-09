@@ -1,13 +1,71 @@
-# This is a common module for the Selected Entries, Selected Pages, and
-# Selected Entries or Pages Custom Fields. Since they are all so similar they
-# can all make use of some of the same code.
+# This is a common module for the Selected Entries and Selected Pages Custom
+# Fields. Since they are all so similar they can all make use of some of the
+# same code.
 package MoreCustomFields::SelectedObject;
 
 use strict;
 use warnings;
 
-use MT::Util
-  qw( relative_date format_ts );
+use MT::Util qw( relative_date format_ts );
+
+# Create the options field displayed on the New/Edit Custom Field screen,
+# where the field is defined. The $type variable contains either "entries" or
+# "pages" to customize the text for the correct field type.
+sub options_field {
+    my ($arg_ref) = @_;
+    my $type      = $arg_ref->{type};
+
+    return qq{
+<div class="textarea-wrapper">
+    <input name="options" id="options" class="full-width" value="<mt:Var name="options" escape="html">" />
+</div>
+<p class="hint">Enter the ID(s) of the blog(s) whose $type should be available for selection. Leave this field blank to use the current blog only.</p>
+<p class="hint">Blog IDs should be comma-separated (as in &rdquo;1,12,19,37,112&ldquo;), or the &rdquo;all&ldquo; value may be specified to include all blogs&rsquo; $type.</p>
+    };
+}
+
+# Populate the field with any saved Entries or Pages.
+sub _field_html_params {
+    my ($key, $tmpl_key, $tmpl_param) = @_;
+    my $app = MT->instance;
+
+    my $id       = $app->param('id');
+    my $blog     = $app->blog;
+    my $blog_id  = $blog ? $blog->id : 0;
+    my $obj_type = $tmpl_param->{obj_type};
+
+    my $field_name  = $tmpl_param->{field_name};
+
+    # Several dropdowns may be needed, because several entries were selected.
+    my $field_value = $tmpl_param->{field_value};
+
+    # If there is no field value, there is nothing to parse. Likely on the
+    # Edit Field screen.
+    return unless $field_value;
+
+    my @obj_ids = split(/,\s?/, $field_value);
+
+    my @obj_ids_loop;
+    foreach my $obj_id (@obj_ids) {
+        # Verify that $obj_id is a number. If no Selected Entries are found, 
+        # it's possible $obj_id could be just a space character, which throws
+        # an error. So, this check ensures we always have a valid entry ID.
+        next unless $obj_id =~ m/\d+/;
+
+        my $obj = MT->model('entry')->load($obj_id)
+            or next;
+
+        push @obj_ids_loop, {
+            field_basename => $field_name,
+            obj_id         => $obj_id,
+            obj_title      => $obj->title,
+            obj_class      => $obj->class,
+            obj_blog_id    => $obj->blog_id,
+            obj_permalink  => $obj->permalink,
+        };
+    }
+    $tmpl_param->{selected_objects_loop} = \@obj_ids_loop;
+}
 
 # This creates the popup dialog that shows the listing of Entries/Pages that
 # can be selected.

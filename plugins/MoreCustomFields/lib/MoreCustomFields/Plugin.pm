@@ -79,7 +79,7 @@ sub load_customfield_types {
             options_delimiter => ',',
             options_field     => sub { MoreCustomFields::SelectedEntries::_options_field(); },
             field_html        => sub { MoreCustomFields::SelectedEntries::_field_html(); },
-            field_html_params => sub { MoreCustomFields::SelectedEntries::_field_html_params(@_); },
+            field_html_params => sub { MoreCustomFields::SelectedObject::_field_html_params(@_); },
         },
         selected_pages => {
             label             => 'Selected Pages',
@@ -89,7 +89,7 @@ sub load_customfield_types {
             options_delimiter => ',',
             options_field     => sub { MoreCustomFields::SelectedPages::_options_field(); },
             field_html        => sub { MoreCustomFields::SelectedPages::_field_html(); },
-            field_html_params => sub { MoreCustomFields::SelectedPages::_field_html_params(@_); },
+            field_html_params => sub { MoreCustomFields::SelectedObject::_field_html_params(@_); },
         },
         selected_content => {
             label             => 'Selected Entries or Pages',
@@ -230,9 +230,12 @@ END
 
     # Insert the More Custom Fields javascript.
     $new .= <<'END';
+    <script type="text/javascript" src="<mt:StaticWebPath>support/plugins/morecustomfields/jquery-ui-1.8.19.custom.min.js"></script>
     <script type="text/javascript" src="<mt:StaticWebPath>support/plugins/morecustomfields/app.js"></script>
+    <link rel="stylesheet" type="text/css" href="<mt:StaticWebPath>support/plugins/morecustomfields/app.css" />
 END
-    $$template =~ s/$old/$old$new/;
+
+    $$template =~ s/$old/$new$old/;
 }
 
 sub post_save {
@@ -257,8 +260,8 @@ sub post_save {
                 field_basename => $1,
             });
         }
-        # Find the Selected Entries, Selected Pages, or Selected Assets field.
-        elsif( m/^customfield_(.*?)_selected(entries|pages|assets|content)cf_(.*?)$/ ) {
+        # Find the Selected Assets or Selected Entries or Pages field.
+        elsif( m/^customfield_(.*?)_selected(assets|content)cf_(.*?)$/ ) {
             my $field_name = $_;
             # This is the text input value
             my $input_value = $app->param($field_name);
