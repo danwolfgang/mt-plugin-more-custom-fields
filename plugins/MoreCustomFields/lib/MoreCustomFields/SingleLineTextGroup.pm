@@ -57,17 +57,17 @@ sub _multi_field_html {
 
     <script type="text/javascript">
     function addGroup(parent,field_name) {
-        var num = $('#' + parent + ' ul').size();
-        $('#'+field_name+'_multiusesinglelinetextgroupcf_invisible-field').clone().appendTo('#' + parent);
+        var num = jQuery('#' + parent + ' ul').size();
+        jQuery('#'+field_name+'_multiusesinglelinetextgroupcf_invisible-field').clone().appendTo('#' + parent);
         // Switch to display:block so that the field is visible.
-        $('#' + parent + ' .cf-text-group').css('display', 'block');
+        jQuery('#' + parent + ' .cf-text-group').css('display', 'block');
         // The text input field has "_invisible" appended so that it isn't
         // inadvertently saved. Remove that trailing identifier so that the
         // field can be properly used.
-        $('#' + parent + ' ul.cf-text-group input[type=text]').each(function(index) {
-            var name = $(this).attr('name');
+        jQuery('#' + parent + ' ul.cf-text-group input[type=text]').each(function(index) {
+            var name = jQuery(this).attr('name');
             name = name.replace(/_invisible$/, '');
-            var name = $(this).attr('name', name);
+            var name = jQuery(this).attr('name', name);
         });
     }
     </script>
@@ -83,7 +83,7 @@ sub _multi_field_html {
                 <mt:Var name="field_template">
         <mt:If name="__last__">
                 <li class="cf-text-group-delete-button" style="text-align: right;">
-                    <a href="javascript:void(0)" onclick="$(this).parent().parent().remove()" class="icon-left icon-error">
+                    <a href="javascript:void(0)" onclick="jQuery(this).parent().parent().remove()" class="icon-left icon-error">
                         Delete this <mt:Var name="text_group_label"> field group
                     </a>
                 </li>
@@ -107,7 +107,7 @@ sub _multi_field_html {
                     <mt:Var name="invisible_field_template">
             <mt:If name="__last__">
                     <li class="cf-text-group-delete-button" style="text-align: right;">
-                        <a href="javascript:void(0)" onclick="$(this).parent().parent().remove()" class="icon-left icon-error">
+                        <a href="javascript:void(0)" onclick="jQuery(this).parent().parent().remove()" class="icon-left icon-error">
                             Delete this <mt:Var name="text_group_label"> field group
                         </a>
                     </li>
