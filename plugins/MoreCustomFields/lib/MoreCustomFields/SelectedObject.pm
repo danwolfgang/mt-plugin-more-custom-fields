@@ -35,8 +35,6 @@ sub _field_html_params {
     my $obj_type = $tmpl_param->{obj_type};
 
     my $field_name  = $tmpl_param->{field_name};
-
-    # Several dropdowns may be needed, because several entries were selected.
     my $field_value = $tmpl_param->{field_value};
 
     # If there is no field value, there is nothing to parse. Likely on the

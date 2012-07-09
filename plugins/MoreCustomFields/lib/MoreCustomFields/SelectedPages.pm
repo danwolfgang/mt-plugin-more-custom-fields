@@ -86,14 +86,23 @@ sub tag_selected_pages {
     # It's used later, to load the field data.
     my $cf_basename = $args->{basename};
     if (!$cf_basename) {
-        return $ctx->error( 'The SelectedPages block tag requires the basename argument. The basename should be the Selected Pages Custom Fields field basename.' );
+        return $ctx->error(
+            'The SelectedPages block tag requires the basename argument. The '
+            . 'basename should be the Selected Pages Custom Fields field '
+            . 'basename.'
+        );
     }
 
-    # Grab the field name with the collected data from above. The basename 
+    # Grab the field name with the collected data from above. The basename
     # must be unique so it's a good thing to key off of!
     my $field = CustomFields::Field->load( { type     => 'selected_pages',
                                              basename => $cf_basename, } );
-    if (!$field) { return $ctx->error('A Selected Pages Custom Field with this basename could not be found.'); }
+    if (!$field) {
+        return $ctx->error(
+            'A Selected Pages Custom Field with this basename could not be '
+            . 'found.'
+        );
+    }
 
     my $basename = 'field.'.$field->basename;
 
@@ -115,7 +124,7 @@ sub tag_selected_pages {
     my $i = 0;
     my $vars = $ctx->{__stash}{vars} ||= {};
     foreach my $page_id (@page_ids) {
-        # Verify that $page_id is a number. If no Selected Pages are found, 
+        # Verify that $page_id is a number. If no Selected Pages are found,
         # it's possible $page_id could be just a space character, which throws
         # an error. So, this check ensures we always have a valid page ID.
         if ($page_id =~ m/\d+/) {
