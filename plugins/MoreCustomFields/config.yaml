@@ -14,6 +14,15 @@ customfield_types: $MoreCustomFields::MoreCustomFields::Plugin::load_customfield
 init_app: $MoreCustomFields::MoreCustomFields::Plugin::init_app
 
 callbacks:
+    cms_post_save.asset:
+        handler: $MoreCustomFields::MoreCustomFields::Plugin::post_save
+        priority: 2
+    cms_post_save.comment:
+        handler: $MoreCustomFields::MoreCustomFields::Plugin::post_save
+        priority: 2
+    cms_post_save.template:
+        handler: $MoreCustomFields::MoreCustomFields::Plugin::post_save
+        priority: 2
     api_post_save.entry:
         handler: $MoreCustomFields::MoreCustomFields::Plugin::post_save
         priority: 2
