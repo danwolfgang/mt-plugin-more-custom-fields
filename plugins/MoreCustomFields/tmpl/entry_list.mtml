@@ -1,6 +1,16 @@
 <mt:unless name="json">
 <mt:SetVar name="screen_type" value="dialog-screen insert-asset-dialog">
-<mt:setvarblock name="page_title"><mt:if name="type" eq="page"><__trans phrase="Select Page"><mt:else><__trans phrase="Select Entry"></mt:if></mt:setvarblock>
+<mt:SetVarBlock name="page_title">
+    <mt:If name="entry_or_page">
+        <__trans phrase="Select Entry or Page">
+    <mt:Else>
+        <mt:If name="type" eq="page">
+            <__trans phrase="Select Page">
+        <mt:Else>
+            <__trans phrase="Select Entry">
+        </mt:If>
+    </mt:If>
+</mt:SetVarBlock>
 <mt:setvarblock name="html_head" append="1">
     <script type="text/javascript" src="<mt:var name="static_uri">js/tc/client.js"></script>
     <script type="text/javascript" src="<mt:var name="static_uri">js/tc/json.js"></script>
@@ -26,10 +36,10 @@
 
     var tableSelect;
     var dlg;
+    
     function init() {
-        // setup
-        dlg = new Dialog.Simple("list-entries");
-        var panel = new ListingPanel("entry");
+        dlg   = new Dialog.Simple("list-entries");
+        panel = new ListingPanel('entry');
         dlg.panel = panel;
 
         // hook into view updates so we can close any opened detail panel
@@ -90,12 +100,6 @@
         <input type="hidden" name="edit_field" value="<mt:var name="edit_field">" />
         <input type="hidden" name="dialog_view" value="1" />
         <input type="hidden" name="id" value="" />
-        <mt:if name="edit_blog_id">
-        <input type="hidden" name="blog_id" value="<mt:var name="edit_blog_id">" />
-        </mt:if>
-        <mt:if name="user_id">
-        <input type="hidden" name="user_id" value="<mt:var name="user_id">" />
-        </mt:if>
     </form>
 
     <div id="selector" class="selector listing list-data">
@@ -133,6 +137,10 @@
         </mt:If>
 
     </mt:unless>
+    <mt:If tag="Version" lt="5">
+        </table>
+        <table cellspacing="0">
+    </mt:if>
                 <tbody>
         <mt:loop name="object_loop">
                     <tr id="entry-<mt:var name="id">" class="<mt:if name="__odd__">odd<mt:else>even</mt:if>">
@@ -188,7 +196,7 @@
 
 <div class="pagination"></div>
 
-<div class="insert_button_spacing">&nbsp;</div>
+<mt:Ignore><div class="insert_button_spacing">&nbsp;</div></mt:Ignore>
 
 <div class="actions-bar">
     <div class="actions-bar-inner pkg actions">

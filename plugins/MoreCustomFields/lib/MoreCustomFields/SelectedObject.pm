@@ -84,6 +84,15 @@ sub list_objects {
          status => MT::Entry->RELEASE(), # Published
     );
 
+    # If this is coming from a Selected Entry or Page CF, then we need to make
+    # the popup dialog show both entries and pages as valid options.
+    my $entry_or_page;
+    if ($type eq 'entries_or_pages') {
+        $terms{class} = '*';
+        $type = 'entry';
+        $entry_or_page = 1;
+    }
+
     my @blog_ids;
     if ($blog_ids eq 'all') {
         # @blog_ids should stay empty so all blogs are loaded.
@@ -110,11 +119,11 @@ sub list_objects {
         template => $tmpl,
         params   => {
             panel_searchable => 1,
-            # edit_blog_id     => $blog_ids,
             edit_field       => $edit_field,
             search           => $search,
             blog_id          => $blog_ids,
             type             => $type,
+            entry_or_page    => $entry_or_page,
         },
         code => sub {
             my ($obj, $row) = @_;

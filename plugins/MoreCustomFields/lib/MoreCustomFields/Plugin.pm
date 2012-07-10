@@ -99,7 +99,7 @@ sub load_customfield_types {
             options_delimiter => ',',
             options_field     => sub { MoreCustomFields::SelectedEntriesOrPages::_options_field(); },
             field_html        => sub { MoreCustomFields::SelectedEntriesOrPages::_field_html(); },
-            field_html_params => sub { MoreCustomFields::SelectedEntriesOrPages::_field_html_params(@_); },
+            field_html_params => sub { MoreCustomFields::SelectedObject::_field_html_params(@_); },
         },
 #        single_line_text_group => {
 #            label             => 'Single-Line Text Group',
