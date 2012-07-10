@@ -49,7 +49,7 @@ jQuery(document).ready(function() {
 
 // The popup dialog uses this function to insert the Selected Entry, Selected
 // Page, or Reciprocal Association.
-function insertSelectedEntry(entry_title, entry_id, field, blog_id) {
+function insertSelectedObject(obj_title, obj_id, obj_class, obj_permalink, field, blog_id) {
     // Check if this is a reciprocal association, or just a standard Selected
     // Entry/Page.
     if ( jQuery('input#'+field+'.reciprocal-object').length ) {
@@ -61,8 +61,10 @@ function insertSelectedEntry(entry_title, entry_id, field, blog_id) {
                 jQuery('input#'+field+'.reciprocal-object').val()
             );
             createReciprocalAssociation(
-                entry_title,
-                entry_id,
+                obj_title,
+                obj_id,
+                obj_class,
+                obj_permalink,
                 field,
                 blog_id
             );
@@ -71,8 +73,10 @@ function insertSelectedEntry(entry_title, entry_id, field, blog_id) {
         // entry association.
         else {
             createReciprocalAssociation(
-                entry_title,
-                entry_id,
+                obj_title,
+                obj_id,
+                obj_class,
+                obj_permalink,
                 field,
                 blog_id
             );
@@ -81,7 +85,13 @@ function insertSelectedEntry(entry_title, entry_id, field, blog_id) {
     // This is just a standard Selected Entries or Selected Pages insert.
     else {
         // Create a list item populated with title, edit, view, and remove links.
-        var $li = createObjectListing(entry_title, entry_id, blog_id);
+        var $li = createObjectListing(
+            obj_title,
+            obj_id,
+            obj_class,
+            obj_permalink,
+            blog_id
+        );
 
         // Insert the list item with the button, preview, etc into the field area.
         jQuery('ul#custom-field-selected-entries_'+field)
@@ -89,27 +99,27 @@ function insertSelectedEntry(entry_title, entry_id, field, blog_id) {
 
         var objects = new Array();
         objects[0] = jQuery('input#'+field).val();
-        objects.push(entry_id);
+        objects.push(obj_id);
         jQuery('input#'+field).val( objects.join(',') );
     }
 }
 
 // Create an object listing for an entry or page. This is used for Selected
 // Entry, Selected Page, and Reciprocal Objects.
-function createObjectListing(entry_title, entry_id, blog_id) {
+function createObjectListing(obj_title, obj_id, obj_class, obj_permalink, blog_id) {
     var $preview = jQuery('<span/>')
         .addClass('obj-title')
-        .text(entry_title);
+        .text(obj_title);
     // Edit link.
     var $edit = jQuery('<a/>')
-        .attr('href', CMSScriptURI+'?__mode=view&_type=entry&id='+entry_id+'&blog_id='+blog_id)
+        .attr('href', CMSScriptURI+'?__mode=view&_type='+obj_class+'&id='+obj_id+'&blog_id='+blog_id)
         .addClass('edit')
         .attr('target', '_blank')
         .attr('title', 'Edit in a new window')
         .html('<img src="'+StaticURI+'images/status_icons/draft.gif" width="9" height="9" alt="Edit" />');
     // View link.
     var $view = jQuery('<a/>')
-        .attr('href', '')
+        .attr('href', obj_permalink)
         .addClass('view')
         .attr('target', '_blank')
         .attr('title', 'View in a new window')
@@ -125,7 +135,7 @@ function createObjectListing(entry_title, entry_id, blog_id) {
 
     // Insert all of the above into a list item.
     var $li = jQuery('<li/>')
-        .addClass('obj-'+entry_id)
+        .addClass('obj-'+obj_id)
         .append($preview)
         .append($edit)
         .append($view)
@@ -136,13 +146,15 @@ function createObjectListing(entry_title, entry_id, blog_id) {
 
 // Create the reciprocal entry association. This happens after selecting
 // an entry from the popup.
-function createReciprocalAssociation(entry_title, recip_entry_id, field, blog_id) {
-    jQuery('input#'+field+'.reciprocal-object').val( recip_entry_id );
+function createReciprocalAssociation(obj_title, recip_obj_id, obj_class, obj_permalink, field, blog_id) {
+    jQuery('input#'+field+'.reciprocal-object').val( recip_obj_id );
 
     // Create a list item populated with title, edit, view, and remove links.
     var $li = createObjectListing(
-        entry_title,
-        recip_entry_id,
+        obj_title,
+        recip_obj_id,
+        obj_class,
+        obj_permalink,
         blog_id
     );
 
@@ -151,13 +163,13 @@ function createReciprocalAssociation(entry_title, recip_entry_id, field, blog_id
 }
 
 // Unlink the selected entry from the current entry for a Reciprocal Association.
-function deleteReciprocalAssociation(field, recip_entry_id) {
+function deleteReciprocalAssociation(field, recip_obj_id) {
     var type = jQuery('#entry_form input[name=_type]').val();
     jQuery.get(
         CMSScriptURI + '?__mode=unlink_reciprocal',
         {
             'recip_field_basename': field,
-            'recip_entry_id': recip_entry_id,
+            'recip_entry_id': recip_obj_id,
             'cur_entry_id': jQuery('input[name=id]').val(),
             'recip_obj_type': type
         },

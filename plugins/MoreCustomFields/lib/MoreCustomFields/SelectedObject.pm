@@ -163,10 +163,12 @@ sub select_object {
         or die $app->errtrans('No edit_field');
 
     my $tmpl = $plugin->load_tmpl('select_entry.mtml', {
-        obj_id      => $obj->id,
-        obj_title   => $obj->title,
-        obj_blog_id => $obj->blog_id,
-        edit_field  => $edit_field,
+        obj_id        => $obj->id,
+        obj_title     => $obj->title,
+        obj_blog_id   => $obj->blog_id,
+        obj_class     => $obj->class,
+        obj_permalink => $obj->permalink,
+        edit_field    => $edit_field,
     });
 
     return $tmpl;
