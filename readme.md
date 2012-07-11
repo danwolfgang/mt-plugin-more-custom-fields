@@ -4,20 +4,23 @@ The Custom Fields found in Movable Type Pro are a boon to creating a flexible
 and robust site. When the standard field types don't quite meet your needs
 however, get More Custom Fields!
 
-* Checkbox Group: easily create a group of checkboxes
+* Checkbox Group: easily create a group of checkboxes. (Compatible with both
+  MT4 and 5.)
 
 * Radio Buttons with Input: build a group of radio buttons, where the last
-  option is a text input field
+  option is a text input field. (Compatible with both MT4 and 5.)
 
 * Selected Entries: select other entries from a pop-up window, to easily
   create a related entries list or string multi-part articles together. Also,
   the number of entries selected is unlimited, and the order you specify is
-  retained!
+  retained! (Compatible with both MT4 and 5.)
 
-* Selected Pages: works just like Selected Entries, but for Pages!
+* Selected Pages: works just like Selected Entries, but for Pages! (Compatible
+  with both MT4 and 5.)
 
 * Selected Entries Or Pages: works just like Selected Entries, but allows you
-  to select a combination of Entries and Pages.
+  to select a combination of Entries and Pages. (Compatible with both MT4 and
+  5.)
 
 * Selected Assets: as you may guess, this works just like Selected Entries and
   Selected Pages. Note that each asset type is registered as a separate custom
@@ -43,10 +46,10 @@ however, get More Custom Fields!
   Entry A is automatically created. When deleting an association, the
   reciprocal is also removed. The best part: on the Edit Entry screen is a
   link to edit the reciprocal Entry, allowing authors to easily jump between
-  Entries.
+  Entries. (Compatible with both MT4 and 5.)
 
 * Reciprocal Page Association: just like Reciprocal Entry Association, but for
-  Pages.
+  Pages. (Compatible with both MT4 and 5.)
 
 
 # Prerequisites
@@ -62,7 +65,7 @@ http://tinyurl.com/easy-plugin-install
 
 This plugin requires a newer version of the `YAML::Tiny` Perl module than is
 included with Movable Type. Included with this plugin (in the `extlib/`
-folder) is a newer version of YAML::Tiny. Copy from the plugin archive
+folder) is a newer version of `YAML::Tiny`. Copy from the plugin archive
 `extlib/YAML/Tiny.pm` to `$MT_HOME/extlib/YAML/Tiny.pm` to update Movable
 Type's copy of this plugin. **This is a required, non-optional step!**
 
