@@ -35,7 +35,8 @@ however, get More Custom Fields!
 
 * Message: administrators can edit the contents of the Message field text
   area, but any other use can only read the contents. Useful for displaying
-  instructions or other data you don't want the user to edit.
+  instructions or other data you don't want the user to edit. (Compatible with
+  both MT4 and 5.)
 
 * Multi-Use Time Stamped Multi-Line Text: another mouthful of a field name,
   but easy to use. This field type provides a reusable Multi-Line text field.

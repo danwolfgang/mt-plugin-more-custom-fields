@@ -10,11 +10,11 @@ use MT::Util
 
 sub _options_field {
     return q{
-<p class="hint">
+<p>
     <input type="radio" name="options" id="options_allow" class="radio" value="allow"<mt:If name="options" eq="allow"> checked="checked"</mt:If> />
     <label for="options_allow">Allow Blog Administrators and System Administrators to edit this field.</label>
 </p>
-<p class="hint">
+<p>
     <input type="radio" name="options" id="options_deny" class="radio" value="deny"<mt:If name="options" eq="deny"> checked="checked"</mt:If> />
     <label for="options_deny">Allow <em>no</em> users to edit this field (the contents may only be edited here).</label>
 </p>
@@ -31,7 +31,11 @@ sub _field_html {
 <!-- Building the Message custom field type -->
 <mt:SetVarBlock name="message_cf">
     <div class="textarea-wrapper">
-        <textarea name="<mt:var name="field_name">" id="<mt:var name="field_id">" class="full-width ta" rows="3" cols="72"><mt:var name="field_value" escape="html"></textarea>
+        <textarea name="<mt:var name="field_name">"
+            id="<mt:var name="field_id">"
+            class="text full-width ta"
+            rows="3"
+            cols="72"><mt:var name="field_value" escape="html"></textarea>
     </div>
 </mt:SetVarBlock>
 
@@ -46,7 +50,7 @@ sub _field_html {
         <mt:If name="on_edit_field">
             <mt:Ignore> 
                 However the admin should always be able to edit the field
-                on the Edit Field screen. 
+                on the Edit Field screen.
             </mt:Ignore>
             <mt:Var name="message_cf">
         <mt:Else>
@@ -56,9 +60,9 @@ sub _field_html {
 
 <mt:Else>
     <mt:Ignore>
-        By not supplying the field_id or textarea as a hidden field, the 
-        text is simply displayed. When saved, no custom field data is ever 
-        actually saved. That means the "default" message can be changed at 
+        By not supplying the field_id or textarea as a hidden field, the
+        text is simply displayed. When saved, no custom field data is ever
+        actually saved. That means the "default" message can be changed at
         any time and it will be updated anywhere it's displayed.
     </mt:Ignore>
     <mt:Var name="field_value" filters="__default__">
