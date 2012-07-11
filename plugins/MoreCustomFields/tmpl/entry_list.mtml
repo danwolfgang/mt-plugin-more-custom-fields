@@ -138,8 +138,10 @@
 
     </mt:unless>
     <mt:If tag="Version" lt="5">
-        </table>
-        <table cellspacing="0">
+            </table>
+            <div class="list-data-wrapper-modal list-data">
+            <div class="list-data-layout-modal">
+            <table cellspacing="0">
     </mt:if>
                 <tbody>
         <mt:loop name="object_loop">
@@ -190,8 +192,12 @@
                 <tbody>
     <mt:unless name="json">
             </table>
-        </div>
-    </form>
+    <mt:If tag="Version" lt="5">
+            </div>
+            </div>
+    </mt:If>
+        </form>
+    </div>
 </div>
 
 <div class="pagination"></div>
