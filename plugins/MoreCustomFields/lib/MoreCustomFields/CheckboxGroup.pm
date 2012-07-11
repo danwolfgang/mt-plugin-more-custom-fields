@@ -11,7 +11,7 @@ use MT::Util
 sub _options_field {
     return q{
 <div class="textarea-wrapper">
-    <textarea name="options" id="options" class="full-width"><mt:Var name="options" escape="html"></textarea>
+    <textarea name="options" id="options" class="text full-width"><mt:Var name="options" escape="html"></textarea>
 </div>
 <p class="hint">
     Please enter all allowable options for this field as a comma delimited list.
