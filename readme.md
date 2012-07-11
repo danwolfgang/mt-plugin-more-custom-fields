@@ -66,6 +66,12 @@ folder) is a newer version of YAML::Tiny. Copy from the plugin archive
 `extlib/YAML/Tiny.pm` to `$MT_HOME/extlib/YAML/Tiny.pm` to update Movable
 Type's copy of this plugin. **This is a required, non-optional step!**
 
+This plugin requires a newer version of the jQuery library than is included
+with Movable Type. Included with this plugin (in the `jQuery/` folder) is a
+newer version of JQuery. Copy from `jQuery/jquery.js` to
+`$MT_HOME/mt-static/jquery/jquery.js` to update Movable Type's copy of jQuery.
+** This is a required, non-optional step!**
+
 # Configuration
 
 More Custom Fields creates several additional field types that are available
