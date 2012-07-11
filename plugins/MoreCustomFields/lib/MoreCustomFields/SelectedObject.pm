@@ -71,6 +71,7 @@ sub list_objects {
     my ($arg_ref)  = @_;
     my $app        = $arg_ref->{app};
     my $blog_ids   = $arg_ref->{blog_ids};
+    my $blog_id    = $arg_ref->{blog_id};
     my $type       = $arg_ref->{type};
     my $edit_field = $arg_ref->{edit_field};
     my $search     = $arg_ref->{search} || '';
@@ -95,17 +96,22 @@ sub list_objects {
 
     my @blog_ids;
     if ($blog_ids eq 'all') {
-        # @blog_ids should stay empty so all blogs are loaded.
+        # Load all blog IDs.
+        my $iter = MT->model('blog')->load_iter();
+        while ( my $blog = $iter->() ) {
+            push @blog_ids, $blog->id;
+        }
     }
     else {
         # Turn this into an array so that all specified blogs can be loaded.
         @blog_ids = split(/,/, $blog_ids);
-        $terms{blog_id} = [@blog_ids];
     }
+    $terms{blog_id} = \@blog_ids;
 
     my %args = (
         sort      => 'authored_on',
         direction => 'descend',
+        limit     => 10,
     );
 
     my $tmpl = $plugin->load_tmpl('entry_list.mtml');
@@ -121,7 +127,7 @@ sub list_objects {
             panel_searchable => 1,
             edit_field       => $edit_field,
             search           => $search,
-            blog_id          => $blog_ids,
+            blog_id          => $blog_id,
             type             => $type,
             entry_or_page    => $entry_or_page,
         },

@@ -26,13 +26,13 @@ sub _field_html {
     type="hidden"
     value="1" />
 
-<mt:SetVarBlock name="blogids"><mt:If name="options"><mt:Var name="options"><mt:Else><mt:Var name="blog_id"></mt:If></mt:SetVarBlock>
+<mt:SetVarBlock name="blog_ids"><mt:If name="options"><mt:Var name="options"><mt:Else><mt:Var name="blog_id"></mt:If></mt:SetVarBlock>
 
 <a
 <mt:If tag="Version" lt="5">
-    onclick="return openDialog(this.form, 'mcf_list_entries', 'blog_id=<mt:Var name="blogids">&edit_field=<mt:Var name="field_id">')"
+    onclick="return openDialog(this.form, 'mcf_list_entries', 'blog_id=<mt:Var name="blog_id">&blog_ids=<mt:Var name="blog_ids">&edit_field=<mt:Var name="field_id">')"
 <mt:Else>
-    onclick="jQuery.fn.mtDialog.open('<mt:Var name="script_uri">?__mode=mcf_list_entries&amp;blog_id=<mt:Var name="blogids">&amp;edit_field=<mt:Var name="field_id">')"
+    onclick="jQuery.fn.mtDialog.open('<mt:Var name="script_uri">?__mode=mcf_list_entries&amp;blog_id=<mt:Var name="blog_id">&amp;blog_ids=<mt:Var name="blog_ids">&amp;edit_field=<mt:Var name="field_id">')"
 </mt:If>
     class="<mt:If tag="Version" lt="5">mt4-choose </mt:If>button">
     Choose entry
@@ -156,7 +156,8 @@ sub list_entries {
     my $app = shift;
     MoreCustomFields::SelectedObject::list_objects({
         app        => $app,
-        blog_ids   => $app->param('blog_id'),
+        blog_id    => $app->param('blog_id'),
+        blog_ids   => $app->param('blog_ids'),
         type       => 'entry',
         edit_field => $app->param('edit_field'),
         search     => $app->param('search') || '',
