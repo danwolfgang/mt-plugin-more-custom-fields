@@ -14,6 +14,7 @@ a.mt4-choose.button {
     font-family:  "Lucida Grande", Verdana, sans-serif;
 }
 
+/* Styling for the list items used for Selected Objects. */
 ul.mcf-listing {
     margin-top: 8px;
 }
@@ -45,4 +46,11 @@ div.custom-field-reciprocal-status {
 div.custom-field-reciprocal-status.mt4.msg-success {
     background-repeat: no-repeat;
     padding-left: 30px;
+}
+
+/* Radio Buttons with Input Field */
+input.radiobuttonswithinput-input {
+    border: 1px solid #ccc;
+    margin-left: 5px;
+    width: 500px;
 }

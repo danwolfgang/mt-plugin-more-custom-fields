@@ -254,7 +254,7 @@ sub post_save {
         }
         # Find the Radio Buttons with Input field.
         elsif (m/^customfield_(.*?)_radiobuttonswithinput$/) {
-            MoreCustomFields::CheckboxGroup::_save({
+            MoreCustomFields::RadioButtonsWithInput::_save({
                 app            => $app,
                 object         => $obj,
                 field_basename => $1,

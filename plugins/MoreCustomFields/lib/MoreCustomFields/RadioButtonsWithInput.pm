@@ -11,7 +11,7 @@ use MT::Util
 sub _options_field {
     return q{
 <div class="textarea-wrapper">
-    <textarea name="options" id="options" class="full-width"><mt:Var name="options" escape="html"></textarea>
+    <textarea name="options" id="options" class="text full-width"><mt:Var name="options" escape="html"></textarea>
 </div>
 <p class="hint">
     Please enter all allowable options for this field as a comma delimited list. The last option will have a text input option appended to it.
@@ -40,7 +40,10 @@ sub _field_html {
             <label for="<mt:Var name="field_id">_<mt:Var name="__counter__">">
                 <mt:Var name="label" escape="html">
             </label>
-            <input type="text" name="<mt:Var name="field_name">_radiobuttonswithinput" style="border: 1px solid #ccc; margin-left: 5px;" value="<mt:Var name="input" escape="html">" />
+            <input type="text"
+                name="<mt:Var name="field_name">_radiobuttonswithinput"
+                class="radiobuttonswithinput-input med"
+                value="<mt:Var name="input" escape="html">" />
         </li>
     <mt:Else>
         <li>
