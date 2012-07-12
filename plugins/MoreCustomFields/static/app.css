@@ -54,3 +54,25 @@ input.radiobuttonswithinput-input {
     margin-left: 5px;
     width: 500px;
 }
+
+/* Time Stamped Text Area */
+
+ul.cf-text-group {
+    margin-bottom: 10px;
+    position: relative;
+}
+
+ul.cf-text-group textarea {
+    border: 1px solid #ccc;
+    background-color:#fff;
+    margin-bottom: 3px;
+    padding: 2px 4px;
+}
+
+ul.cf-text-group li.cf-text-group-delete-button {
+    display: inline;
+    position: absolute;
+    right: 0;
+    bottom: 2px;
+    margin: 0;
+}

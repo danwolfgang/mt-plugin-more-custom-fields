@@ -41,6 +41,7 @@ however, get More Custom Fields!
 * Multi-Use Time Stamped Multi-Line Text: another mouthful of a field name,
   but easy to use. This field type provides a reusable Multi-Line text field.
   When saved, each Multi-Line text field has a time stamp saved with it.
+  (Compatible with both MT4 and 5.)
 
 * Reciprocal Entry Association: used to link two entries together. When
   editing Entry A and linking Entry B, an association from Entry B back to

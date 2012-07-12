@@ -26,9 +26,13 @@ jQuery(document).ready(function() {
         );
     });
 
+    // Delete a Timestamped Textarea
+    jQuery(document).on('click', 'ul.cf-text-group li.cf-text-group-delete-button a', function(){
+        jQuery(this).parent().parent().remove();
+    });
 
     // Objects in the selected entries/pages CF are sortable. After sorting,
-    // update the hdiden field with the object IDs.
+    // update the hidden field with the object IDs.
     jQuery('ul.custom-field-selected-entries').sortable({
         revert: true,
         stop: function(event, ui) {
@@ -188,4 +192,44 @@ function deleteReciprocalAssociation(field, recip_obj_id) {
         },
         'json'
     );
+}
+
+// Timestamped Textarea
+function addGroup(parent, field_name) {
+    jQuery('#'+field_name+'_multiusetimestampedmultilinetextcf_invisible-field')
+        .clone()
+        .appendTo('#'+parent);
+
+    // The just-appended field is the last one, so we can easily grab it 
+    // with :last-child.
+    // Switch to display:block so that the field is visible.
+    jQuery('#'+parent+' ul.cf-text-group:last-child').css('display', 'block');
+    // Set the timestamp of the just-appended field.
+    jQuery('#'+parent+' ul.cf-text-group:last-child input#'+field_name+'_multiusetimestampedmultilinetextcf_timestamp')
+        .val( createDate() );
+}
+
+// Create the timestamp for the Timestamped Textarea CF.
+function createDate() {
+    var d = new Date();
+    var year = d.getFullYear();
+    var month = d.getMonth() + 1;
+    if (month < 10) { month = 0 + month.toString(); }
+    var date = d.getDate();
+    if (date < 10) { date = 0 + date.toString(); }
+    var hours = d.getHours();
+    if (hours < 10) { hours = 0 + hours.toString(); }
+    var min = d.getMinutes();
+    if (min < 10) { min = 0 + min.toString(); }
+    var sec = d.getSeconds();
+    if (sec < 10) { sec = 0 + sec.toString(); }
+
+    var ts = year.toString()
+        + month.toString()
+        + date.toString()
+        + hours.toString()
+        + min.toString()
+        + sec.toString();
+
+    return ts;
 }

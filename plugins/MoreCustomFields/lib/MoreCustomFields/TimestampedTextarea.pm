@@ -11,7 +11,7 @@ use MT::Util qw( relative_date offset_time offset_time_list epoch2ts ts2epoch
 sub _field_html {
     return q{
 <mt:SetVarTemplate name="invisible_field_template">
-    <li style="padding-bottom: 2px;">
+    <li>
         <input type="hidden" 
             name="<mt:Var name="field_name">_multiusetimestampedmultilinetextcf_cb_beacon" 
             value="1" />
@@ -19,8 +19,9 @@ sub _field_html {
         <textarea
             name="<mt:var name="field_name">_multiusetimestampedmultilinetextcf_text" 
             id="<mt:var name="field_name">_multiusetimestampedmultilinetextcf_text"
-            style="border:1px solid #ccc; background-color:#fff; margin-bottom: 3px;" 
-            class="full-width ti"></textarea>
+            class="text full-width"></textarea>
+
+        <div class="timestamp">&nbsp;</div>
 
         <input type="hidden"
             name="<mt:var name="field_name">_multiusetimestampedmultilinetextcf_timestamp" 
@@ -29,7 +30,7 @@ sub _field_html {
     </li>
 </mt:SetVarTemplate>
 <mt:SetVarTemplate name="field_template">
-    <li style="padding-bottom: 2px;">
+    <li>
         <input type="hidden" 
             name="<mt:Var name="field_name">_multiusetimestampedmultilinetextcf_cb_beacon" 
             value="1" />
@@ -37,12 +38,12 @@ sub _field_html {
         <textarea
             name="<mt:var name="field_name">_multiusetimestampedmultilinetextcf_text" 
             id="<mt:var name="field_name">_multiusetimestampedmultilinetextcf_text"
-            style="border:1px solid #ccc; background-color:#fff; margin-bottom: 3px;" 
-            class="full-width"><mt:Var name="ts_text" escape="html"></textarea>
+            class="text full-width"><mt:Var name="ts_text" escape="html"></textarea>
 
-    <mt:If name="timestamp">
-        <div>Time stamp: <mt:Var name="timestamp_formatted"></div>
-    </mt:If>
+        <div class="timestamp">
+            <mt:If name="timestamp">Time stamp: <mt:Var name="timestamp_formatted"></mt:If>
+        </div>
+
         <input type="hidden"
             name="<mt:var name="field_name">_multiusetimestampedmultilinetextcf_timestamp" 
             id="<mt:var name="field_name">_multiusetimestampedmultilinetextcf_timestamp"
@@ -51,42 +52,6 @@ sub _field_html {
 </mt:SetVarTemplate>
 
     <script type="text/javascript">
-    function addGroup(parent,field_name) {
-        jQuery('#' + field_name + '_multiusetimestampedmultilinetextcf_invisible-field')
-            .clone()
-            .appendTo('#' + parent);
-
-        // The just-appended field is the last one, so we can easily grab it 
-        // with :last-child.
-        // Switch to display:block so that the field is visible.
-        jQuery('#' + parent + ' ul.cf-text-group:last-child').css('display', 'block');
-
-        jQuery('#' + parent + ' ul.cf-text-group:last-child input#<mt:var name="field_name">_multiusetimestampedmultilinetextcf_timestamp').val( createDate() );
-    }
-    
-    function createDate() {
-        var d = new Date();
-        var year = d.getFullYear();
-        var month = d.getMonth() + 1;
-        if (month < 10) { month = 0 + month.toString(); }
-        var date = d.getDate();
-        if (date < 10) { date = 0 + date.toString(); }
-        var hours = d.getHours();
-        if (hours < 10) { hours = 0 + hours.toString(); }
-        var min = d.getMinutes();
-        if (min < 10) { min = 0 + min.toString(); }
-        var sec = d.getSeconds();
-        if (sec < 10) { sec = 0 + sec.toString(); }
-
-        var ts = year.toString()
-            + month.toString()
-            + date.toString()
-            + hours.toString()
-            + min.toString()
-            + sec.toString();
-
-        return ts;
-    }
 
     jQuery(document).ready(function($) {
         // Populate any empty timestamp field.
@@ -104,14 +69,12 @@ sub _field_html {
     </mt:If>
     <mt:Loop name="fields_loop">
         <mt:If name="__first__">
-            <ul class="cf-text-group"<mt:If name="text_group_counter" gt="1"> 
-                style="border-top: 1px solid #ccc; padding-top: 4px;"</mt:If>>
+            <ul class="cf-text-group">
         </mt:If>
                 <mt:Var name="field_template">
         <mt:If name="__last__">
-                <li class="cf-text-group-delete-button" style="text-align: right;">
-                    <a href="javascript:void(0)" 
-                        onclick="jQuery(this).parent().parent().remove()" 
+                <li class="cf-text-group-delete-button">
+                    <a href="javascript:void(0)"
                         class="icon-left icon-error">
                         Delete this <mt:Var name="text_group_label"> field
                     </a>
@@ -133,15 +96,14 @@ sub _field_html {
     <mt:If name="__last__">
         <mt:Loop name="fields_loop">
             <mt:If name="__first__">
-                <ul class="cf-text-group" 
-                    style="border-top: 1px solid #ccc; padding-top: 4px; display: none;" 
+                <ul class="cf-text-group"
+                    style="display: none;"
                     id="<mt:Var name="field_name">_multiusetimestampedmultilinetextcf_invisible-field">
             </mt:If>
                     <mt:Var name="invisible_field_template">
             <mt:If name="__last__">
-                    <li class="cf-text-group-delete-button" style="text-align: right;">
-                        <a href="javascript:void(0)" 
-                            onclick="jQuery(this).parent().parent().remove()" 
+                    <li class="cf-text-group-delete-button">
+                        <a href="javascript:void(0)"
                             class="icon-left icon-error">
                             Delete this <mt:Var name="text_group_label"> field
                         </a>
