@@ -29,6 +29,15 @@ sub _field_html_params {
     my ($key, $tmpl_key, $tmpl_param) = @_;
     my $app = MT->instance;
 
+    $tmpl_param->{cf_name} = $key eq 'selected_pages' ? 'page'
+        : $key eq 'selected_entries' ? 'entry'
+        : $key eq 'selected_content' ? 'entry or page'
+        : 'entry'; # Entry is just a fallback.
+    $tmpl_param->{mode} = $key eq 'selected_pages' ? 'mcf_list_pages'
+        : $key eq 'selected_entries' ? 'mcf_list_entries'
+        : $key eq 'selected_content' ? 'mcf_list_content'
+        : 'mcf_list_entries'; # Entry is just a fallback.
+
     my $id       = $app->param('id');
     my $blog     = $app->blog;
     my $blog_id  = $blog ? $blog->id : 0;
@@ -63,14 +72,6 @@ sub _field_html_params {
         };
     }
     $tmpl_param->{selected_objects_loop} = \@obj_ids_loop;
-    $tmpl_param->{cf_name} = $key eq 'selected_pages' ? 'page'
-        : $key eq 'selected_entries' ? 'entry'
-        : $key eq 'selected_content' ? 'entry or page'
-        : 'entry'; # Entry is just a fallback.
-    $tmpl_param->{mode} = $key eq 'selected_pages' ? 'mcf_list_pages'
-        : $key eq 'selected_entries' ? 'mcf_list_entries'
-        : $key eq 'selected_content' ? 'mcf_list_content'
-        : 'mcf_list_entries'; # Entry is just a fallback.
 }
 
 # The field HTML.
