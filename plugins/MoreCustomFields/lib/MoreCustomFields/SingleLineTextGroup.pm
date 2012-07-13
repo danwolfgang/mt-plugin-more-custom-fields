@@ -4,8 +4,8 @@ use strict;
 
 use MT 4.2;
 use base qw(MT::Plugin);
-use CustomFields::Util qw( get_meta save_meta field_loop _get_html );
-use MT::Util qw( relative_date offset_time offset_time_list epoch2ts ts2epoch format_ts encode_html dirify );
+use MT::Util qw( dirify );
+use YAML::Tiny;
 
 sub _options_field {
     return q{
