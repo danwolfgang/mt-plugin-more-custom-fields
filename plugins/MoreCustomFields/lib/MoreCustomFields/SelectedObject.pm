@@ -63,6 +63,68 @@ sub _field_html_params {
         };
     }
     $tmpl_param->{selected_objects_loop} = \@obj_ids_loop;
+    $tmpl_param->{cf_name} = $key eq 'selected_pages' ? 'page'
+        : $key eq 'selected_entries' ? 'entry'
+        : $key eq 'selected_content' ? 'entry or page'
+        : 'entry'; # Entry is just a fallback.
+    $tmpl_param->{mode} = $key eq 'selected_pages' ? 'mcf_list_pages'
+        : $key eq 'selected_entries' ? 'mcf_list_entries'
+        : $key eq 'selected_content' ? 'mcf_list_content'
+        : 'mcf_list_entries'; # Entry is just a fallback.
+}
+
+# The field HTML.
+sub _field_html {
+    return q{
+<input name="<mt:Var name="field_name">"
+    id="<mt:Var name="field_id">"
+    class="full-width selected-entries hidden"
+    type="hidden"
+    value="<mt:Var name="field_value">" />
+<input name="<mt:Var name="field_name">_cb_beacon"
+    id="<mt:Var name="field_id">"
+    class="hidden"
+    type="hidden"
+    value="1" />
+
+<mt:SetVarBlock name="blog_ids"><mt:If name="options"><mt:Var name="options"><mt:Else><mt:Var name="blog_id"></mt:If></mt:SetVarBlock>
+
+<a
+<mt:If tag="Version" lt="5">
+    onclick="return openDialog(this.form, '<mt:Var name="mode">', 'blog_id=<mt:Var name="blog_id">&blog_ids=<mt:Var name="blog_ids">&edit_field=<mt:Var name="field_id">')"
+<mt:Else>
+    onclick="jQuery.fn.mtDialog.open('<mt:Var name="script_uri">?__<mt:Var name="mode">&amp;blog_id=<mt:Var name="blog_id">&amp;blog_ids=<mt:Var name="blog_ids">&amp;edit_field=<mt:Var name="field_id">')"
+</mt:If>
+    class="<mt:If tag="Version" lt="5">mt4-choose </mt:If>button">
+    Choose <mt:Var name="cf_name">
+</a>
+
+<ul class="custom-field-selected-entries mcf-listing"
+    id="custom-field-selected-entries_<mt:Var name="field_name">">
+<mt:Loop name="selected_objects_loop">
+    <li id="obj-<mt:Var name="obj_id">" class="sortable">
+        <span class="obj-title"><mt:Var name="obj_title"></span>
+        <a href="<mt:Var name="script_uri">?__mode=view&amp;_type=<mt:Var name="obj_class">&amp;id=<mt:Var name="obj_id">&amp;blog_id=<mt:Var name="obj_blog_id">"
+            class="edit"
+            target="_blank"
+            title="Edit in a new window."><img
+                src="<mt:StaticWebPath>images/status_icons/draft.gif"
+                width="9" height="9" alt="Edit" /></a>
+        <a href="<mt:Var name="obj_permalink">"
+            class="view"
+            target="_blank"
+            title="View in a new window."><img
+                src="<mt:StaticWebPath>images/status_icons/view.gif"
+                width="13" height="9" alt="View" /></a>
+        <img class="remove"
+            alt="Remove selected <mt:Var name="cf_name">"
+            title="Remove selected <mt:Var name="cf_name">"
+            src="<mt:StaticWebPath>images/status_icons/close.gif"
+            width="9" height="9" />
+    </li>
+</mt:Loop>
+</ul>
+    };
 }
 
 # This creates the popup dialog that shows the listing of Entries/Pages that

@@ -4,65 +4,11 @@ use strict;
 
 use MT 4.2;
 use base qw(MT::Plugin);
-use MT::Util qw( relative_date format_ts );
 
 sub _options_field {
     MoreCustomFields::SelectedObject::options_field({
         type => 'content',
     });
-}
-
-sub _field_html {
-    return q{
-<input name="<mt:Var name="field_name">"
-    id="<mt:Var name="field_id">"
-    class="full-width selected-entries hidden"
-    type="hidden"
-    value="<mt:Var name="field_value">" />
-<input name="<mt:Var name="field_name">_cb_beacon"
-    id="<mt:Var name="field_id">"
-    class="hidden"
-    type="hidden"
-    value="1" />
-
-<mt:SetVarBlock name="blog_ids"><mt:If name="options"><mt:Var name="options"><mt:Else><mt:Var name="blog_id"></mt:If></mt:SetVarBlock>
-
-<a
-<mt:If tag="Version" lt="5">
-    onclick="return openDialog(this.form, 'mcf_list_content', 'blog_id=<mt:Var name="blog_id">&blog_ids=<mt:Var name="blog_ids">&edit_field=<mt:Var name="field_id">')"
-<mt:Else>
-    onclick="jQuery.fn.mtDialog.open('<mt:Var name="script_uri">?__mode=mcf_list_content&amp;blog_id=<mt:Var name="blog_id">&amp;blog_ids=<mt:Var name="blog_ids">&amp;edit_field=<mt:Var name="field_id">')"
-</mt:If>
-    class="<mt:If tag="Version" lt="5">mt4-choose </mt:If>button">
-    Choose entry or page
-</a>
-
-<ul class="custom-field-selected-entries mcf-listing"
-    id="custom-field-selected-entries_<mt:Var name="field_name">">
-<mt:Loop name="selected_objects_loop">
-    <li id="obj-<mt:Var name="obj_id">" class="sortable">
-        <span class="obj-title"><mt:Var name="obj_title"></span>
-        <a href="<mt:Var name="script_uri">?__mode=view&amp;_type=<mt:Var name="obj_class">&amp;id=<mt:Var name="obj_id">&amp;blog_id=<mt:Var name="obj_blog_id">"
-            class="edit"
-            target="_blank"
-            title="Edit in a new window."><img 
-                src="<mt:StaticWebPath>images/status_icons/draft.gif"
-                width="9" height="9" alt="Edit" /></a>
-        <a href="<mt:Var name="obj_permalink">"
-            class="view"
-            target="_blank"
-            title="View in a new window."><img
-                src="<mt:StaticWebPath>images/status_icons/view.gif"
-                width="13" height="9" alt="View" /></a>
-        <img class="remove"
-            alt="Remove selected entry"
-            title="Remove selected entry"
-            src="<mt:StaticWebPath>images/status_icons/close.gif"
-            width="9" height="9" />
-    </li>
-</mt:Loop>
-</ul>
-    };
 }
 
 # The SelectedEntriesOrPages tag will let you intelligently output the links

@@ -78,7 +78,7 @@ sub load_customfield_types {
             no_default        => 1,
             options_delimiter => ',',
             options_field     => sub { MoreCustomFields::SelectedEntries::_options_field(); },
-            field_html        => sub { MoreCustomFields::SelectedEntries::_field_html(); },
+            field_html        => sub { MoreCustomFields::SelectedObject::_field_html(); },
             field_html_params => sub { MoreCustomFields::SelectedObject::_field_html_params(@_); },
         },
         selected_pages => {
@@ -88,7 +88,7 @@ sub load_customfield_types {
             no_default        => 1,
             options_delimiter => ',',
             options_field     => sub { MoreCustomFields::SelectedPages::_options_field(); },
-            field_html        => sub { MoreCustomFields::SelectedPages::_field_html(); },
+            field_html        => sub { MoreCustomFields::SelectedObject::_field_html(); },
             field_html_params => sub { MoreCustomFields::SelectedObject::_field_html_params(@_); },
         },
         selected_content => {
@@ -98,7 +98,7 @@ sub load_customfield_types {
             no_default        => 1,
             options_delimiter => ',',
             options_field     => sub { MoreCustomFields::SelectedEntriesOrPages::_options_field(); },
-            field_html        => sub { MoreCustomFields::SelectedEntriesOrPages::_field_html(); },
+            field_html        => sub { MoreCustomFields::SelectedObject::_field_html(); },
             field_html_params => sub { MoreCustomFields::SelectedObject::_field_html_params(@_); },
         },
 #        single_line_text_group => {
