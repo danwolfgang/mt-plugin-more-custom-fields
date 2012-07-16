@@ -195,7 +195,7 @@ function deleteReciprocalAssociation(field, recip_obj_id) {
 }
 
 // Timestamped Textarea
-function addGroup(parent, field_name) {
+function addTimestampedTextareaGroup(parent, field_name) {
     jQuery('#'+field_name+'_multiusetimestampedmultilinetextcf_invisible-field')
         .clone()
         .appendTo('#'+parent);

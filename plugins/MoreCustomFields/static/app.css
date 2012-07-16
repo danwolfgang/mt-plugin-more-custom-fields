@@ -49,14 +49,14 @@ div.custom-field-reciprocal-status.mt4.msg-success {
 }
 
 /* Radio Buttons with Input Field */
-input.radiobuttonswithinput-input {
+input.radiobuttonswithinput-input,
+input.radiobuttonswithinput-input.text {
     border: 1px solid #ccc;
     margin-left: 5px;
     width: 500px;
 }
 
 /* Time Stamped Text Area */
-
 ul.cf-text-group {
     margin-bottom: 10px;
     position: relative;
@@ -69,10 +69,16 @@ ul.cf-text-group textarea {
     padding: 2px 4px;
 }
 
+div.timestamp {
+    min-height: 20px;
+}
+
 ul.cf-text-group li.cf-text-group-delete-button {
     display: inline;
     position: absolute;
     right: 0;
-    bottom: 2px;
+    bottom: 1px;
     margin: 0;
 }
+    div.mt4 ul.cf-text-group li.cf-text-group-delete-button { bottom: 4px; }
+

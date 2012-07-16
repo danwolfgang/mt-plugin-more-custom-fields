@@ -5,6 +5,7 @@ use strict;
 use MT 4.2;
 use base qw(MT::Plugin);
 use MT::Util qw( format_ts );
+use YAML::Tiny;
 
 sub _field_html {
     return q{
@@ -63,7 +64,8 @@ sub _field_html {
 <mt:Loop name="text_group_loop">
     <mt:Var name="__counter__" setvar="text_group_counter">
     <mt:If name="__first__">
-        <div id="<mt:Var name="field_name">_multiusetimestampedmultilinetextcf_container">
+        <div class="multiusetimestampedmultilinetextcf_container mt<mt:Version sprintf="%d">"
+            id="<mt:Var name="field_name">_multiusetimestampedmultilinetextcf_container">
     </mt:If>
     <mt:Loop name="fields_loop">
         <mt:If name="__first__">
@@ -83,8 +85,7 @@ sub _field_html {
     <mt:If name="__last__">
         </div>
         <p id="create-new-link">
-            <a href="javascript:void(0);" 
-                onclick="addGroup('<mt:Var name="field_name">_multiusetimestampedmultilinetextcf_container','<mt:Var name="field_name">')" 
+            <a href="javascript:addTimestampedTextareaGroup('<mt:Var name="field_name">_multiusetimestampedmultilinetextcf_container','<mt:Var name="field_name">')"
                 class="icon-left icon-create">
                 Add another <mt:Var name="text_group_label"> field
             </a>
