@@ -233,3 +233,21 @@ function createDate() {
 
     return ts;
 }
+
+// Multi-Use Single-Line Text Group
+function addSingleLineTextGroup(parent,field_name) {
+    var num = jQuery('#' + parent + ' ul').size();
+    jQuery('#'+field_name+'_multiusesinglelinetextgroupcf_invisible-field').clone().appendTo('#' + parent);
+
+    // Switch to display:block so that the field is visible.
+    jQuery('#' + parent + ' .cf-text-group').css('display', 'block');
+
+    // The text input field has "_invisible" appended so that it isn't
+    // inadvertently saved. Remove that trailing identifier so that the
+    // field can be properly used.
+    jQuery('#' + parent + ' ul.cf-text-group input[type=text]').each(function(index) {
+        var name = jQuery(this).attr('name');
+        name = name.replace(/_invisible$/, '');
+        var name = jQuery(this).attr('name', name);
+    });
+}

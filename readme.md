@@ -31,7 +31,8 @@ however, get More Custom Fields!
 
 * Multi-Use Single-Line Text Group: don't let the crazy name scare you -- this
   field type allows you to create a reusable group of fields, perfect for
-  including a list of your favorite bookmarks, for example.
+  including a list of your favorite bookmarks, for example. (Compatible with
+  both MT4 and 5.)
 
 * Message: administrators can edit the contents of the Message field text
   area, but any other use can only read the contents. Useful for displaying

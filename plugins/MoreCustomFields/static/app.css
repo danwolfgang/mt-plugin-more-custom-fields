@@ -82,3 +82,12 @@ ul.cf-text-group li.cf-text-group-delete-button {
 }
     div.mt4 ul.cf-text-group li.cf-text-group-delete-button { bottom: 4px; }
 
+/* Single-Line Text Group */
+div.multiusesinglelinetextgroupcf_container ul.cf-text-group li.cf-text-group-delete-button {
+    display: block;
+    position: relative;
+    text-align: right;
+}
+
+    div.mt4.multiusesinglelinetextgroupcf_container ul.cf-text-group li.cf-text-group-delete-button { margin-top: 7px; }
+

@@ -10,7 +10,9 @@ use YAML::Tiny;
 sub _options_field {
     return q{
 <div class="textarea-wrapper">
-    <textarea name="options" id="options" class="full-width"><mt:Var name="options" escape="html"></textarea>
+    <textarea name="options"
+        id="options"
+        class="text full-width"><mt:Var name="options" escape="html"></textarea>
 </div>
 <p class="hint">
     Please enter all allowable options for this field as a comma delimited list.
@@ -25,7 +27,7 @@ sub _field_html {
     <ul class="cf-text-group">
     </mt:If>
     <mt:If name="option">
-        <li style="padding-bottom: 2px;">
+        <li>
             <input type="hidden" name="<mt:Var name="field_name">_singlelinetextgroupcf_<mt:Var name="option" dirify="1">_cb_beacon" value="1" />
             <label for="<mt:var name="field_name">_singlelinetextgroupcf_<mt:Var name="option" dirify="1">" style="width: 100px; display: block; float: left; text-align: right; padding: 4px 5px 0 0;"><mt:Var name="option"></label>
             <input type="text" name="<mt:var name="field_name">_singlelinetextgroupcf_<mt:Var name="option" dirify="1">" id="<mt:var name="field_name">_singlelinetextgroupcf_<mt:Var name="option" dirify="1">" value="<mt:Var name="value" escape="html">" class="ti" style="border:1px solid #ccc;background-color:#fff;padding:2px 4px; width: 465px;" />
@@ -41,49 +43,56 @@ sub _field_html {
 sub _multi_field_html {
     return q{
 <mt:SetVarTemplate name="invisible_field_template">
-    <li style="padding-bottom: 2px;">
-        <input type="hidden" name="<mt:Var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">_cb_beacon" value="1" />
-        <label for="<mt:var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">"><mt:Var name="option"></label>
-        <input type="text" name="<mt:var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">_invisible" id="<mt:var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">" value="" style="border:1px solid #ccc;background-color:#fff;padding:2px 4px;" class="full-width ti" />
+    <li>
+        <input type="hidden"
+            name="<mt:Var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">_cb_beacon"
+            value="1" />
+        <label for="<mt:var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">">
+            <mt:Var name="option">
+        </label>
+        <div class="textarea-wrapper">
+            <input type="text"
+                name="<mt:var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">_invisible"
+                id="<mt:var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">"
+                value=""
+                class="full-width ti" />
+        </div>
     </li>
 </mt:SetVarTemplate>
 <mt:SetVarTemplate name="field_template">
-    <li style="padding-bottom: 2px;">
-        <input type="hidden" name="<mt:Var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">_cb_beacon" value="1" />
-        <label for="<mt:var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">"><mt:Var name="option"></label>
-        <input type="text" name="<mt:var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">" id="<mt:var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">" value="<mt:Var name="value" escape="html">" style="border:1px solid #ccc;background-color:#fff;padding:2px 4px;" class="full-width ti" />
+    <li>
+        <input type="hidden"
+            name="<mt:Var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">_cb_beacon"
+            value="1" />
+        <label for="<mt:var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">">
+            <mt:Var name="option">
+        </label>
+        <div class="textarea-wrapper">
+            <input type="text"
+                name="<mt:var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">"
+                id="<mt:var name="field_name">_multiusesinglelinetextgroupcf_<mt:Var name="option" dirify="1">"
+                value="<mt:Var name="value" escape="html">"
+                class="full-width ti" />
+        </div>
     </li>
 </mt:SetVarTemplate>
 
-    <script type="text/javascript">
-    function addGroup(parent,field_name) {
-        var num = jQuery('#' + parent + ' ul').size();
-        jQuery('#'+field_name+'_multiusesinglelinetextgroupcf_invisible-field').clone().appendTo('#' + parent);
-        // Switch to display:block so that the field is visible.
-        jQuery('#' + parent + ' .cf-text-group').css('display', 'block');
-        // The text input field has "_invisible" appended so that it isn't
-        // inadvertently saved. Remove that trailing identifier so that the
-        // field can be properly used.
-        jQuery('#' + parent + ' ul.cf-text-group input[type=text]').each(function(index) {
-            var name = jQuery(this).attr('name');
-            name = name.replace(/_invisible$/, '');
-            var name = jQuery(this).attr('name', name);
-        });
-    }
-    </script>
 <mt:Loop name="text_group_loop">
     <mt:Var name="__counter__" setvar="text_group_counter">
     <mt:If name="__first__">
-        <div id="<mt:Var name="field_name">_multiusesinglelinetextgroupcf_container">
+        <div class="multiusesinglelinetextgroupcf_container mt<mt:Version sprintf="%d">"
+            id="<mt:Var name="field_name">_multiusesinglelinetextgroupcf_container">
     </mt:If>
     <mt:Loop name="fields_loop">
         <mt:If name="__first__">
-            <ul class="cf-text-group"<mt:If name="text_group_counter" gt="1"> style="border-top: 1px solid #ccc; padding-top: 4px;"</mt:If>>
+            <ul class="cf-text-group">
         </mt:If>
                 <mt:Var name="field_template">
         <mt:If name="__last__">
-                <li class="cf-text-group-delete-button" style="text-align: right;">
-                    <a href="javascript:void(0)" onclick="jQuery(this).parent().parent().remove()" class="icon-left icon-error">
+                <li class="cf-text-group-delete-button">
+                    <a href="javascript:void(0)"
+                        onclick="jQuery(this).parent().parent().remove()"
+                        class="icon-left icon-error">
                         Delete this <mt:Var name="text_group_label"> field group
                     </a>
                 </li>
@@ -93,7 +102,8 @@ sub _multi_field_html {
     <mt:If name="__last__">
         </div>
         <p id="create-new-link">
-            <a href="javascript:addGroup('<mt:Var name="field_name">_multiusesinglelinetextgroupcf_container','<mt:Var name="field_name">')" class="icon-left icon-create">
+            <a href="javascript:addSingleLineTextGroup('<mt:Var name="field_name">_multiusesinglelinetextgroupcf_container','<mt:Var name="field_name">')"
+                class="icon-left icon-create">
                 Add another <mt:Var name="text_group_label"> field group
             </a>
         </p>
@@ -102,12 +112,16 @@ sub _multi_field_html {
     <mt:If name="__last__">
         <mt:Loop name="fields_loop">
             <mt:If name="__first__">
-                <ul class="cf-text-group" style="border-top: 1px solid #ccc; padding-top: 4px; display: none;" id="<mt:Var name="field_name">_multiusesinglelinetextgroupcf_invisible-field">
+                <ul class="cf-text-group"
+                    id="<mt:Var name="field_name">_multiusesinglelinetextgroupcf_invisible-field"
+                    style="display: none;">
             </mt:If>
                     <mt:Var name="invisible_field_template">
             <mt:If name="__last__">
-                    <li class="cf-text-group-delete-button" style="text-align: right;">
-                        <a href="javascript:void(0)" onclick="jQuery(this).parent().parent().remove()" class="icon-left icon-error">
+                    <li class="cf-text-group-delete-button">
+                        <a href="javascript:void(0)"
+                            onclick="jQuery(this).parent().parent().remove()"
+                            class="icon-left icon-error">
                             Delete this <mt:Var name="text_group_label"> field group
                         </a>
                     </li>
@@ -119,18 +133,16 @@ sub _multi_field_html {
     };
 }
 
-
-
 sub _field_html_params {
     # The principle thing to do here is add the field value to the options
     # loop.
     my ($key, $tmpl_key, $tmpl_param) = @_;
     my $app = MT->instance;
 
-    # Only proceed if there are values to process.med
+    # Only proceed if there are values to process.
     if ($tmpl_param->{field_value}) {
-        # The field values are saved as YAML. Grab the values, convert them to a
-        # string, and push them into the options loop.
+        # The field values are saved as YAML. Grab the values, convert them to
+        # a string, and push them into the options loop.
         my $yaml = YAML::Tiny->new;
         $yaml = YAML::Tiny->read_string( $tmpl_param->{field_value} );
 
