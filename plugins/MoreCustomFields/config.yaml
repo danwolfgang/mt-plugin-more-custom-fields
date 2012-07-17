@@ -62,10 +62,13 @@ tags:
 applications:
     cms:
         methods:
+            # Popup listing dialogs
             mcf_list_entries:   $MoreCustomFields::MoreCustomFields::SelectedEntries::list_entries
             mcf_list_pages:     $MoreCustomFields::MoreCustomFields::SelectedPages::list_pages
             mcf_list_content:   $MoreCustomFields::MoreCustomFields::SelectedEntriesOrPages::list_content
+            # Object selected, prepare for insert
             mcf_select_object:  $MoreCustomFields::MoreCustomFields::SelectedObject::select_object
+            # AJAX unlink method for Reciprocal Associations.
             unlink_reciprocal:  $MoreCustomFields::MoreCustomFields::ReciprocalObject::ajax_unlink
         search_apis:
             entry:

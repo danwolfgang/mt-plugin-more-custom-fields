@@ -10,7 +10,7 @@ sub _options_field {
 <div class="textarea-wrapper">
     <input name="options"
         id="options"
-        class="full-width"
+        class="text full-width"
         value="<mt:Var name="options" escape="html">" />
 </div>
 <p class="hint">
@@ -107,7 +107,7 @@ sub _field_html {
 </mt:If>
 </ul>
         };
-    } # Closing if ( $app->param('_type') !~ /(entry|page)/ )
+    }
 }
 
 # The ReciprocalEntry tag will enter the Entry context of the selected entry.

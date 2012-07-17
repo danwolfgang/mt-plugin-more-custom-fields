@@ -106,7 +106,7 @@ sub list_content {
     MoreCustomFields::SelectedObject::list_objects({
         app        => $app,
         blog_id    => $app->param('blog_id'),
-        blog_ids   => $app->param('blog_ids'),
+        blog_ids   => $app->param('blog_ids') || $app->param('blog_id'),
         type       => 'entries_or_pages',
         edit_field => $app->param('edit_field'),
         search     => $app->param('search') || '',
