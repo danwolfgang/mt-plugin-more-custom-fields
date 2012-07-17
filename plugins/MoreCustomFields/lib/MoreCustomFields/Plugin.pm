@@ -212,9 +212,14 @@ sub load_customfield_types {
     return $customfield_types;
 }
 
+# This is responsible for loading jQuery in the head of the site.
 sub update_template {
-    # This is responsible for loading jQuery in the head of the site.
     my ($cb, $app, $template) = @_;
+
+    # Only update the necessary tempaltes -- entry, page, category, folder,
+    # and author. All of which happen to be easily identifiable as using the
+    # mode `view`.
+    return unless $app->param('__mode') eq 'view';
 
     my $old = q{</head>};
     my $new;
