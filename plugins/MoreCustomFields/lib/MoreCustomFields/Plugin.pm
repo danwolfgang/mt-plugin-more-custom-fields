@@ -257,6 +257,7 @@ sub post_save {
                 count  => $2,
             });
         }
+
         # Find the Radio Buttons with Input field.
         elsif (m/^customfield_(.*?)_radiobuttonswithinput$/) {
             MoreCustomFields::RadioButtonsWithInput::_save({
@@ -265,56 +266,6 @@ sub post_save {
                 field_basename => $1,
             });
         }
-        # Find the Selected Assets or Selected Entries or Pages field.
-        elsif( m/^customfield_(.*?)_selected(assets|content)cf_(.*?)$/ ) {
-            my $field_name = $_;
-            # This is the text input value
-            my $input_value = $app->param($field_name);
-
-            # This line serves two purposes:
-            # - Create the "real" customfield to write to the DB, if it doesn't exist already.
-            # - If the field has already been created (because this is the 2nd or 3rd or 4th etc
-            #   Selected Entry CF option) then get it so that we can see the currently-selected
-            #   options and append a new result to them.
-            my $customfield_value = $app->param("customfield_$1");
-
-            my $result;
-            # Join all the selected entries into a list
-            if ( $customfield_value ) { #only "join" if the field has already been set
-                if ($input_value eq '0') {
-                    $result = $customfield_value;
-                }
-                else {
-                    $result = join ',', $customfield_value, $input_value;
-                }
-                $result =~ s/^\s?,(.*)$/$1/;
-            }
-            else { # Nothing saved yet? Just assign the variable
-                $result = $app->param($field_name);
-            }
-
-            # If the customfield held some results, then a real EntryID value exists, such as "12."
-            # If the field was empty, however, the $results variable is empty, indicating that the
-            # field should *not* be saved. This is incorrect because an empty field may be
-            # purposefully unselected, so we need to force save the deletion of the field.
-            if (!$result) { $result = ' '; }
-
-            # If all objects have been deleted, we need to save that this
-            # field is now empty. To do this, we still need something to
-            # check for: a beacon. After the last Selected Asset/Entry/Page
-            # has been deleted, a beacon hidden input field is inserted.
-            # Check for this field. If it exists, then remove clear any
-            # saved data.
-            if ($3 eq 'beacon') {
-                $result = ' ';
-            }
-
-            # Save the new result to the *real* field name, which should be written to the DB.
-            $app->param("customfield_$1", $result);
-
-            # Destroy the specially-assembled fields, because they make MT barf.
-            $app->delete_param($field_name);
-        } #end of Selected Entries/Pages/Assets field.
 
         # Find the Multi-Use Single Line Text Group field
         # The "beacon" is used to always grab the text field. This will catch
