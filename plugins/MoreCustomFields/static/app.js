@@ -1,16 +1,16 @@
 jQuery(document).ready(function() {
 
     // Delete a Selected Entry
-    jQuery(document).on('click', 'ul.custom-field-selected-entries li img.remove', function(){
+    jQuery(document).on('click', 'ul.custom-field-selected-objects li img.remove', function(){
         var obj_id = jQuery(this).parent().attr('id');
         obj_id = obj_id.replace('obj-','');
 
-        var obj_ids = jQuery(this).parent().parent().parent().find('input.selected-entries').val();
+        var obj_ids = jQuery(this).parent().parent().parent().find('input.selected-objects').val();
         var re = new RegExp(',?'+obj_id);
         obj_ids = obj_ids.replace(re,'');
 
         // Write the updated list of Selected Entries back to the field.
-        jQuery(this).parent().parent().parent().find('input.selected-entries').val( obj_ids );
+        jQuery(this).parent().parent().parent().find('input.selected-objects').val( obj_ids );
 
         // Finally, actually remove the item.
         jQuery(this).parent().remove();
@@ -33,7 +33,7 @@ jQuery(document).ready(function() {
 
     // Objects in the selected entries/pages CF are sortable. After sorting,
     // update the hidden field with the object IDs.
-    jQuery('ul.custom-field-selected-entries').sortable({
+    jQuery('ul.custom-field-selected-objects').sortable({
         revert: true,
         stop: function(event, ui) {
             var objects = new Array();
@@ -44,7 +44,7 @@ jQuery(document).ready(function() {
                 objects.push(id);
             });
 
-            jQuery(this).parent().find('input.selected-entries').val( objects.join(',') );
+            jQuery(this).parent().find('input.selected-objects').val( objects.join(',') );
         }
     }).disableSelection();
 
@@ -98,7 +98,7 @@ function insertSelectedObject(obj_title, obj_id, obj_class, obj_permalink, field
         );
 
         // Insert the list item with the button, preview, etc into the field area.
-        jQuery('ul#custom-field-selected-entries_'+field)
+        jQuery('ul#custom-field-selected-objects_'+field)
             .append($li)
 
         var objects = new Array();
@@ -139,7 +139,7 @@ function createObjectListing(obj_title, obj_id, obj_class, obj_permalink, blog_i
 
     // Insert all of the above into a list item.
     var $li = jQuery('<li/>')
-        .addClass('obj-'+obj_id)
+        .attr('id', 'obj-'+obj_id)
         .append($preview)
         .append($edit)
         .append($view)

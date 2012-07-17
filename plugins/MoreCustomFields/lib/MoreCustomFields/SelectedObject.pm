@@ -79,7 +79,7 @@ sub _field_html {
     return q{
 <input name="<mt:Var name="field_name">"
     id="<mt:Var name="field_id">"
-    class="full-width selected-entries hidden"
+    class="full-width selected-objects hidden"
     type="hidden"
     value="<mt:Var name="field_value">" />
 <input name="<mt:Var name="field_name">_cb_beacon"
@@ -100,8 +100,8 @@ sub _field_html {
     Choose <mt:Var name="cf_name">
 </a>
 
-<ul class="custom-field-selected-entries mcf-listing"
-    id="custom-field-selected-entries_<mt:Var name="field_name">">
+<ul class="custom-field-selected-objects mcf-listing"
+    id="custom-field-selected-objects_<mt:Var name="field_name">">
 <mt:Loop name="selected_objects_loop">
     <li id="obj-<mt:Var name="obj_id">" class="sortable">
         <span class="obj-title"><mt:Var name="obj_title"></span>
