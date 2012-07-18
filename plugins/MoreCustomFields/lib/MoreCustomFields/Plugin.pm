@@ -219,7 +219,8 @@ sub update_template {
     # Only update the necessary tempaltes -- entry, page, category, folder,
     # and author. All of which happen to be easily identifiable as using the
     # mode `view`.
-    return unless $app->param('__mode') eq 'view';
+    return unless $app->param('__mode') eq 'view'
+        || $app->param('__mode') eq 'cfg_prefs'; # For MT5 Website & Blog objects.
 
     my $old = q{</head>};
     my $new;
