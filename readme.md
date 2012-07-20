@@ -4,23 +4,20 @@ The Custom Fields found in Movable Type Pro are a boon to creating a flexible
 and robust site. When the standard field types don't quite meet your needs
 however, get More Custom Fields!
 
-* Checkbox Group: easily create a group of checkboxes. (Compatible with both
-  MT4 and 5.)
+* Checkbox Group: easily create a group of checkboxes.
 
 * Radio Buttons with Input: build a group of radio buttons, where the last
-  option is a text input field. (Compatible with both MT4 and 5.)
+  option is a text input field.
 
 * Selected Entries: select other entries from a pop-up window, to easily
   create a related entries list or string multi-part articles together. Also,
   the number of entries selected is unlimited, and the order you specify is
-  retained! (Compatible with both MT4 and 5.)
+  retained!
 
-* Selected Pages: works just like Selected Entries, but for Pages! (Compatible
-  with both MT4 and 5.)
+* Selected Pages: works just like Selected Entries, but for Pages!
 
 * Selected Entries Or Pages: works just like Selected Entries, but allows you
-  to select a combination of Entries and Pages. (Compatible with both MT4 and
-  5.)
+  to select a combination of Entries and Pages.
 
 * Selected Assets: as you may guess, this works just like Selected Entries and
   Selected Pages. Note that each asset type is registered as a separate custom
@@ -31,34 +28,44 @@ however, get More Custom Fields!
 
 * Multi-Use Single-Line Text Group: don't let the crazy name scare you -- this
   field type allows you to create a reusable group of fields, perfect for
-  including a list of your favorite bookmarks, for example. (Compatible with
-  both MT4 and 5.)
+  including a list of your favorite bookmarks, for example.
 
 * Message: administrators can edit the contents of the Message field text
   area, but any other use can only read the contents. Useful for displaying
-  instructions or other data you don't want the user to edit. (Compatible with
-  both MT4 and 5.)
+  instructions or other data you don't want the user to edit.
 
 * Multi-Use Time Stamped Multi-Line Text: another mouthful of a field name,
   but easy to use. This field type provides a reusable Multi-Line text field.
   When saved, each Multi-Line text field has a time stamp saved with it.
-  (Compatible with both MT4 and 5.)
 
 * Reciprocal Entry Association: used to link two entries together. When
   editing Entry A and linking Entry B, an association from Entry B back to
   Entry A is automatically created. When deleting an association, the
   reciprocal is also removed. The best part: on the Edit Entry screen is a
   link to edit the reciprocal Entry, allowing authors to easily jump between
-  Entries. (Compatible with both MT4 and 5.)
+  Entries.
 
 * Reciprocal Page Association: just like Reciprocal Entry Association, but for
-  Pages. (Compatible with both MT4 and 5.)
+  Pages.
 
 
 # Prerequisites
 
-* Movable Type Pro 4.2x or 4.3x
+## Movable Type Pro 4.2x or Greater
 
+This plugin works with Movable Type Pro 4.2x or greater. Additionally required:
+
+* [Melody Compatibility
+  Layer](https://github.com/endevver/mt-plugin-melody-compat)
+* [Config Assistant](https://github.com/openmelody/mt-plugin-configassistant)
+
+## Movable Type Pro 5.12 or greater
+
+This plugin works with Movable Type Pro 5.12 or greater and does *not* require
+Config Assistant or the Melody Compatibility Layer (though to be clear, it
+specifically does not use these plugins because they are not yet MT5
+compatible). Installation requires an additional (likely familiar) step, noted
+below.
 
 # Installation
 
@@ -66,17 +73,25 @@ To install this plugin follow the instructions found here:
 
 http://tinyurl.com/easy-plugin-install
 
-This plugin requires a newer version of the `YAML::Tiny` Perl module than is
-included with Movable Type. Included with this plugin (in the `extlib/`
-folder) is a newer version of `YAML::Tiny`. Copy from the plugin archive
-`extlib/YAML/Tiny.pm` to `$MT_HOME/extlib/YAML/Tiny.pm` to update Movable
-Type's copy of this plugin. **This is a required, non-optional step!**
+This plugin requires a newer version of the `YAML::Tiny` Perl module (1.4.4)
+than is included with Movable Type. Included with this plugin (in the
+`extlib/` folder) is a newer version of `YAML::Tiny`. Copy from the plugin
+archive `extlib/YAML/Tiny.pm` to `$MT_HOME/extlib/YAML/Tiny.pm` to update
+Movable Type's copy of this plugin. **This is a required, non-optional step!**
 
-This plugin requires a newer version of the jQuery library than is included
-with Movable Type. Included with this plugin (in the `jQuery/` folder) is a
-newer version of JQuery. Copy from `jQuery/jquery.js` to
-`$MT_HOME/mt-static/jquery/jquery.js` to update Movable Type's copy of jQuery.
-** This is a required, non-optional step!**
+This plugin requires a newer version of the jQuery library (1.7.x or greater)
+than is included with Movable Type. Included with this plugin (in the
+`jQuery/` folder) is a newer version of JQuery. Copy from `jQuery/jquery.js`
+to `$MT_HOME/mt-static/jquery/jquery.js` to update Movable Type's copy of
+jQuery. ** This is a required, non-optional step!**
+
+## Movable Type 5 Installation
+
+Install as noted above. Be sure to update `YAML::Tiny` as instructed.
+
+Movable Type 5.1x includes jQuery version 1.4.x and so needs to be updated.
+Movable Type 5.2 includes jQuery version 1.7.2 and therefore does *not* need
+to be updated.
 
 # Configuration
 
