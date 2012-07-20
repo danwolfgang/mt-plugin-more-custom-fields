@@ -1,5 +1,9 @@
 # More Custom Fields Overview
 
+**Note**: This version 2.0 update represents a significant overhaul to More
+Custom Fields. Upgraders: be sure to read through the Prerequisite and
+Installation sections of the documentation, below.
+
 The Custom Fields found in Movable Type Pro are a boon to creating a flexible
 and robust site. When the standard field types don't quite meet your needs
 however, get More Custom Fields!
