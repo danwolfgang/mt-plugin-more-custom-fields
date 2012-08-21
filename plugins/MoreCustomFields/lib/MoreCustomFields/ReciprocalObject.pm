@@ -167,9 +167,22 @@ sub tag_reciprocal_entry {
     # Verify that $entryid is a number. If no Selected Entries are found, 
     # it's possible $entryid could be just a space character, which throws
     # an error. So, this check ensures we always have a valid entry ID.
-    if ($entryid =~ m/\d+/) {
+    if ($entryid && $entryid =~ m/\d+/) {
         # Assign the selected entry
         my $entry = MT->model( $type )->load({ id => $entryid, });
+        if (!$entry) {
+            MT->log({
+                level     => MT->model('log')->INFO(),
+                class     => $type,
+                blog_id   => $field->blog_id,
+                message   => "A reciprocal $type association was not "
+                    . "published for source $type ID #"
+                    . $ctx->{__stash}{entry}{column_values}{id} . " and "
+                    . "destination ID #" . $entryid . " because the $type "
+                    . "could not be loaded.",
+            });
+            return $res;
+        }
         # Regardless of whether this is a Page or Entry, we always populate
         # the `entry` stash.
         local $ctx->{__stash}{entry} = $entry;
@@ -223,10 +236,21 @@ sub _save {
     return unless $recip_entry_id;
 
     # Load the reciprocal entry and associate it with the current entry.
-    my $recip_entry = MT->model( $type )->load({ id => $recip_entry_id })
-        or die "The $type specified in the Reciprocal " . ucfirst($type) 
-            . " Association custom field could not be loaded: $type ID " 
-            . $recip_entry_id;
+    my $recip_entry = MT->model( $type )->load({ id => $recip_entry_id });
+
+    if (!$recip_entry) {
+        MT->log({
+            level     => MT->model('log')->WARNING(),
+            class     => $type,
+            author_id => $obj->author_id,
+            blog_id   => $obj->blog_id,
+            message   => "The $type specified in the Reciprocal "
+                . ucfirst($type) . " Association custom field (source $type "
+                . "ID #" . $obj->id . ") could not be loaded: $type ID #"
+                . $recip_entry_id,
+        });
+        return;
+    }
 
     my $cf_basename = 'field.' . $field_basename;
 
