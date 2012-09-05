@@ -184,6 +184,7 @@ sub asset_insert_param {
     # a custom field with the basename specified. (Because the asset inserter
     # is being overridden we're affecting a widely-used screen.)
     return 1 unless $field_basename
+        && $field_basename =~ /selected_/ # Could be a `selected_[anything]`
         && MT->model('field')->load({
             blog_id  => $param->{blog_id},
             basename => $field_basename,
