@@ -97,6 +97,11 @@ Movable Type 5.1x includes jQuery version 1.4.x and so needs to be updated.
 Movable Type 5.2 includes jQuery version 1.7.2 and therefore does *not* need
 to be updated.
 
+Static content needs to be copied. (This is handled automatically with Movable
+Type 4 and Config Assistant, but needs to be manually done with MT5.) Copy the
+contents of `$MT_HOME/plugins/MoreCustomFields/static/` to
+`$MT_HOME/mt-static/support/plugins/morecustomfields/`.
+
 # Configuration
 
 More Custom Fields creates several additional field types that are available
