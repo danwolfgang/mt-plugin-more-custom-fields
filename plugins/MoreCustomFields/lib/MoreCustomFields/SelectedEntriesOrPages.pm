@@ -122,17 +122,23 @@ sub search_api_prep {
     my $args    = shift;
     my $blog_id = shift;
 
+    # Arguments need to be specified because using `setup_terms_args` means
+    # all of the query needs to be built here. Start with the generic values
+    # used to build any search.
+    $terms->{blog_id}  = $blog_id;
+    $args->{sort}      = 'created_on';
+    $args->{direction} = 'descend';
+
+    # If this isn't an MCF-initiated search, exit now. Because the basic terms
+    # and arguments were already built above, we can quit now and the search
+    # will still execute in the expected manner. But, if this *is* an
+    # MCF-initiated search then we can apply the final parameters to get the
+    # desired results.
     my $app = MT->instance;
     return unless $app->mode eq 'mcf_list_content';
 
     # Search the current blog, and search both Entries and Pages for the term.
-    $terms->{blog_id} = $blog_id;
     $terms->{class}   = '*';
-
-    # Arguments need to be specified because using `setup_terms_args` means
-    # all of the query needs to be built here.
-    $args->{sort}      = 'created_on';
-    $args->{direction} = 'descend';
 }
 
 1;
