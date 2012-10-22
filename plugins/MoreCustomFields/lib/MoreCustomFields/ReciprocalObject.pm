@@ -34,8 +34,9 @@ sub _field_html_params {
     });
 
     if ($obj) {
-        $tmpl_param->{obj_title}     = $obj->title;
         $tmpl_param->{obj_id}        = $obj->id;
+        $tmpl_param->{obj_title}     = $obj->title;
+        $tmpl_param->{obj_class}     = $obj->class;
         $tmpl_param->{obj_blog_id}   = $obj->blog_id;
         $tmpl_param->{obj_permalink} = $obj->permalink;
     }
@@ -121,7 +122,6 @@ sub tag_reciprocal_entry {
     my $res     = '';
 
     $type = 'entry' if !$type;
-    #$type    ||= 'entry';
 
     # The basename of the custom field you want to grab must be specified.
     # It's used later, to load the field data.
