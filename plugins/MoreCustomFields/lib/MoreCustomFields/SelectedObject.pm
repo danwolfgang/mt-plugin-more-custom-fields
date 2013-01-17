@@ -151,7 +151,7 @@ sub list_objects {
     # If this is coming from a Selected Entry or Page CF, then we need to make
     # the popup dialog show both entries and pages as valid options.
     my $entry_or_page;
-    if ($type eq 'entries_or_pages') {
+    if ($app->mode eq 'mcf_list_content') {
         $terms{class} = '*';
         $type = 'entry';
         $entry_or_page = 1;
@@ -204,11 +204,14 @@ sub list_objects {
             if (my $ts = $obj->authored_on) {
                 my $date_format = MT::App::CMS->LISTING_DATE_FORMAT();
                 my $datetime_format = MT::App::CMS->LISTING_DATETIME_FORMAT();
-                $row->{created_on_formatted} = format_ts($date_format, $ts, $obj->blog,
+                $row->{created_on_formatted} = format_ts(
+                    $date_format, $ts, $obj->blog,
                     $app->user ? $app->user->preferred_language : undef);
-                $row->{created_on_time_formatted} = format_ts($datetime_format, $ts, $obj->blog,
+                $row->{created_on_time_formatted} = format_ts(
+                    $datetime_format, $ts, $obj->blog,
                     $app->user ? $app->user->preferred_language : undef);
-                $row->{created_on_relative} = relative_date($ts, time, $obj->blog);
+                $row->{created_on_relative} = relative_date(
+                    $ts, time, $obj->blog);
             }
 
             my $author = MT->model('author')->load( $obj->author_id );

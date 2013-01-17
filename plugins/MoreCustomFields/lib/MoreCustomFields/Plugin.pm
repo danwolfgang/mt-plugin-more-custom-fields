@@ -31,6 +31,48 @@ sub init_app {
     if ( ref($tags) eq 'HASH' ) {
         MT::__merge_hash($r->{tags}, $tags);
     }
+
+    # If this is MT4, we need to use the `setup_terms_args` key to help make
+    # the Selected Entries or Pages CF search work.
+    if ($app->product_version =~ /^4/) {
+        # Build the additional registry details. Note that the tree is actually
+        # applications -> cms -> search_apis -> entry -> setup_terms_args
+        my $reg = {
+            'search_apis' => {
+                'entry' => {
+                    'setup_terms_args' => sub {
+                        my $terms   = shift;
+                        my $args    = shift;
+                        my $blog_id = shift;
+
+                        # Arguments need to be specified because using
+                        # `setup_terms_args` means all of the query needs to be
+                        # built here. Start with the generic values used to
+                        # build any search.
+                        $terms->{blog_id}  = $blog_id;
+                        $args->{sort}      = 'created_on';
+                        $args->{direction} = 'descend';
+
+                        # If this isn't an MCF-initiated search, exit now.
+                        # Because the basic terms and arguments were already
+                        # built above, we can quit now and the search will
+                        # still execute in the expected manner. But, if this
+                        # *is* an MCF-initiated search then we can apply the
+                        # final parameters to get the desired results.
+                        return 1 unless $app->mode eq 'mcf_list_content';
+
+                        # Search the current blog, and search both Entries and
+                        # Pages for the term.
+                        $terms->{class}   = '*';
+                    },
+                },
+            },
+        };
+
+        # Merge the updated registry keys with the plugin's registry entries.
+        my $plugin = MT->component('morecustomfields');
+        MT::__merge_hash($plugin->registry('applications', 'cms'), $reg);
+    }
 }
 
 # Build the tags associated with all of these new fields, and return them to 

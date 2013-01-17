@@ -1,8 +1,8 @@
 name: More Custom Fields
 id: MoreCustomFields
 key: MoreCustomFields
-description: 'Use additional types of custom fields: checkbox group, radio buttons with an input box, selected entries, and selected pages.'
-version: 2.0.5
+description: 'Use additional types of custom fields: checkbox group, radio buttons with an input box, selected objects, and many more.'
+version: 2.0.6
 static_version: 2
 author_name: 'Dan Wolfgang, uiNNOVATIONS'
 author_link: http://uinnovations.com
@@ -70,6 +70,3 @@ applications:
             mcf_select_object:  $MoreCustomFields::MoreCustomFields::SelectedObject::select_object
             # AJAX unlink method for Reciprocal Associations.
             unlink_reciprocal:  $MoreCustomFields::MoreCustomFields::ReciprocalObject::ajax_unlink
-        search_apis:
-            entry:
-                setup_terms_args: $MoreCustomFields::MoreCustomFields::SelectedEntriesOrPages::search_api_prep
