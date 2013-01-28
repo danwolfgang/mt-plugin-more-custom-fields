@@ -471,7 +471,10 @@ SelectedPages block like this:
       <mt:If name="__first__">
         <ul>
       </mt:If>
-        <li><mt:if tag="entryclass" eq="page"><img src="pageicon.gif"/><mt:else><img src="entryicon.gif"/></mt:if><a href="<mt:EntryPermalink>"><mt:EntryTitle></a></li>
+        <li>
+            <mt:if tag="entryclass" eq="page"><img src="pageicon.gif"/><mt:else><img src="entryicon.gif"/></mt:if>
+            <a href="<mt:EntryPermalink>"><mt:EntryTitle></a>
+        </li>
       <mt:If name="__last__">
         </ul>
       </mt:If>
