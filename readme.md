@@ -59,17 +59,14 @@ however, get More Custom Fields!
 
 This plugin works with Movable Type Pro 4.2x or greater. Additionally required:
 
-* [Melody Compatibility
-  Layer](https://github.com/endevver/mt-plugin-melody-compat)
 * [Config Assistant](https://github.com/openmelody/mt-plugin-configassistant)
 
 ## Movable Type Pro 5.12 or greater
 
 This plugin works with Movable Type Pro 5.12 or greater and does *not* require
-Config Assistant or the Melody Compatibility Layer (though to be clear, it
-specifically does not use these plugins because they are not yet MT5
-compatible). Installation requires an additional (likely familiar) step, noted
-below.
+Config Assistant (though to be clear, it specifically does not use this plugin
+because it's not yet MT5 compatible). Installation requires an additional
+(likely familiar) step, noted below.
 
 # Installation
 
