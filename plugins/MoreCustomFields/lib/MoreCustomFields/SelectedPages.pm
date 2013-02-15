@@ -76,11 +76,12 @@ sub tag_selected_pages {
         # an error. So, this check ensures we always have a valid page ID.
         if ($page_id =~ m/\d+/) {
             # Assign the meta vars
-            local $vars->{__first__} = !$i;
-            local $vars->{__last__} = !defined $page_ids[$i + 1];
-            local $vars->{__odd__} = ($i % 2) == 0; # 0-based $i
-            local $vars->{__even__} = ($i % 2) == 1;
+            local $vars->{__first__}   = !$i;
+            local $vars->{__last__}    = !defined $page_ids[$i + 1];
+            local $vars->{__odd__}     = ($i % 2) == 0; # 0-based $i
+            local $vars->{__even__}    = ($i % 2) == 1;
             local $vars->{__counter__} = $i + 1;
+
             # Assign the selected page
             my $page = MT::Page->load( { id => $page_id, } );
             local $ctx->{__stash}{entry} = $page;

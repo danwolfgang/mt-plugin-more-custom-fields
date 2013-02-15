@@ -77,14 +77,14 @@ sub tag_selected_entries {
         # an error. So, this check ensures we always have a valid entry ID.
         if ($entryid =~ m/\d+/) {
             # Assign the meta vars
-            local $vars->{__first__} = !$i;
-            local $vars->{__last__} = !defined $entryids[$i + 1];
-            local $vars->{__odd__} = ($i % 2) == 0; # 0-based $i
-            local $vars->{__even__} = ($i % 2) == 1;
+            local $vars->{__first__}   = !$i;
+            local $vars->{__last__}    = !defined $entryids[$i + 1];
+            local $vars->{__odd__}     = ($i % 2) == 0; # 0-based $i
+            local $vars->{__even__}    = ($i % 2) == 1;
             local $vars->{__counter__} = $i + 1;
+
             # Assign the selected entry
-            my $entry = MT::Entry->load( { id => $entryid, } );
-            local $ctx->{__stash}{entry} = $entry;
+            local $ctx->{__stash}{entry} = MT->model('entry')->load( $entryid );
 
             my $out = $builder->build($ctx, $tokens);
             if (!defined $out) {
