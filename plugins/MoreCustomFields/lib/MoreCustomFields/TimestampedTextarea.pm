@@ -11,14 +11,14 @@ sub _field_html {
     return q{
 <mt:SetVarTemplate name="invisible_field_template">
     <li>
-        <input type="hidden" 
+        <input type="hidden"
             name="<mt:Var name="field_name">_multiusetimestampedmultilinetextcf_cb_beacon" 
             value="1" />
 
         <textarea
             name="<mt:var name="field_name">_multiusetimestampedmultilinetextcf_text" 
             id="<mt:var name="field_name">_multiusetimestampedmultilinetextcf_text"
-            class="text full-width"></textarea>
+            class="text full low full-width"></textarea>
 
         <div class="timestamp">&nbsp;</div>
 
@@ -30,14 +30,14 @@ sub _field_html {
 </mt:SetVarTemplate>
 <mt:SetVarTemplate name="field_template">
     <li>
-        <input type="hidden" 
+        <input type="hidden"
             name="<mt:Var name="field_name">_multiusetimestampedmultilinetextcf_cb_beacon" 
             value="1" />
 
         <textarea
             name="<mt:var name="field_name">_multiusetimestampedmultilinetextcf_text" 
             id="<mt:var name="field_name">_multiusetimestampedmultilinetextcf_text"
-            class="text full-width"><mt:Var name="ts_text" escape="html"></textarea>
+            class="text full low full-width"><mt:Var name="ts_text" escape="html"></textarea>
 
         <div class="timestamp">
             <mt:If name="timestamp">Time stamp: <mt:Var name="timestamp_formatted"></mt:If>
