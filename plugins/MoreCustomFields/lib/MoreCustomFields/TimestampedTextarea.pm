@@ -317,7 +317,9 @@ sub _create_tags {
 
         # Load the objects (entry, author, whatever) based on the current
         # field definition.
-        my $obj_type = $field_def->obj_type;
+        my $obj_type = ($field_def->obj_type =~ /(entry|page)/)
+            ? 'entry' # Entry and Page both store as 'entry' in the stash.
+            : $field_def->obj_type;
         my $basename = 'field.' . $field_def->basename;
 
         # Create the actual tag Use the tag name and append "Loop" to it.
