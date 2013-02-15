@@ -67,8 +67,12 @@ sub tag_selected_entries {
 
     # Create an array of the entry IDs held in the field.
     # $object->$basename is the lookup that actually grabs the data.
-    my @entryids = split(/,\s?/, $object->$basename)
-      if ($object && $object->$basename);
+    my @entryids = split(/\s?,\s?/, $object->$basename)
+        if ($object && $object->$basename);
+    # If there are any empty elements in the array, remove them. They just
+    # confuse the meta variables.
+    @entryids = grep(/\S/, @entryids);
+
     my $i = 0;
     my $vars = $ctx->{__stash}{vars} ||= {};
     foreach my $entryid (@entryids) {

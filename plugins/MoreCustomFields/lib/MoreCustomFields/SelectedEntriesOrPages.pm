@@ -66,9 +66,13 @@ sub tag_selected_content {
 
     # Create an array of the entry IDs held in the field.
     # $object->$basename is the lookup that actually grabs the data.
-    my @itemids = split( /,\s?/, $object->$basename );
-    my $i       = 0;
-    my $vars    = $ctx->{__stash}{vars} ||= {};
+    my @itemids = split( /\s?,\s?/, $object->$basename );
+    # If there are any empty elements in the array, remove them. They just
+    # confuse the meta variables.
+    @itemids = grep(/\S/, @itemids);
+
+    my $i    = 0;
+    my $vars = $ctx->{__stash}{vars} ||= {};
     foreach my $itemid (@itemids) {
 
         # Verify that $itemid is a number. If no Selected Entries are found,

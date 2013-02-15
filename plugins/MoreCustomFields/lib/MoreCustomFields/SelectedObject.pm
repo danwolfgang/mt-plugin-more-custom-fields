@@ -50,7 +50,7 @@ sub _field_html_params {
     # Edit Field screen.
     return unless $field_value;
 
-    my @obj_ids = split(/,\s?/, $field_value);
+    my @obj_ids = split(/\s?,\s?/, $field_value);
 
     my @obj_ids_loop;
     foreach my $obj_id (@obj_ids) {
