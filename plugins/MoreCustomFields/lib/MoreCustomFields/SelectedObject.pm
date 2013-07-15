@@ -174,7 +174,6 @@ sub list_objects {
     my %args = (
         sort      => 'authored_on',
         direction => 'descend',
-        limit     => 10,
     );
 
     my $tmpl = $plugin->load_tmpl('entry_list.mtml');
@@ -221,7 +220,6 @@ sub list_objects {
         },
         terms => \%terms,
         args  => \%args,
-        limit => 10,
     });
 }
 
