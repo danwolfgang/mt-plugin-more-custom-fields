@@ -254,11 +254,11 @@ sub load_customfield_types {
     return $customfield_types;
 }
 
-# This is responsible for loading jQuery in the head of the site.
+# This is responsible for loading support files in the head of the site.
 sub update_template {
     my ($cb, $app, $template) = @_;
 
-    # Only update the necessary tempaltes -- entry, page, category, folder,
+    # Only update the necessary templates -- entry, page, category, folder,
     # and author. All of which happen to be easily identifiable as using the
     # mode `view`.
     return unless $app->param('__mode') eq 'view'
@@ -276,9 +276,12 @@ sub update_template {
 END
     }
 
+    # MT4 also needs jQuery UI for the draggable Entry/Page/Asset Objects.
+    $new .= q{<script type="text/javascript" src="<mt:StaticWebPath>support/plugins/morecustomfields/jquery-ui-1.8.19.custom.min.js"></script>}
+        if $app->product_version =~ /^4/;
+
     # Insert the More Custom Fields javascript.
     $new .= <<'END';
-    <script type="text/javascript" src="<mt:StaticWebPath>support/plugins/morecustomfields/jquery-ui-1.8.19.custom.min.js"></script>
     <script type="text/javascript" src="<mt:StaticWebPath>support/plugins/morecustomfields/app.js"></script>
     <link rel="stylesheet" type="text/css" href="<mt:StaticWebPath>support/plugins/morecustomfields/app.css" />
 END
