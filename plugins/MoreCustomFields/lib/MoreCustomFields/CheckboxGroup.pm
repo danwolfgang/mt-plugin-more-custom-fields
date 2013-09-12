@@ -60,19 +60,12 @@ sub _save {
         # Join all the checkboxes into a list, but only if the field has 
         # already been set
         my $result;
-        if ( $customfield_value ) {
+        if ( defined $customfield_value ) {
             $result = join ', ', $customfield_value, $app->param($field_name);
         }
         else { # Nothing saved yet? Just assign the variable
             $result = $app->param($field_name);
         }
-
-        # If the customfield held some results, then a real text value exists,
-        # such as "blue." If the field was empty, however, the $results 
-        # variable is empty, indicating that the field should *not* be saved. 
-        # This is incorrect because an empty field may be purposefully 
-        # unselected, so we need to force save the deletion of the field.
-        if (!$result) { $result = ' '; }
 
         # Save the new result to the *real* field name, which should be 
         # written to the DB.
