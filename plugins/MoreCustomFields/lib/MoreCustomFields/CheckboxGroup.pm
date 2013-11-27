@@ -64,7 +64,7 @@ sub _save {
             $result = join ', ', $customfield_value, $app->param($field_name);
         }
         else { # Nothing saved yet? Just assign the variable
-            $result = $app->param($field_name);
+            $result = $app->param($field_name) || '';
         }
 
         # Save the new result to the *real* field name, which should be 
