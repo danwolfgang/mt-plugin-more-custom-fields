@@ -242,12 +242,23 @@ sub select_object {
     my $edit_field = $app->param('edit_field')
         or die $app->errtrans('No edit_field');
 
+    # Prepare the object's text field to be used, just in case the title field isn't available (such as if the object is a comment, which has no title).
+    my $len  = 100;
+    my $text = $obj->text;
+    if ( length $text > $len ) {
+        $text = substr( $text, 0, $len );
+        $text .= '...';
+    }
+
+    $text = $obj->title
+        if $obj->can('title');
+
     my $tmpl = $plugin->load_tmpl('insert_object.mtml', {
         obj_id        => $obj->id,
-        obj_title     => $obj->title,
+        obj_title     => $text,
         obj_blog_id   => $obj->blog_id,
-        obj_class     => $obj->class,
-        obj_permalink => $obj->permalink,
+        obj_class     => $type,
+        obj_permalink => $obj->can('permalink') ? $obj->permalink : '',
         edit_field    => $edit_field,
     });
 

@@ -15,6 +15,7 @@ use MoreCustomFields::SelectedAssets;
 use MoreCustomFields::SelectedEntriesOrPages;
 use MoreCustomFields::SelectedEntries;
 use MoreCustomFields::SelectedPages;
+use MoreCustomFields::SelectedComments;
 use MoreCustomFields::SingleLineTextGroup;
 use MoreCustomFields::Message;
 use MoreCustomFields::TimestampedTextarea;
@@ -142,6 +143,20 @@ sub load_customfield_types {
             options_field     => sub { MoreCustomFields::SelectedEntriesOrPages::_options_field(); },
             field_html        => sub { MoreCustomFields::SelectedObject::_field_html(); },
             field_html_params => sub { MoreCustomFields::SelectedObject::_field_html_params(@_); },
+        },
+        selected_comments => {
+            label             => 'Selected Comments',
+            column_def        => 'vchar',
+            order             => 2103,
+            no_default        => 1,
+            options_delimiter => ',',
+            options_field     => sub {
+                MoreCustomFields::SelectedObject::options_field({
+                    type => 'comments',
+                });
+            },
+            field_html        => sub { MoreCustomFields::SelectedComments::_field_html(); },
+            field_html_params => sub { MoreCustomFields::SelectedComments::_field_html_params(@_); },
         },
 #        single_line_text_group => {
 #            label             => 'Single-Line Text Group',

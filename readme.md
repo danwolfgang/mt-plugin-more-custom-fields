@@ -52,6 +52,11 @@ however, get More Custom Fields!
   "Selected Videos," and "Selected Files" are also available to filter the
   types of asset you want the field to work with.
 
+* Selected Comments: again like the Selected Entries field, this field allows
+  you to choose from published comments. The number of comments that can be
+  selected is not limited, comments can be sorted by drag and drop, and an Edit
+  link is available for the linked comments. (No View link is present because
+  how and where you may publish comments can vary considerably.)
 
 # Prerequisites
 
@@ -116,6 +121,7 @@ when defining custom fields:
 * Selected Entries or Pages
 * Selected Assets (and "child" types: Selected Images, Selected Audios,
   Selected Videos, Selected Files, and any other type of registered asset)
+* Selected Comments
 
 Use these field types as you would any other: from the Preferences menu select
 Custom Fields, and create a new custom field.
@@ -163,13 +169,13 @@ separated with a comma to create a string (as in "1,12,19,37,112"), or the
 value "all" may be used to include all blogs. Leaving this field blank will
 use the current blog.
 
-The **Selected Entries**, **Selected Pages**, and **Selected Entries or
-Pages** field types provides the ability to select those object types -- as
-many as needed, sortable in whatever order is needed. Specify a blog ID as
-this field's option to determine which blog's objects are available for
-selection. Blog IDs must be separated with a comma to create a string (as in
-"1,12,19,37,112"), or the value "all" may be used to include all blogs.
-Leaving this field blank will make the current blog's objects available.
+The **Selected Entries**, **Selected Pages**, **Selected Entries or Pages**,
+and **Selected Comments** field types provides the ability to select those
+object types -- as many as needed, sortable in whatever order is needed.
+Specify a blog ID as this field's option to determine which blog's objects are
+available for selection. Blog IDs must be separated with a comma to create a
+string (as in "1,12,19,37,112"), or the value "all" may be used to include all
+blogs. Leaving this field blank will make the current blog's objects available.
 
 The **Selected Assets** field type (and the related asset types) work similar
 to the Selected Entries field type: select an unlimited number of assets and
@@ -195,6 +201,7 @@ which may help expedite your theme creation.
 * Reciprocal Entry Association: `reciprocal_entry`
 * Reciprocal Page Association: `reciprocal_page`
 * Selected Assets: `selected_assets`
+* Selected Comments: `selected_comments`
 * Selected Entries: `selected_entries`
 * Selected Pages: `selected_pages`
 * Selected Entries or Pages: `selected_content`
@@ -501,6 +508,11 @@ does. If you've created a Selected Assets custom field with the `basename` of
       </mt:If>
     </mt:SelectedAssets>
 
+## Selected Comments
+
+Selected Comments also works like the Selected Entries field type -- except is
+uses comments. More Custom Fields includes the block tag `SelectedComments` to
+help output your selected.
 
 # Known Issues
 

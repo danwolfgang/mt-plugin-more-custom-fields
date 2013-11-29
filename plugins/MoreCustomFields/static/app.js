@@ -122,12 +122,15 @@ function createObjectListing(obj_title, obj_id, obj_class, obj_permalink, blog_i
         .attr('title', 'Edit in a new window')
         .html('<img src="'+StaticURI+'images/status_icons/draft.gif" width="9" height="9" alt="Edit" />');
     // View link.
-    var $view = jQuery('<a/>')
-        .attr('href', obj_permalink)
-        .addClass('view')
-        .attr('target', '_blank')
-        .attr('title', 'View in a new window')
-        .html('<img src="'+StaticURI+'images/status_icons/view.gif" width="13" height="9" alt="View" />');
+    var $view;
+    if (obj_permalink) {
+        $view = jQuery('<a/>')
+            .attr('href', obj_permalink)
+            .addClass('view')
+            .attr('target', '_blank')
+            .attr('title', 'View in a new window')
+            .html('<img src="'+StaticURI+'images/status_icons/view.gif" width="13" height="9" alt="View" />');
+    }
     // Delete button.
     var $remove = jQuery('<img/>')
         .addClass('remove')

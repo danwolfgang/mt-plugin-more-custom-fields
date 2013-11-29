@@ -52,12 +52,13 @@ callbacks:
 
 tags:
     block:
-        SelectedAssets:  $MoreCustomFields::MoreCustomFields::SelectedAssets::tag_selected_assets
+        SelectedAssets:   $MoreCustomFields::MoreCustomFields::SelectedAssets::tag_selected_assets
+        SelectedComments: $MoreCustomFields::MoreCustomFields::SelectedComments::tag_selected_comments
         SelectedEntriesOrPages: $MoreCustomFields::MoreCustomFields::SelectedEntriesOrPages::tag_selected_content
-        SelectedEntries: $MoreCustomFields::MoreCustomFields::SelectedEntries::tag_selected_entries
-        SelectedPages:   $MoreCustomFields::MoreCustomFields::SelectedPages::tag_selected_pages
-        ReciprocalEntry: $MoreCustomFields::MoreCustomFields::ReciprocalObject::tag_reciprocal_entry
-        ReciprocalPage:  $MoreCustomFields::MoreCustomFields::ReciprocalObject::tag_reciprocal_page
+        SelectedEntries:  $MoreCustomFields::MoreCustomFields::SelectedEntries::tag_selected_entries
+        SelectedPages:    $MoreCustomFields::MoreCustomFields::SelectedPages::tag_selected_pages
+        ReciprocalEntry:  $MoreCustomFields::MoreCustomFields::ReciprocalObject::tag_reciprocal_entry
+        ReciprocalPage:   $MoreCustomFields::MoreCustomFields::ReciprocalObject::tag_reciprocal_page
 
 applications:
     cms:
@@ -66,6 +67,7 @@ applications:
             mcf_list_entries:   $MoreCustomFields::MoreCustomFields::SelectedEntries::list_entries
             mcf_list_pages:     $MoreCustomFields::MoreCustomFields::SelectedPages::list_pages
             mcf_list_content:   $MoreCustomFields::MoreCustomFields::SelectedEntriesOrPages::list_content
+            mcf_list_comments:  $MoreCustomFields::MoreCustomFields::SelectedComments::list_content
             # Object selected, prepare for insert
             mcf_select_object:  $MoreCustomFields::MoreCustomFields::SelectedObject::select_object
             # AJAX unlink method for Reciprocal Associations.
