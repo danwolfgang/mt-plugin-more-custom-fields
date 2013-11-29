@@ -242,7 +242,7 @@ sub select_object {
     my $edit_field = $app->param('edit_field')
         or die $app->errtrans('No edit_field');
 
-    my $tmpl = $plugin->load_tmpl('select_entry.mtml', {
+    my $tmpl = $plugin->load_tmpl('insert_object.mtml', {
         obj_id        => $obj->id,
         obj_title     => $obj->title,
         obj_blog_id   => $obj->blog_id,

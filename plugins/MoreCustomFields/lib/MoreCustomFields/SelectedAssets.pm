@@ -208,7 +208,7 @@ sub asset_insert_param {
     $param->{obj_permalink} = $asset->url || '';
     $param->{obj_blog_id}   = $app->blog->id;
 
-    my $new_tmpl = $plugin->load_tmpl('select_entry.mtml', $param);
+    my $new_tmpl = $plugin->load_tmpl('insert_object.mtml', $param);
 
     # Use the new template.
     $tmpl->text($new_tmpl->text());
