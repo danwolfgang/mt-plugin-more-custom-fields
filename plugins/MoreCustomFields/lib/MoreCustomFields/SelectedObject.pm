@@ -14,12 +14,13 @@ use MT::Util qw( relative_date format_ts );
 sub options_field {
     my ($arg_ref) = @_;
     my $type      = $arg_ref->{type};
+    my $blog_id = MT->instance->blog ? MT->instance->blog->id : 'all';
 
     return qq{
 <div class="textarea-wrapper">
-    <input name="options" id="options" class="full-width" value="<mt:Var name="options" escape="html">" />
+    <input name="options" id="options" class="text full-width" value="<mt:Var name="options" _default="$blog_id" escape="html">" />
 </div>
-<p class="hint">Enter the ID(s) of the blog(s) whose $type should be available for selection. Leave this field blank to use the current blog only.</p>
+<p class="hint">Enter the ID(s) of the blog(s) whose $type should be available for selection.</p>
 <p class="hint">Blog IDs should be comma-separated (as in &rdquo;1,12,19,37,112&ldquo;), or the &rdquo;all&ldquo; value may be specified to include all blogs&rsquo; $type.</p>
     };
 }
