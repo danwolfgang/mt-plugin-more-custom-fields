@@ -39,8 +39,8 @@ sub _field_html {
                 src="<mt:StaticWebPath>images/status_icons/draft.gif"
                 width="9" height="9" alt="Edit" /></a>
         <img class="remove"
-            alt="Remove selected asset"
-            title="Remove selected asset"
+            alt="Remove selected comment"
+            title="Remove selected comment"
             src="<mt:StaticWebPath>images/status_icons/close.gif"
             width="9" height="9" />
     </li>
@@ -136,16 +136,17 @@ sub tag_selected_comments {
     };
     return $ctx->error($@) if $@;
 
-    # Create an array of the asset IDs held in the field.
+    # Create an array of the comment IDs held in the field.
     # $object->$basename is the lookup that actually grabs the data.
     my @comment_ids = split(/,\s?/, $object->$basename)
       if ($object && $object->$basename);
     my $i = 0;
     my $vars = $ctx->{__stash}{vars} ||= {};
     foreach my $comment_id (@comment_ids) {
-        # Verify that $assetid is a number. If no Selected Comments are found,
-        # it's possible $assetid could be just a space character, which throws
-        # an error. So, this check ensures we always have a valid asset ID.
+        # Verify that $comment_id is a number. If no Selected Comments are
+        # found, it's possible $comment_id could be just a space character,
+        # which throws an error. So, this check ensures we always have a valid
+        # comment ID.
         if ($comment_id =~ m/\d+/) {
             # Assign the meta vars
             local $vars->{__first__} = !$i;
@@ -153,9 +154,10 @@ sub tag_selected_comments {
             local $vars->{__odd__} = ($i % 2) == 0; # 0-based $i
             local $vars->{__even__} = ($i % 2) == 1;
             local $vars->{__counter__} = $i + 1;
-            # Assign the selected asset
-            my $asset = MT->model('comment')->load( { id => $comment_id, } );
-            local $ctx->{__stash}{comment} = $comment;
+            # Assign the selected comment
+            local $ctx->{__stash}{comment} = MT->model('comment')->load({
+                id => $comment_id,
+            });
 
             my $out = $builder->build($ctx, $tokens);
             if (!defined $out) {
