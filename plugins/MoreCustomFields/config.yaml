@@ -2,7 +2,7 @@ name: More Custom Fields
 id: MoreCustomFields
 key: MoreCustomFields
 description: 'Use additional types of custom fields: checkbox group, radio buttons with an input box, selected objects, and many more.'
-version: 2.1.0
+version: 2.1.1
 static_version: 3
 author_name: 'Dan Wolfgang, uiNNOVATIONS'
 author_link: http://uinnovations.com
