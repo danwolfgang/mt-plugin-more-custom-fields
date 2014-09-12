@@ -14,6 +14,8 @@ however, get More Custom Fields!
   area, but any other use can only read the contents. Useful for displaying
   instructions or other data you don't want the user to edit.
 
+* Multi-Line Text (WYSIWYG): expands upon the standard Multi-Line Text field by adding the CKEditor WYSIWYG editor.
+
 * Multi-Use Single-Line Text Group: don't let the crazy name scare you -- this
   field type allows you to create a reusable group of fields, perfect for
   including a list of your favorite bookmarks, for example.
@@ -111,6 +113,7 @@ when defining custom fields:
 
 * Checkbox Group
 * Message
+* Multi-Line Text (WYSIWYG)
 * Multi-Use Single-Line Text Group
 * Multi-Use Time Stamped Multi-Line Text
 * Radio Buttons with Input
@@ -133,6 +136,8 @@ The **Message** field type should receive a default value. This value is the
 "message" displayed for all other users. The field options allow you to
 specify whether *no* user should be able to edit the field data, or if
 administrators should be able to override the supplied default.
+
+The **Multi-Line Text (WYSIWYG)** field type is a textarea with the CKEditor WYSIWYG editor to the make text entry and formatting easy.
 
 The **Multi-Use Single-Line Text Group** field type is a mouthful. A breakdown
 of this field: The Single-Line Text field is included with MT Pro and lets you
@@ -194,6 +199,7 @@ which may help expedite your theme creation.
 
 * Checkbox Group: `checkbox_group`
 * Message: `message`
+* Multi-Line Text (WYSIWYG): `wysiwyg_textarea`
 * Multi-Use Single-Line Text Group: `multi_use_single_line_text_group`
 * Multi-Use Time Stamped Multi-Line Text:
   `multi_use_timestamped_multi_line_text`
@@ -254,6 +260,10 @@ would only be printed if "Monkeywrench" were checked in the custom field.
 
 The Message custom field can be output simply using the tag you define for the
 field. There are no special capabilities.
+
+## Multi-Line Text (WYSIWYG)
+
+The Multi-Line Text (WYSIWYG) field can be output simply by using the tag you define for the field. There are no special capabilities.
 
 ## Multi-Use Single-Line Text Group
 

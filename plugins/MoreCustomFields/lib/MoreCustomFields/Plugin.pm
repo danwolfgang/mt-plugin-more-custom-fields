@@ -20,6 +20,7 @@ use MoreCustomFields::SingleLineTextGroup;
 use MoreCustomFields::Message;
 use MoreCustomFields::TimestampedTextarea;
 use MoreCustomFields::ReciprocalObject;
+use MoreCustomFields::WYSIWYGTextArea;
 
 sub init_app {
     my $plugin = shift;
@@ -181,10 +182,17 @@ sub load_customfield_types {
         multi_use_timestamped_multi_line_text => {
             label             => 'Multi-Use Time Stamped Multi-Line Text',
             column_def        => 'vblob',
-            order             => 201,
+            order             => 202,
             no_default        => 1,
             field_html        => sub { MoreCustomFields::TimestampedTextarea::_field_html(); },
             field_html_params => sub { MoreCustomFields::TimestampedTextarea::_field_html_params(@_); },
+        },
+        wysiwyg_textarea => {
+            label             => 'Multi-Line Text (WYSIWYG)',
+            column_def        => 'vclob',
+            order             => 201,
+            no_default        => 1,
+            field_html        => sub { MoreCustomFields::WYSIWYGTextArea::_field_html(); },
         },
         message => {
             label             => 'Message',
