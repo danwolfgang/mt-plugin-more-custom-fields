@@ -60,7 +60,7 @@ sub _save {
         # Join all the checkboxes into a list, but only if the field has
         # already been set
         my $result;
-        if ( defined $customfield_value ) {
+        if ( defined $customfield_value && $customfield_value ) {
             $result = join ', ', $customfield_value, $app->param($field_name);
         }
         else { # Nothing saved yet? Just assign the variable
