@@ -35,7 +35,7 @@ sub _field_html {
     };
 }
 
-# This is called by MoreCustomFields::Plugin::post_save, which is the 
+# This is called by MoreCustomFields::Plugin::post_save, which is the
 # post-save callback handler. Save the data for this custom field type.
 sub _save {
     my ($arg_ref) = shift;
@@ -43,21 +43,21 @@ sub _save {
     my $obj   = $arg_ref->{object};
     my $count = $arg_ref->{count};
 
-    # Now look at the individual checkbox in the group to determine if 
+    # Now look at the individual checkbox in the group to determine if
     # it's checked.
-    if( $app->param( /^customfield_(.*?)_checkboxgroupcf_$count$/ ) ) { 
+    if( $app->param( /^customfield_(.*?)_checkboxgroupcf_$count$/ ) ) {
         my $field_name = "customfield_$1_checkboxgroupcf_$count";
 
         # This line serves two purposes:
-        # - Create the "real" customfield to write to the DB, if it doesn't 
+        # - Create the "real" customfield to write to the DB, if it doesn't
         #   exist already.
-        # - If the field has already been created (because this is the 2nd or 
-        #   3rd or 4th etc Checkbox Group CF option) then get it so that we 
-        #   can see the currently-selected options and append a new result to 
+        # - If the field has already been created (because this is the 2nd or
+        #   3rd or 4th etc Checkbox Group CF option) then get it so that we
+        #   can see the currently-selected options and append a new result to
         #   them.
         my $customfield_value = $app->param("customfield_$1");
 
-        # Join all the checkboxes into a list, but only if the field has 
+        # Join all the checkboxes into a list, but only if the field has
         # already been set
         my $result;
         if ( defined $customfield_value ) {
@@ -67,7 +67,7 @@ sub _save {
             $result = $app->param($field_name) || '';
         }
 
-        # Save the new result to the *real* field name, which should be 
+        # Save the new result to the *real* field name, which should be
         # written to the DB.
         $app->param("customfield_$1", $result);
 
