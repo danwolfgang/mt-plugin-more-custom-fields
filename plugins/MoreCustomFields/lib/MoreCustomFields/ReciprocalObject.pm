@@ -91,18 +91,18 @@ sub _field_html {
             class="edit"
             target="_blank"
             title="Edit in a new window."><img 
-                src="<mt:StaticWebPath>images/status_icons/draft.gif"
+                src="<mt:Var name="static_uri">images/status_icons/draft.gif"
                 width="9" height="9" alt="Edit" /></a>
         <a href="<mt:Var name="obj_permalink">"
             class="view"
             target="_blank"
             title="View in a new window."><img
-                src="<mt:StaticWebPath>images/status_icons/view.gif"
+                src="<mt:Var name="static_uri">images/status_icons/view.gif"
                 width="13" height="9" alt="View" /></a>
         <img class="remove"
             alt="Remove selected entry"
             title="Remove selected entry"
-            src="<mt:StaticWebPath>images/status_icons/close.gif"
+            src="<mt:Var name="static_uri">images/status_icons/close.gif"
             width="9" height="9" />
     </li>
 </mt:If>

@@ -295,18 +295,18 @@ sub update_template {
         # Include jQuery as part of the js_include, used on the 
         # include/header.tmpl, which is used on all pages.
         $new = <<'END';
-    <script type="text/javascript" src="<mt:StaticWebPath>jquery/jquery.js"></script>
+    <script type="text/javascript" src="<mt:Var name="static_uri">jquery/jquery.js"></script>
 END
     }
 
     # MT4 also needs jQuery UI for the draggable Entry/Page/Asset Objects.
-    $new .= q{<script type="text/javascript" src="<mt:StaticWebPath>support/plugins/morecustomfields/jquery-ui-1.8.19.custom.min.js"></script>}
+    $new .= q{<script type="text/javascript" src="<mt:Var name="static_uri">support/plugins/morecustomfields/jquery-ui-1.8.19.custom.min.js"></script>}
         if $app->product_version =~ /^4/;
 
     # Insert the More Custom Fields javascript.
     $new .= <<'END';
-    <script type="text/javascript" src="<mt:StaticWebPath>support/plugins/morecustomfields/app.js"></script>
-    <link rel="stylesheet" type="text/css" href="<mt:StaticWebPath>support/plugins/morecustomfields/app.css" />
+    <script type="text/javascript" src="<mt:Var name="static_uri">support/plugins/morecustomfields/app.js"></script>
+    <link rel="stylesheet" type="text/css" href="<mt:Var name="static_uri">support/plugins/morecustomfields/app.css" />
 END
 
     $$template =~ s/$old/$new$old/;
