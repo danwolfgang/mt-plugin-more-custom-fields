@@ -189,7 +189,7 @@ sub _multi_field_html_params {
             undef @group_loop;
             # The $group_num is the group order/parent of the values. Sort
             # it so that they are displayed in the order they were saved.
-            foreach my $group_num ( sort keys %{$field} ) {
+            foreach my $group_num ( sort {$a<=>$b} keys %{$field} ) {
                 my @fields_loop;
                 # Now push the saved field value into the option loop.
                 foreach my $option ( @$option_loop ) {
@@ -351,7 +351,7 @@ sub _create_tags {
                 # The $group_num is the group order/parent of the values.
                 # Sort it so that they are displayed in the order they
                 # were saved.
-                foreach my $group_num ( sort keys %{$field} ) {
+                foreach my $group_num ( sort {$a<=>$b} keys %{$field} ) {
                     local $vars->{'__first__'} = ($count++ == 0);
                     local $vars->{'__last__'} = ($count == scalar keys %{$field});
 
