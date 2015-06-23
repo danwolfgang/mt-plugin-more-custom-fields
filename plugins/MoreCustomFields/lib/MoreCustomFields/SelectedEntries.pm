@@ -80,6 +80,10 @@ sub tag_selected_entries {
         # it's possible $entryid could be just a space character, which throws
         # an error. So, this check ensures we always have a valid entry ID.
         if ($entryid =~ m/\d+/) {
+            my $entry = MT->model('entry')->load( $entryid );
+            # Check if the entry actually loaded, it might have been deleted
+            # by a user.
+            next unless $entry;            
             # Assign the meta vars
             local $vars->{__first__}   = !$i;
             local $vars->{__last__}    = !defined $entryids[$i + 1];
@@ -88,7 +92,7 @@ sub tag_selected_entries {
             local $vars->{__counter__} = $i + 1;
 
             # Assign the selected entry
-            local $ctx->{__stash}{entry} = MT->model('entry')->load( $entryid );
+            local $ctx->{__stash}{entry} = $entry;
 
             my $out = $builder->build($ctx, $tokens);
             if (!defined $out) {
