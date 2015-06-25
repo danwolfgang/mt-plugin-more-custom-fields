@@ -79,6 +79,12 @@ sub tag_selected_pages {
         # it's possible $page_id could be just a space character, which throws
         # an error. So, this check ensures we always have a valid page ID.
         if ($page_id =~ m/\d+/) {
+            # Assign the selected page
+            my $page = MT::Page->load( { id => $page_id } );
+            # Check if the page actually loaded, it might have been deleted
+            # by a user.
+            next unless $page;
+            
             # Assign the meta vars
             local $vars->{__first__}   = !$i;
             local $vars->{__last__}    = !defined $page_ids[$i + 1];
@@ -86,8 +92,6 @@ sub tag_selected_pages {
             local $vars->{__even__}    = ($i % 2) == 1;
             local $vars->{__counter__} = $i + 1;
 
-            # Assign the selected page
-            my $page = MT::Page->load( { id => $page_id, } );
             local $ctx->{__stash}{entry} = $page;
 
             my $out = $builder->build($ctx, $tokens);

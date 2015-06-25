@@ -79,7 +79,10 @@ sub tag_selected_content {
         # it's possible $itemid could be just a space character, which throws
         # an error. So, this check ensures we always have a valid item ID.
         if ( $itemid =~ m/\d+/ ) {
-
+            # Make sure the item actually loaded, it might have been deleted by
+            # a user
+            my $item = MT::Entry->load( { id => $itemid, } );
+            next unless $item;
             # Assign the meta vars
             local $vars->{__first__}   = !$i;
             local $vars->{__last__}    = !defined $itemids[ $i + 1 ];
@@ -88,7 +91,7 @@ sub tag_selected_content {
             local $vars->{__counter__} = $i + 1;
 
             # Assign the selected item
-            my $item = MT::Entry->load( { id => $itemid, } );
+
             local $ctx->{__stash}{entry} = $item;
 
             my $out = $builder->build( $ctx, $tokens );
