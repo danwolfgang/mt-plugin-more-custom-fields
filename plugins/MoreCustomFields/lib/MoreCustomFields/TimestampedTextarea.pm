@@ -133,7 +133,7 @@ sub _field_html_params {
         # The field values are saved as YAML. Grab the values, convert them to
         # a string, and push them into the options loop.
         my $yaml = YAML::Tiny->new;
-        $yaml = YAML::Tiny->read_string( $tmpl_param->{field_value} );
+        eval { $yaml = YAML::Tiny->read_string( $tmpl_param->{field_value} ) };
 
         # The $field_name is the custom field basename.
         foreach my $field_name ( keys %{$yaml->[0]} ) {
@@ -330,7 +330,8 @@ sub _create_tags {
             my $obj = $ctx->stash($obj_type);
 
             # Then load the saved YAML
-            my $yaml = YAML::Tiny->read_string( $obj->$basename );
+            my $yaml = YAML::Tiny->new;
+            eval { $yaml = YAML::Tiny->read_string( $obj->$basename ) };
 
             # The $field_name is the custom field basename.
             foreach my $field_name ( keys %{$yaml->[0]} ) {

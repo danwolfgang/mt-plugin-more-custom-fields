@@ -144,7 +144,7 @@ sub _field_html_params {
         # The field values are saved as YAML. Grab the values, convert them to
         # a string, and push them into the options loop.
         my $yaml = YAML::Tiny->new;
-        $yaml = YAML::Tiny->read_string( $tmpl_param->{field_value} );
+        eval { $yaml = YAML::Tiny->read_string( $tmpl_param->{field_value} ) };
 
         # Step through the saved YAML to populate fields.
         my $option_loop = $tmpl_param->{option_loop};
@@ -177,11 +177,11 @@ sub _multi_field_html_params {
     my $option_loop = $tmpl_param->{option_loop};
 
     # Only proceed if there are values to process.
-    if ($tmpl_param->{field_value}) {
+    if ( $tmpl_param->{field_value} ) {
         # The field values are saved as YAML. Grab the values, convert them to a
         # string, and push them into the options loop.
         my $yaml = YAML::Tiny->new;
-        $yaml = YAML::Tiny->read_string( $tmpl_param->{field_value} );
+        eval { $yaml = YAML::Tiny->read_string( $tmpl_param->{field_value} ) };
 
         # The $field_name is the custom field basename.
         foreach my $field_name ( keys %{$yaml->[0]} ) {
@@ -194,7 +194,7 @@ sub _multi_field_html_params {
                 # Now push the saved field value into the option loop.
                 foreach my $option ( @$option_loop ) {
                     my $label = $option->{label};
-                    push @fields_loop, { 
+                    push @fields_loop, {
                         is_selected => $option->{is_selected},
                         label       => $label,
                         option      => $option->{option},
@@ -337,7 +337,8 @@ sub _create_tags {
             my $obj = $ctx->stash($obj_type);
 
             # Then load the saved YAML
-            my $yaml = YAML::Tiny->read_string( $obj->$basename );
+            my $yaml = YAML::Tiny->new;
+            eval { $yaml = YAML::Tiny->read_string( $obj->$basename ) };
 
             # The $field_name is the custom field basename.
             foreach my $field_name ( keys %{$yaml->[0]} ) {

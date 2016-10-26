@@ -83,7 +83,7 @@ sub tag_selected_entries {
             my $entry = MT->model('entry')->load( $entryid );
             # Check if the entry actually loaded, it might have been deleted
             # by a user.
-            next unless $entry;            
+            next unless $entry;
             # Assign the meta vars
             local $vars->{__first__}   = !$i;
             local $vars->{__last__}    = !defined $entryids[$i + 1];
