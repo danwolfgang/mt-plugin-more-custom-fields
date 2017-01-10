@@ -172,10 +172,11 @@ sub tag_reciprocal_entry {
         my $entry = MT->model( $type )->load({ id => $entryid, });
         if (!$entry) {
             MT->log({
-                level     => MT->model('log')->INFO(),
-                class     => $type,
-                blog_id   => $field->blog_id,
-                message   => "A reciprocal $type association was not "
+                level    => MT->model('log')->INFO(),
+                class    => 'More Custom Fields',
+                category => $type,
+                blog_id  => $field->blog_id,
+                message  => "A reciprocal $type association was not "
                     . "published for source $type ID #"
                     . $ctx->{__stash}{entry}{column_values}{id} . " and "
                     . "destination ID #" . $entryid . " because the $type "
@@ -241,7 +242,8 @@ sub _save {
     if (!$recip_entry) {
         MT->log({
             level     => MT->model('log')->WARNING(),
-            class     => $type,
+            class     => 'More Custom Fields',
+            category  => $type,
             author_id => $obj->author_id,
             blog_id   => $obj->blog_id,
             message   => "The $type specified in the Reciprocal "
@@ -264,7 +266,8 @@ sub _save {
 
     MT->log({
         level     => MT->model('log')->INFO(),
-        class     => $type,
+        class     => 'More Custom Fields',
+        category  => $type,
         author_id => $obj->author_id,
         blog_id   => $obj->blog_id,
         message   => "A reciprocal $type association was created between \""
@@ -332,7 +335,8 @@ sub ajax_unlink {
 
     MT->log({
         level     => MT->model('log')->INFO(),
-        class     => $recip_obj_type,
+        class     => 'More Custom Fields',
+        category  => $recip_obj_type,
         author_id => $cur_entry->author_id,
         blog_id   => $cur_entry->blog_id,
         message   => "A reciprocal $recip_obj_type association was deleted "
