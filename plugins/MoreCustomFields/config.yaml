@@ -57,6 +57,7 @@ tags:
         SelectedEntriesOrPages: $MoreCustomFields::MoreCustomFields::SelectedEntriesOrPages::tag_selected_content
         SelectedEntries:  $MoreCustomFields::MoreCustomFields::SelectedEntries::tag_selected_entries
         SelectedPages:    $MoreCustomFields::MoreCustomFields::SelectedPages::tag_selected_pages
+        SelectedWidgets:  $MoreCustomFields::MoreCustomFields::SelectedWidgets::tag_selected_widgets
         ReciprocalEntry:  $MoreCustomFields::MoreCustomFields::ReciprocalObject::tag_reciprocal_entry
         ReciprocalPage:   $MoreCustomFields::MoreCustomFields::ReciprocalObject::tag_reciprocal_page
 
@@ -70,5 +71,9 @@ applications:
             mcf_list_comments: $MoreCustomFields::MoreCustomFields::SelectedComments::list_content
             # Object selected, prepare for insert
             mcf_select_object: $MoreCustomFields::MoreCustomFields::SelectedObject::select_object
+            # Selected Widgets is like other Selected Objects, but a little
+            # different.
+            mcf_list_widgets:  $MoreCustomFields::MoreCustomFields::SelectedWidgets::list_content
+            mcf_select_widget: $MoreCustomFields::MoreCustomFields::SelectedWidgets::select_object
             # AJAX unlink method for Reciprocal Associations.
             unlink_reciprocal: $MoreCustomFields::MoreCustomFields::ReciprocalObject::ajax_unlink

@@ -13,6 +13,18 @@
   <__trans phrase="Close"></button>
 
 <script type="text/javascript">
+<mt:If name="inserts_loop">
+    <mt:Loop name="inserts_loop">
+        window.parent.insertSelectedObject(
+            '<mt:Var name="obj_title" escape="html" escape="JS">',
+            '<mt:Var name="obj_id">',
+            '<mt:Var name="obj_class">',
+            '<mt:Var name="obj_permalink">',
+            '<mt:Var name="edit_field">',
+            '<mt:Var name="obj_blog_id">'
+        );
+    </mt:Loop>
+<mt:Else>
     window.parent.insertSelectedObject(
         '<mt:Var name="obj_title" escape="html" escape="JS">',
         '<mt:Var name="obj_id">',
@@ -21,6 +33,8 @@
         '<mt:Var name="edit_field">',
         '<mt:Var name="obj_blog_id">'
     );
+</mt:If>
+    
 <mt:If tag="Version" lt="5">
     closeDialog();
 <mt:Else>

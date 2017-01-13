@@ -250,8 +250,9 @@ sub select_object {
         $text .= '...';
     }
 
-    $text = $obj->title
-        if $obj->can('title');
+    $text = $obj->can('title') ? $obj->title
+                : $obj->can('name') ? $obj->name
+                : 'Object title';
 
     my $tmpl = $plugin->load_tmpl('insert_object.mtml', {
         obj_id        => $obj->id,

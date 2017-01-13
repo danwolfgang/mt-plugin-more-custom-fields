@@ -16,6 +16,7 @@ use MoreCustomFields::SelectedEntriesOrPages;
 use MoreCustomFields::SelectedEntries;
 use MoreCustomFields::SelectedPages;
 use MoreCustomFields::SelectedComments;
+use MoreCustomFields::SelectedWidgets;
 use MoreCustomFields::SingleLineTextGroup;
 use MoreCustomFields::Message;
 use MoreCustomFields::TimestampedTextarea;
@@ -159,6 +160,18 @@ sub load_customfield_types {
             field_html        => sub { MoreCustomFields::SelectedComments::_field_html(); },
             field_html_params => sub { MoreCustomFields::SelectedComments::_field_html_params(@_); },
         },
+        selected_widgets => {
+            label             => 'Selected Widgets',
+            column_def        => 'vchar',
+            order             => 2104,
+            no_default        => 1,
+            options_delimiter => ',',
+            options_field     => sub {
+                MoreCustomFields::SelectedWidgets::_options_field();
+            },
+            field_html        => sub { MoreCustomFields::SelectedWidgets::_field_html(); },
+            field_html_params => sub { MoreCustomFields::SelectedWidgets::_field_html_params(@_); },
+        },
 #        single_line_text_group => {
 #            label             => 'Single-Line Text Group',
 #            column_def        => 'vblob',
@@ -254,7 +267,7 @@ sub load_customfield_types {
             # Not setting the context (making the context system-wide)
             # results in a Selected Asset custom field that is usable at the
             # blog level as normal. However, when trying to use it for system-
-            # level objects (authors), a a permissions error pops up. I
+            # level objects (authors), a permissions error pops up. I
             # didn't investigate more because I don't need system-level
             # support.
             context           => 'blog',

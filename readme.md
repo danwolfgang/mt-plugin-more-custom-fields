@@ -60,6 +60,8 @@ however, get More Custom Fields!
   link is available for the linked comments. (No View link is present because
   how and where you may publish comments can vary considerably.)
 
+* Selected Widgets: the familiar Selected Objects capability is extended to Widgets.
+
 # Prerequisites
 
 ## Movable Type Pro 4.2x or Greater
@@ -125,6 +127,7 @@ when defining custom fields:
 * Selected Assets (and "child" types: Selected Images, Selected Audios,
   Selected Videos, Selected Files, and any other type of registered asset)
 * Selected Comments
+* Selected Widgets
 
 Use these field types as you would any other: from the Preferences menu select
 Custom Fields, and create a new custom field.
@@ -211,6 +214,7 @@ which may help expedite your theme creation.
 * Selected Entries: `selected_entries`
 * Selected Pages: `selected_pages`
 * Selected Entries or Pages: `selected_content`
+* Selected Widgets: `selected_widgets`
 
 Note that the Selected Assets field actually creates a different custom field
 for each type of asset field available (Selected Images, Selected Videos,
@@ -520,9 +524,36 @@ does. If you've created a Selected Assets custom field with the `basename` of
 
 ## Selected Comments
 
-Selected Comments also works like the Selected Entries field type -- except is
+Selected Comments also works like the Selected Entries field type -- except it
 uses comments. More Custom Fields includes the block tag `SelectedComments` to
 help output your selected.
+
+## Selected Widgets
+
+The Selected Widgets field extends the same Selected Object capability to
+Widgets. It works similarly to all of the other Selelected... fields but with a
+few notable differences.
+
+When creating a Selected Widget CF, choose from where the Widgets should be
+pulled: the current blog only, the current blog and parent website, or the
+current blog, parent website, and system level.
+
+When using the Selected Widgets field, click the Choose widgets button to see a
+popup dialog of options. Notice that you can use checkboxes to multi-select your
+desired widgets. Note that order of selection is not recognized, however after
+inserting, the Widgets can be drag-dropped to the desired order.
+
+The tag to publish your Selected Widgets is also slightly different but
+familiar. The basename of your Custom Field needs to be supplied to the
+SelectedWidgets blog tag, and the `widget_name` variable is the only option
+available. In the example below, this variable is used to publish the name of
+the Widget and to include the desired Widget.
+
+    <mt:SelectedWidgets basename="my_selected_widgets">
+        <h1><mt:Var name="widget_name"></h1>
+        <mt:Include widget="$widget_name">
+    </mt:SelectedWidgets>
+
 
 # Known Issues
 
