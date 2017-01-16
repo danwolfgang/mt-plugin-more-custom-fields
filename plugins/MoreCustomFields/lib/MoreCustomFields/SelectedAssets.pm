@@ -20,8 +20,12 @@ sub _field_html {
 
 <a
 <mt:If tag="Version" lt="5">
+    <mt:Ignore> MT 4.something </mt:Ignore>
     onclick="return openDialog(this.form, 'list_assets', 'blog_id=<mt:Var name="blog_id">&amp;edit_field=<mt:Var name="field_id">&amp;selected_assets_cf=1&amp;_type=asset&amp;dialog_view=1&amp;asset_select=1<mt:If name="asset_type" ne="asset">&amp;filter=class&amp;filter_val=<mt:Var name="asset_type">&amp;require_type=<mt:Var name="asset_type"></mt:If>')"
+<mt:ElseIf tag="Version" gt="6.2">
+    onclick="jQuery.fn.mtDialog.open('<mt:Var name="script_uri">?__mode=list_asset&amp;_type=asset&amp;edit_field=<mt:Var name="field_id">&amp;blog_id=<mt:Var name="blog_id">&amp;dialog_view=1<mt:If name="asset_type" ne="asset">&amp;filter=class&amp;filter_val=<mt:Var name="asset_type">&amp;require_type=<mt:Var name="asset_type"></mt:If>&amp;edit_field=<mt:Var name="field_id">&amp;asset_select=1')"
 <mt:Else>
+    <mt:Ignore> MT 5.something, 6.0, and 6.1 </mt:Ignore>
     onclick="jQuery.fn.mtDialog.open('<mt:Var name="script_uri">?__mode=dialog_list_asset&amp;edit_field=<mt:Var name="field_id">&amp;blog_id=<mt:Var name="blog_id">&amp;no_insert=1&amp;selected_assets_cf=1<mt:If name="asset_type" ne="asset">&amp;filter=class&amp;filter_type=<mt:Var name="asset_type"></mt:If>')"
 </mt:If>
     class="<mt:If tag="Version" lt="5">mt4-choose </mt:If>button">
@@ -190,8 +194,11 @@ sub asset_insert_param {
             type => { like => 'selected_%' }, # Could be a `selected_[anything]`
         });
 
-    my $ctx = $tmpl->context;
-    my $asset = $ctx->stash('asset');
+    # Only a single asset can be selected in the popup, so the assets stash
+    # should only have a single asset in its array to get.
+    my $ctx    = $tmpl->context;
+    my $assets = $ctx->stash('assets');
+    my $asset  = @$assets[0];
 
     my $html;
     # If this asset has a URL and file path then link it for easy previewing.
